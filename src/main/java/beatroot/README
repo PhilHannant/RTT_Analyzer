@@ -1,0 +1,29 @@
+
+BeatRoot - a musical beat tracking and visualisation system
+
+Simon Dixon, Centre for Digital Music
+School of Electronic Engineering and Computer Science
+Queen Mary, University of London
+
+http://www.eecs.qmul.ac.uk/~simond/beatroot/
+
+***
+
+BeatRoot is a musical beat tracking and visualisation system. The
+original description of the beat tracking algorithms appears in the
+paper:
+
+Automatic Extraction of Tempo and Beat from Expressive Performances,
+Journal of New Music Research, 30 (1), 39-58, 2001.
+
+An update on BeatRoot and report on several evaluations of the systems
+is found in the paper:
+
+Evaluation of the Audio Beat Tracking System BeatRoot, Journal of New
+Music Research, 36 (1), 39-50, 2007.
+
+The graphical user interface is described in the paper:
+
+An Interactive Beat Tracking and Visualisation System, 2001
+International Computer Music Conference (ICMC2001, pp 215-218).
+
