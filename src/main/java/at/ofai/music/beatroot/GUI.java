@@ -319,7 +319,12 @@ public class GUI extends JFrame {
 	public void loadAudioData() {
 		loadAudioData(chooser.getAudioInName());
 	} // loadAudioData()
-	
+
+	public void startLiveAudio(){
+		audioProcessor.setLiveInput();
+		audioProcessor.processFrame();
+	}
+
 	/** Loads and processes a given audio file.
 	 *  @param fileName The name of the audio file to open
 	 */

@@ -78,7 +78,8 @@ class EventProcessor implements ActionListener, KeyListener {
 		else if (command.equals(GUI.STOP))
 			audioPlayer.stop();
 		else if (command.equals(GUI.LOAD_AUDIO))
-			gui.loadAudioData();
+			gui.startLiveAudio();
+		//gui.loadAudioData();
 		else if (command.equals(GUI.SAVE_AUDIO))
 			audioPlayer.save();
 		else if (command.equals(GUI.LOAD_BEATS))
