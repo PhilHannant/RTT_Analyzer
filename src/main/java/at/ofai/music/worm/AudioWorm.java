@@ -322,7 +322,7 @@ public class AudioWorm {
 	} // init()
 
 	public void start() { 
-		//System.out.println("Start called");//DEBUG
+		System.out.println("Start called");//DEBUG
 		if (isFileInput) {
 			gui.setDelay(fileDelay / averageCount);
 			out.start();

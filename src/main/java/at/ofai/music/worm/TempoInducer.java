@@ -181,6 +181,7 @@ public class TempoInducer {
 			addPeak(timeBase * (counter - MID_POINT), envelope[MID_POINT]);
 		} else
 			onset = false;
+		System.out.println("tempo " + 60/tempo);
 		return tempo;
 	} // getTempo
 	
