@@ -351,7 +351,6 @@ public class AudioProcessor {
             totalFrames = (int) (pcmInputStream.getFrameLength() / hopSize);
         else {
             totalFrames = (int) (MAX_LENGTH / hopTime);
-            System.out.println("totalFrames " + totalFrames);
         }
         if ((newFrame == null) || (newFrame.length != freqMapSize)) {
 			newFrame = new double[freqMapSize];
@@ -495,7 +494,6 @@ public class AudioProcessor {
 				}
 		}
 		frameRMS = Math.sqrt(frameRMS / inputBuffer.length * 2 * channels);
-        System.out.println("frameRMS " + frameRMS);
 		return true;
 	} // getFrame()
 
@@ -505,7 +503,6 @@ public class AudioProcessor {
 	 *  then (optionally) normalising and calculating onsets.
 	 */
 	protected void processFrame() {
-		System.out.println(getFrame());
 		if (getFrame()) {
 			for (int i = 0; i < fftSize; i++) {
 				reBuffer[i] = window[i] * circBuffer[cbIndex];
