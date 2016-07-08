@@ -39,7 +39,7 @@ import java.awt.event.HierarchyEvent;
 import at.ofai.music.util.PSPrinter;
 
 
-class WormControlPanel extends JPanel
+public class WormControlPanel extends JPanel
 					   implements ActionListener, HierarchyBoundsListener {	
 
 	static final long serialVersionUID = 0;
@@ -117,64 +117,63 @@ class WormControlPanel extends JPanel
 		worm.setControlPanel(this); // for callback
 	} // constructor
 	
-	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("<<x>>"))
-			worm.xZoom(true);
-		else if (e.getActionCommand().equals(">>x<<"))
-			worm.xZoom(false);
-		else if (e.getActionCommand().equals("<<<"))
-			worm.xMoveRight(false);
-		else if (e.getActionCommand().equals(">>>"))
-			worm.xMoveRight(true);
-		else if (e.getActionCommand().equals("ML >>"))
-			worm.audio.ti.switchLevels(true);
-		else if (e.getActionCommand().equals("<< ML"))
-			worm.audio.ti.switchLevels(false);
-		else if (e.getActionCommand().equals("Play") ||
-					e.getActionCommand().equals("Cont"))
+	public void actionPerformed(String e) {
+//		if (e.getActionCommand().equals("<<x>>"))
+//			worm.xZoom(true);
+//		else if (e.getActionCommand().equals(">>x<<"))
+//			worm.xZoom(false);
+//		else if (e.getActionCommand().equals("<<<"))
+//			worm.xMoveRight(false);
+//		else if (e.getActionCommand().equals(">>>"))
+//			worm.xMoveRight(true);
+//		else if (e.getActionCommand().equals("ML >>"))
+//			worm.audio.ti.switchLevels(true);
+//		else if (e.getActionCommand().equals("<< ML"))
+//			worm.audio.ti.switchLevels(false);
+		if (e.equals("Play"))
 			worm.play();
-		else if (e.getActionCommand().equals("Pause"))
-			worm.pause();
-		else if (e.getActionCommand().equals("Stop"))
-			worm.stop();
-		else if (e.getActionCommand().equals("<<y>>"))
-			worm.yZoom(true);
-		else if (e.getActionCommand().equals(">>y<<"))
-			worm.yZoom(false);
-		else if (e.getActionCommand().equals("vvv"))
-			worm.yMoveDown(true);
-		else if (e.getActionCommand().equals("^^^"))
-			worm.yMoveDown(false);
-		else if (e.getActionCommand().equals("Header")) {
-			worm.editParameters();
-		} else if (e.getActionCommand().equals("Smooth"))
-			worm.smooth();
-		else if (e.getActionCommand().equals("Flags")) {
-			flagMenu.setVisible(true);
-			flagMenu.setLocation(
-						((Component)e.getSource()).getLocationOnScreen());
-		} else if (e.getActionCommand().equals("Load")) {
-			new WormLoadDialog(worm);
-		} else if (e.getActionCommand().equals("Save")) {
-			worm.save(new MyFileChooser().browseSave());
-		} else if (e.getActionCommand().equals("Quit"))
-		    System.exit(0);
-		else if (e.getActionCommand().equals("AutoScale"))
-			worm.setAutoScaleMode(
-							((JCheckBoxMenuItem)e.getSource()).isSelected());
-		else if (e.getActionCommand().equals("Glow Worm"))
-			worm.setGlow(((JCheckBoxMenuItem)e.getSource()).isSelected());
-		else if (e.getActionCommand().equals("Histograms"))
-			TempoInducer.plotFlag =
-							((JCheckBoxMenuItem)e.getSource()).isSelected();
-		else if (e.getActionCommand().equals("Print300"))
-			PSPrinter.print(worm, 300);
-		else if (e.getActionCommand().equals("Print600"))
-			PSPrinter.print(worm, 600);
-		else
-			for (int i = 0; i < Worm.smoothLabels.length; i++)
-				if (e.getActionCommand().equals(Worm.smoothLabels[i]))
-					worm.setSmoothMode(i);
+//		else if (e.getActionCommand().equals("Pause"))
+//			worm.pause();
+//		else if (e.getActionCommand().equals("Stop"))
+//			worm.stop();
+//		else if (e.getActionCommand().equals("<<y>>"))
+//			worm.yZoom(true);
+//		else if (e.getActionCommand().equals(">>y<<"))
+//			worm.yZoom(false);
+//		else if (e.getActionCommand().equals("vvv"))
+//			worm.yMoveDown(true);
+//		else if (e.getActionCommand().equals("^^^"))
+//			worm.yMoveDown(false);
+//		else if (e.getActionCommand().equals("Header")) {
+//			worm.editParameters();
+//		} else if (e.getActionCommand().equals("Smooth"))
+//			worm.smooth();
+//		else if (e.getActionCommand().equals("Flags")) {
+//			flagMenu.setVisible(true);
+//			flagMenu.setLocation(
+//						((Component)e.getSource()).getLocationOnScreen());
+//		} else if (e.getActionCommand().equals("Load")) {
+//			new WormLoadDialog(worm);
+//		} else if (e.getActionCommand().equals("Save")) {
+//			worm.save(new MyFileChooser().browseSave());
+//		} else if (e.getActionCommand().equals("Quit"))
+//		    System.exit(0);
+//		else if (e.getActionCommand().equals("AutoScale"))
+//			worm.setAutoScaleMode(
+//							((JCheckBoxMenuItem)e.getSource()).isSelected());
+//		else if (e.getActionCommand().equals("Glow Worm"))
+//			worm.setGlow(((JCheckBoxMenuItem)e.getSource()).isSelected());
+//		else if (e.getActionCommand().equals("Histograms"))
+//			TempoInducer.plotFlag =
+//							((JCheckBoxMenuItem)e.getSource()).isSelected();
+//		else if (e.getActionCommand().equals("Print300"))
+//			PSPrinter.print(worm, 300);
+//		else if (e.getActionCommand().equals("Print600"))
+//			PSPrinter.print(worm, 600);
+//		else
+//			for (int i = 0; i < Worm.smoothLabels.length; i++)
+//				if (e.getActionCommand().equals(Worm.smoothLabels[i]))
+//					worm.setSmoothMode(i);
 	} // actionPerformed
 
 	public void ancestorMoved(HierarchyEvent e) {}
@@ -185,4 +184,8 @@ class WormControlPanel extends JPanel
 		repaint();
 	} // ancestorResized()
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
 } // class WormControlPanel

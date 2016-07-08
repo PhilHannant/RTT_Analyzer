@@ -327,9 +327,9 @@ public class AudioWorm {
 			gui.setDelay(fileDelay / averageCount);
 			out.start();
 		} else {
-			//System.out.println("Flushing targetDataLine");//DEBUG
+			System.out.println("Flushing targetDataLine");//DEBUG
 			targetDataLine.flush();
-			//System.out.println("Restarting targetDataLine");//DEBUG
+			System.out.println("Restarting targetDataLine");//DEBUG
 			targetDataLine.start();
 		}
 		//System.out.println("Start completed");//DEBUG
@@ -566,6 +566,7 @@ public class AudioWorm {
 				sum += (double)longSample * (double)longSample;
 			}
 		}
+        System.out.println("processWindow returns " + Math.sqrt(sum) / normalise);
 		return Math.sqrt(sum) / normalise;
 	} // processWindow()
 

@@ -494,6 +494,7 @@ public class AudioProcessor {
 				}
 		}
 		frameRMS = Math.sqrt(frameRMS / inputBuffer.length * 2 * channels);
+        System.out.println("frameRMS " + frameRMS);
 		return true;
 	} // getFrame()
 

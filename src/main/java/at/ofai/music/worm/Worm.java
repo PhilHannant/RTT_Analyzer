@@ -100,7 +100,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	WormFile wormFile;
 	Thread playThread;
 
-	public Worm(JFrame f) {
+	public Worm() {
 		x = new double[WormConstants.wormLength];
 		y = new double[WormConstants.wormLength];
 		labels = new String[WormConstants.wormLength];
@@ -114,7 +114,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 		loudnessUnits = "dB";
 		tempoUnits = "BPM";
 		init();
-		theFrame = f;
+//		theFrame = f;
 		playThread = new Thread(this);
 		playThread.start();
 		xSize = WormConstants.X_SZ;
@@ -282,7 +282,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 		}
 	} // setAxis()
 	
-	// Starts/continues playing in a separate thread; immediately returns
+	// Starts/continues ing in a separate thread; immediately returns
 	void play() {
 		playButton.setText("Pause");
 		playButton.repaint();
@@ -677,7 +677,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 
 	public static Worm createInFrame(String[] args) {
 		JFrame f = new JFrame(WormConstants.title);
-		Worm w = new Worm(f);
+		Worm w = new Worm();
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].startsWith("-d")) {
 				if (args[i].length() == 2)
@@ -693,24 +693,24 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 			else
 				w.setTimingOffsetString(args[i]);
 		}
-		f.getContentPane().setBackground(WormConstants.backgroundColor);
-		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(),
-					BoxLayout.Y_AXIS));
-		f.getContentPane().add(w);
-		f.getContentPane().add(new WormScrollBar(w));
-		f.getContentPane().add(new WormControlPanel(w));
+//		f.getContentPane().setBackground(WormConstants.backgroundColor);
+//		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(),
+//					BoxLayout.Y_AXIS));
+//		f.getContentPane().add(w);
+//		f.getContentPane().add(new WormScrollBar(w));
+//		f.getContentPane().add(new WormControlPanel(w));
 		w.addHierarchyBoundsListener(w);
 		// or f.getContentPane().addHier... -- both seem to work the same
 		Dimension borderSize = FrameMargins.get(false);
-		f.setSize(w.getWidth() + borderSize.width,
-				  w.getHeight() + borderSize.height + WormConstants.cpHeight);
-		GraphicsConfiguration gc = f.getGraphicsConfiguration();
-		Rectangle bounds = gc.getBounds();
-		f.setLocation(bounds.x + (bounds.width - f.getWidth()) / 2,
-					  bounds.y + (bounds.height - f.getHeight()) / 2);
-		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		f.setVisible(true);
-		f.setIconImage(WormIcon.getWormIcon(1,f));
+//		f.setSize(w.getWidth() + borderSize.width,
+//				  w.getHeight() + borderSize.height + WormConstants.cpHeight);
+//		GraphicsConfiguration gc = f.getGraphicsConfiguration();
+//		Rectangle bounds = gc.getBounds();
+//		f.setLocation(bounds.x + (bounds.width - f.getWidth()) / 2,
+//					  bounds.y + (bounds.height - f.getHeight()) / 2);
+//		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//		f.setVisible(true);
+//		f.setIconImage(WormIcon.getWormIcon(1,f));
 		if (args.length > 0)
 			w.play();
 		return w;
