@@ -5,6 +5,6 @@ package realTimeSoundCapture;
  */
 public interface SoundCapture {
 
-    void startCapture();
+    int startCapture();
 
 }

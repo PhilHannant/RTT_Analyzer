@@ -18,7 +18,7 @@ public class SoundCaptureImpl implements SoundCapture{
     private int streamedBytes;
     private int sampleSize;
     private byte[] data;
-    private long recordLength = 30000; //30 second length used for testing purposes
+    private long recordLength = 5000; //5 second length used for testing purposes
 
 
     public SoundCaptureImpl(){
@@ -38,11 +38,12 @@ public class SoundCaptureImpl implements SoundCapture{
             input = (TargetDataLine) AudioSystem.getLine(info);
             input.open(format);
             outputStream = new ByteArrayOutputStream();
-
+            data = new byte[input.getBufferSize()];
+            input.start();
             long currentTime = System.currentTimeMillis();
             long finishTime = currentTime + recordLength;
             bytesRead = 0;
-            while(currentTime < finishTime){
+            while(System.currentTimeMillis() < finishTime){
 
                 streamedBytes = input.read(data, 0, sampleSize);
                 bytesRead += streamedBytes;
