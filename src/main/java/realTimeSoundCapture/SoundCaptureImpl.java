@@ -75,4 +75,13 @@ public class SoundCaptureImpl implements SoundCapture{
         write++;
         status = false;//added to allow for testing
     }
+
+    public void close() throws IOException {
+        input.close();
+        outputStream.close();
+    }
+
+    public int getReadPos() {
+        return read;
+    }
 }

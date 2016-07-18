@@ -14,4 +14,6 @@ public interface SoundCapture {
     void writeNext(Object data);
 
     void close() throws IOException;
+
+    int getReadPos();
 }
