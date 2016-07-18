@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Created by philhannant on 20/06/2016.
  */
@@ -35,11 +37,15 @@ public class SoundCaptureImplTest {
 
     @Test
     public void circularitytest(){
-
+        for(int i = 0; i < 11; i++){
+            sc.getNext();
+        }
+        int bufferNumber = sc.getReadPos();
+        assertEquals(bufferNumber, 1);
     }
-    
+
     @After
-    public void finish(){
+    public void finish() throws IOException {
         sc.close();
     }
 }
