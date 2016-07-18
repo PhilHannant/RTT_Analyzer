@@ -18,9 +18,12 @@ public class SoundCaptureImpl implements SoundCapture{
     private int streamedBytes;
     private int sampleSize;
     private byte[] data;
+    private Object audioObject;
     private long recordLength = 5000; //5 second length used for testing purposes
     private static Object[] audioBuffer;
     private boolean status;
+    private int read;
+    private int write;
 
 
     public SoundCaptureImpl(){
@@ -31,6 +34,7 @@ public class SoundCaptureImpl implements SoundCapture{
         boolean signed = true;
         boolean bigEndian = true;
         format = new AudioFormat(sampleRate, bitsPerSample, channels, signed, bigEndian);
+        audioBuffer = new Object[10];
     }
 
     public int startCapture(){
@@ -52,7 +56,8 @@ public class SoundCaptureImpl implements SoundCapture{
                 bytesRead += streamedBytes;
 
                 outputStream.write(data, 0, streamedBytes);
-                outputStream.toByteArray();
+                audioObject = outputStream.toByteArray();
+                writeNext(audioObject);
             }
             return bytesRead;
         } catch (LineUnavailableException ex) {
@@ -61,5 +66,13 @@ public class SoundCaptureImpl implements SoundCapture{
         return 0;
     }
 
+    public Object getNext(){
+        return audioBuffer[read];
+    }
 
+    public void writeNext(Object data){
+        audioBuffer[write] = data;
+        write++;
+        status = false;//added to allow for testing
+    }
 }
