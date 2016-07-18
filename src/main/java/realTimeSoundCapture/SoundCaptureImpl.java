@@ -67,13 +67,22 @@ public class SoundCaptureImpl implements SoundCapture{
     }
 
     public Object getNext(){
-        return audioBuffer[read];
+        Object audioData = audioBuffer[read];
+        //reset buffer pointer, not very robust
+        if(read < audioBuffer.length-1)
+            read ++;
+        else read = 0;
+        return audioData;
     }
 
     public void writeNext(Object data){
         audioBuffer[write] = data;
-        write++;
-        status = false;//added to allow for testing
+        if(write < audioBuffer.length-1)
+            write++;
+        else {
+            write = 0;
+            status = false;//added to allow for testing
+        }
     }
 
     public void close() throws IOException {
