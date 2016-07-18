@@ -19,6 +19,8 @@ public class SoundCaptureImpl implements SoundCapture{
     private int sampleSize;
     private byte[] data;
     private long recordLength = 5000; //5 second length used for testing purposes
+    private static Object[] audioBuffer;
+    private boolean status;
 
 
     public SoundCaptureImpl(){
@@ -43,12 +45,14 @@ public class SoundCaptureImpl implements SoundCapture{
             long currentTime = System.currentTimeMillis();
             long finishTime = currentTime + recordLength;
             bytesRead = 0;
-            while(System.currentTimeMillis() < finishTime){
+            status = true;
+            while(status){
 
                 streamedBytes = input.read(data, 0, sampleSize);
                 bytesRead += streamedBytes;
 
                 outputStream.write(data, 0, streamedBytes);
+                outputStream.toByteArray();
             }
             return bytesRead;
         } catch (LineUnavailableException ex) {
@@ -56,4 +60,6 @@ public class SoundCaptureImpl implements SoundCapture{
         }
         return 0;
     }
+
+
 }
