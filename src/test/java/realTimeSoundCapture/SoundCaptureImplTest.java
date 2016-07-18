@@ -16,10 +16,17 @@ public class SoundCaptureImplTest {
         sc = new SoundCaptureImpl();
     }
 
-    @Test
-    public void testStartCapture(){
-        int bytesread = sc.startCapture();
-        assertTrue(bytesread > 0);
-    }
+//    Implementation changed so test no longer relevant
+//    @Test
+//    public void testStartCapture(){
+//        int bytesread = sc.startCapture();
+//        System.out.println(bytesread);
+//        assertTrue(bytesread > 0);
+//    }
 
+    @Test
+    public void cbTest(){
+        Object obj = sc.getNext();
+        assertTrue(obj != null);
+    }
 }
