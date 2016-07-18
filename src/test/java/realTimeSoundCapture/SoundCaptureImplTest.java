@@ -1,6 +1,8 @@
 package realTimeSoundCapture;
 
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +16,7 @@ public class SoundCaptureImplTest {
     @Before
     public void setUp(){
         sc = new SoundCaptureImpl();
+        sc.startCapture();
     }
 
 //    Implementation changed so test no longer relevant
@@ -28,5 +31,15 @@ public class SoundCaptureImplTest {
     public void cbTest(){
         Object obj = sc.getNext();
         assertTrue(obj != null);
+    }
+
+    @Test
+    public void circularitytest(){
+
+    }
+    
+    @After
+    public void finish(){
+        sc.close();
     }
 }
