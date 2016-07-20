@@ -6,7 +6,7 @@ import liveaudio.LiveAudioProcessor
   */
 class LiveAudioProcessorTest extends FlatSpec {
 
-  "An AudioProcessor readSample" should "return an integer" in {
+  "A LiveAudioProcessor readSample" should "return an integer" in {
     val lap = new LiveAudioProcessor
     val data = Array.fill(20)((scala.util.Random.nextInt(256) - 128).toByte)
     val returnedVal = lap.readSample(data)
@@ -14,4 +14,11 @@ class LiveAudioProcessorTest extends FlatSpec {
 
   }
 
+  "A LiveAudioProcessor readFrames" should "return an integer" in {
+    val lap = new LiveAudioProcessor
+    val data = Array.fill(20)((scala.util.Random.nextInt(256) - 128).toByte)
+    val numberOfFrames = 10
+    val returnedVal = lap.readFrames(data, numberOfFrames)
+    assert(returnedVal == numberOfFrames)
+  }
 }
