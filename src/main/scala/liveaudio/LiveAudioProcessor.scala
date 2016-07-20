@@ -10,7 +10,7 @@ class LiveAudioProcessor() {
   val bytesPerSample: Int = 2
 
   def readSample(data: Array[Byte]): Long = {
-    var value = 0
+
     def sampleReader(data: Array[Byte], value: Long, acc: Int): Long = {
       acc match {
         case x if x < bytesPerSample => {
@@ -26,7 +26,7 @@ class LiveAudioProcessor() {
       }
     }
 
-    sampleReader(data, 0L, value)
+    sampleReader(data, 0L, 0)
   }
 
 
