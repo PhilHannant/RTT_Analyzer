@@ -77,7 +77,8 @@ import scala.collection.mutable
   * object instead.
   **/
 class WaveletBPMDetector private (
-                                   private val liveAudio: LiveAudioProcessor,
+                                   private val liveAudio: SoundCaptureImpl,
+                                   private val audioProcessor: LiveAudioProcessor,
                                    private val windowFrames : Int,
                                    private val waveletType : WaveletBPMDetector.Wavelet,
                                    private val windowsToProcess : Int) extends BPMDetector {
@@ -205,7 +206,7 @@ class WaveletBPMDetector private (
       println(windowFrames * liveAudio.channels)
       for (currentWindow <- 0 until windowsToProcess) {
         val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
-        val framesRead = audioFile.readFrames(buffer, windowFrames); //something here
+        val framesRead = audioProcessor.readFrames(buffer,0, windowFrames); //something here
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
         computeWindowBpm(leftChannelSamples)
@@ -262,7 +263,8 @@ object WaveletBPMDetector {
     * @throws WindowSizeException
     **/
   def apply(
-             liveAudio : LiveAudioProcessor,
+             liveAudio : SoundCaptureImpl,
+             audioProcessor: LiveAudioProcessor,
              windowFrames : Int,
              waveletType : Wavelet = Daubechies4,
              windowsToConsider : Int = 0) : WaveletBPMDetector = {
@@ -277,16 +279,18 @@ object WaveletBPMDetector {
     }
 
 
-    return new WaveletBPMDetector(liveAudio, windowFrames, waveletType, windowsNumber)
+    return new WaveletBPMDetector(liveAudio, audioProcessor, windowFrames, waveletType, windowsNumber)
   }
 
 }
 
 
 object test extends App {
-  val liveAudio = new LiveAudioProcessor
+  val liveAudio = new SoundCaptureImpl
+  val audioProcessor = new LiveAudioProcessor
   val tempo = WaveletBPMDetector(
     liveAudio,
+    audioProcessor,
     131072,
     WaveletBPMDetector.Daubechies4).bpm()
   println(tempo)
