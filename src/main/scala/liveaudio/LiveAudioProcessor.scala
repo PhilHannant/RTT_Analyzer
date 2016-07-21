@@ -8,10 +8,13 @@ class LiveAudioProcessor() {
 
   var bufferPointer: Int = 0
   val bytesPerSample: Int = 2
+  val numberOfChannels: Int = 2
+  val data = Array.fill(20)((scala.util.Random.nextInt(256) - 128).toByte)
+  var frameCounter = 0
 
-  def readSample(data: Array[Byte]): Long = {
+  def readSample(): Long = {
 
-    def sampleReader(data: Array[Byte], value: Long, acc: Int): Long = {
+    def sampleReader(value: Long, acc: Int): Long = {
       acc match {
         case x if x < bytesPerSample => {
           var v: Int = data(bufferPointer);
@@ -19,15 +22,18 @@ class LiveAudioProcessor() {
             val valueNew = value + (v << (acc * 8))
             bufferPointer = bufferPointer + 1
             val newAcc = acc + 1
-            sampleReader(data, valueNew, newAcc)
+            sampleReader(valueNew, newAcc)
         }
         case x if x == bytesPerSample => value
         case _ => value
       }
     }
 
-    sampleReader(data, 0L, 0)
+    sampleReader(0L, 0)
   }
 
-
+  def readFrames(sampleBuffer: Array[Int], offset: Int, numberOfFrames: Int): Int = {
+ 
+    return numberOfFrames
+  }
 }
