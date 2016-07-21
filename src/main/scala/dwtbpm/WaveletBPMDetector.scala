@@ -1,14 +1,22 @@
 package dwtbpm
 
 
-import me.mziccard.audio.bpm.BPMDetector
+
+import java.io.{BufferedInputStream, File, FileInputStream}
+import java.nio.file.{Files, Paths}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.math.min
 import scala.math.pow
 import scala.math.abs
-import me.mziccard.audio.{AudioFile, WavFile, _}
-import me.mziccard.sci.ArrayOperations._
+import jwave.transforms._
+import jwave._
+import jwave.transforms.wavelets.daubechies._
+import jwave.transforms.wavelets.haar._
+import liveaudio._
+import ArrayOperations._
+
+import scala.collection.mutable
 
 /**
   * Adapted from dwt bpm detector created by Mario Ziccardi, source https://github.com/mziccard/scala-audio-file,
@@ -69,7 +77,7 @@ import me.mziccard.sci.ArrayOperations._
   * object instead.
   **/
 class WaveletBPMDetector private (
-                                   private val audioFile : AudioFile,
+                                   private val liveAudio: LiveAudioProcessor,
                                    private val windowFrames : Int,
                                    private val waveletType : WaveletBPMDetector.Wavelet,
                                    private val windowsToProcess : Int) extends BPMDetector {
@@ -85,6 +93,7 @@ class WaveletBPMDetector private (
    **/
   private var instantBpm = ArrayBuffer[Double]()
 
+  private var dataBuffer: mutable.Queue[Array[Byte]] = new mutable.Queue[Array[Byte]]
   /**
     * The tempo in beats-per-minute computed for the track
     **/
@@ -134,8 +143,8 @@ class WaveletBPMDetector private (
     var dCMinLength : Int = 0
     val levels = 4
     val maxDecimation = pow(2, levels-1)
-    val minIndex : Int = (60.toDouble / 220 * audioFile.sampleRate.toDouble/maxDecimation).toInt
-    val maxIndex : Int = (60.toDouble / 40 * audioFile.sampleRate.toDouble/maxDecimation).toInt
+    val minIndex : Int = (60.toDouble / 220 *  liveAudio.sampleRate.toDouble/maxDecimation).toInt
+    val maxIndex : Int = (60.toDouble / 40 * liveAudio.sampleRate.toDouble/maxDecimation).toInt
 
     // 4 Level DWT
     for (loop <- 0 until levels) {
@@ -186,16 +195,16 @@ class WaveletBPMDetector private (
 
     // Compute window BPM given the peak
     val realLocation = minIndex + location
-    val windowBpm : Double = 60.toDouble / realLocation * (audioFile.sampleRate.toDouble/maxDecimation)
+    val windowBpm : Double = 60.toDouble / realLocation * (liveAudio.sampleRate.toDouble/maxDecimation)
     println("windowBpm " + windowBpm)
     instantBpm += windowBpm;
   }
 
   override def bpm() : Double = {
     if (_bpm == -1) {
-      println(windowFrames * audioFile.numChannels)
+      println(windowFrames * liveAudio.channels)
       for (currentWindow <- 0 until windowsToProcess) {
-        val buffer : Array[Int]  = new Array[Int](windowFrames * audioFile.numChannels)
+        val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
         val framesRead = audioFile.readFrames(buffer, windowFrames); //something here
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
@@ -209,6 +218,13 @@ class WaveletBPMDetector private (
     return _bpm
   }
 
+  def addData(data: Array[Byte]) = {
+    dataBuffer += data
+  }
+
+  def popData(): Array[Byte] = {
+    dataBuffer.dequeue()
+  }
 }
 
 object WaveletBPMDetector {
@@ -246,7 +262,7 @@ object WaveletBPMDetector {
     * @throws WindowSizeException
     **/
   def apply(
-             audioFile : AudioFile,
+             liveAudio : LiveAudioProcessor,
              windowFrames : Int,
              waveletType : Wavelet = Daubechies4,
              windowsToConsider : Int = 0) : WaveletBPMDetector = {
@@ -261,16 +277,16 @@ object WaveletBPMDetector {
     }
 
 
-    return new WaveletBPMDetector(audioFile, windowFrames, waveletType, windowsNumber)
+    return new WaveletBPMDetector(liveAudio, windowFrames, waveletType, windowsNumber)
   }
 
 }
 
 
 object test extends App {
-  val audioFile = WavFile("/Users/philhannant/Desktop/Wavs/120test.wav")
+  val liveAudio = new LiveAudioProcessor
   val tempo = WaveletBPMDetector(
-    audioFile,
+    liveAudio,
     131072,
     WaveletBPMDetector.Daubechies4).bpm()
   println(tempo)
