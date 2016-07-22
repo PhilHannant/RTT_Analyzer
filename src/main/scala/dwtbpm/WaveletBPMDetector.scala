@@ -94,7 +94,7 @@ class WaveletBPMDetector private (
    **/
   private var instantBpm = ArrayBuffer[Double]()
 
-  private var dataBuffer: mutable.Queue[Array[Byte]] = new mutable.Queue[Array[Byte]]
+  private val dataBuffer: mutable.Queue[Array[Byte]] = new mutable.Queue[Array[Byte]]
   /**
     * The tempo in beats-per-minute computed for the track
     **/
@@ -203,8 +203,7 @@ class WaveletBPMDetector private (
 
   override def bpm() : Double = {
     if (_bpm == -1) {
-      println(windowFrames * liveAudio.channels)
-      for (currentWindow <- 0 until windowsToProcess) {
+      while (dataBuffer.nonEmpty) {
         val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
         val framesRead = audioProcessor.readFrames(buffer,0, windowFrames); //something here
         val leftChannelSamples : Array[Double] =
