@@ -6,7 +6,11 @@ import javax.sound.sampled._
 import dwtbpm.WaveletBPMDetector
 import realTimeSoundCapture.SoundCapture
 
-class SoundCaptureImpl {
+class SoundCaptureImpl() {
+
+  private var dwtbpm: WaveletBPMDetector = _
+  def dwtbpm (value: WaveletBPMDetector):Unit = dwtbpm = value
+
 
   val sampleSize = 1024
   val sampleRate: Float = 44100
@@ -26,9 +30,6 @@ class SoundCaptureImpl {
   private val recordLength: Long = 5000
   private var status: Boolean = false
 
-  val dwtbpm: WaveletBPMDetector = new WaveletBPMDetector()
-
-
   def startCapture: Int = {
     try {
       input = AudioSystem.getTargetDataLine(format)
@@ -47,7 +48,7 @@ class SoundCaptureImpl {
           streamedBytes = input.read(data, 0, sampleSize)
           bytesRead += streamedBytes
           outputStream.write(data, 0, streamedBytes)
-          outputStream.toByteArray
+          dwtbpm.addData(outputStream.toByteArray)
         }
       }
       return bytesRead
@@ -59,7 +60,11 @@ class SoundCaptureImpl {
     }
     return 0
   }
+
+
+
 }
+
 
 object SoundCaptureImpl{
 
