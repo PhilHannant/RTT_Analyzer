@@ -205,14 +205,11 @@ class WaveletBPMDetector private (
     if (_bpm == -1) {
       while (dataBuffer.nonEmpty) {
         val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
-        val framesRead = audioProcessor.readFrames(buffer,0, windowFrames); //something here
+        val framesRead = audioProcessor.readFrames(buffer,0, windowFrames)
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
         computeWindowBpm(leftChannelSamples)
       }
-      //      val leftChannelSamples : Array[Double] =
-      //        audioFile.bArray.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
-      //      computeWindowBpm(leftChannelSamples)
       _bpm = instantBpm.toArray.median
     }
     return _bpm
