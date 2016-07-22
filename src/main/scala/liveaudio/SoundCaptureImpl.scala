@@ -27,7 +27,7 @@ class SoundCaptureImpl() {
   private var bytesRead: Int = 0
   private var streamedBytes: Int = 0
   private var data: Array[Byte] = null
-  private val recordLength: Long = 5000
+  private val recordLength: Long = 500
   private var status: Boolean = false
 
   def startCapture: Int = {
@@ -43,7 +43,7 @@ class SoundCaptureImpl() {
       val finishTime: Long = currentTime + recordLength
       bytesRead = 0
       status = true
-      while (status) {
+      while (System.currentTimeMillis < finishTime) {
         {
           streamedBytes = input.read(data, 0, sampleSize)
           bytesRead += streamedBytes
