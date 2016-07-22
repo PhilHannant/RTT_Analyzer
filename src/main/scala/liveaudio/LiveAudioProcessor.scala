@@ -33,7 +33,26 @@ class LiveAudioProcessor() {
   }
 
   def readFrames(sampleBuffer: Array[Int], offset: Int, numberOfFrames: Int): Int = {
- 
+    var pointer = offset
+
+    for(i <- 0 until numberOfFrames){
+      if (frameCounter == numberOfFrames) return i
+
+      getSample(0)
+      frameCounter = frameCounter + 1
+    }
+
+    def getSample(acc: Int): Int = {
+      acc match{
+        case x if x < numberOfChannels => {
+          sampleBuffer(pointer) = readSample().toInt
+          val newAcc = acc + 1
+          pointer = pointer + 1
+          getSample(newAcc)
+        }
+        case _ => acc
+      }
+    }
     return numberOfFrames
   }
 }

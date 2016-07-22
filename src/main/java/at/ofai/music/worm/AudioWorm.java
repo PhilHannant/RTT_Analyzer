@@ -358,6 +358,7 @@ public class AudioWorm {
 	} // stop()
 
 	public boolean nextBlock() throws IOException {
+        System.out.println("nextblock");
 		double rms = 0, tempo = 0;
 		for (int i = 0; i < averageCount; i++) {	// 5 => 20 FPS
 			int waitCount = 1;//D

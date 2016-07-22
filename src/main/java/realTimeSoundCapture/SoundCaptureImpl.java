@@ -2,6 +2,7 @@ package realTimeSoundCapture;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import dwtbpm.WaveletBPMDetector;
 
 /**
  * Created by philhannant on 20/06/2016.
@@ -16,7 +17,7 @@ public class SoundCaptureImpl implements SoundCapture{
     private ByteArrayOutputStream outputStream;
     private int bytesRead;
     private int streamedBytes;
-    private int sampleSize;
+    int sampleSize;
     private byte[] data;
     private Object audioObject;
     private long recordLength = 5000; //5 second length used for testing purposes
@@ -24,6 +25,7 @@ public class SoundCaptureImpl implements SoundCapture{
     private boolean status;
     private int read;
     private int write;
+
 
 
     public SoundCaptureImpl(){

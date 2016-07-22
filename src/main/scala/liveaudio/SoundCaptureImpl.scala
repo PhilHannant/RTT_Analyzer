@@ -3,6 +3,7 @@ package liveaudio
 import java.io._
 import javax.sound.sampled._
 
+import dwtbpm.WaveletBPMDetector
 import realTimeSoundCapture.SoundCapture
 
 class SoundCaptureImpl {
@@ -25,7 +26,7 @@ class SoundCaptureImpl {
   private val recordLength: Long = 5000
   private var status: Boolean = false
 
-
+  val dwtbpm: WaveletBPMDetector = new WaveletBPMDetector()
 
 
   def startCapture: Int = {

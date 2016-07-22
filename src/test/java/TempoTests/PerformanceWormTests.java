@@ -17,7 +17,5 @@ public class PerformanceWormTests {
         WormControlPanel wcp = new WormControlPanel(w);
         wcp.actionPerformed("Play");
 
-
-
     }
 }
