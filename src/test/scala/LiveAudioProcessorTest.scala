@@ -30,11 +30,14 @@ class SoundCaptureImplTest extends FlatSpec {
 
   "A SoundCaptureImpl" should "send a byte array" in {
     val sci = new SoundCaptureImpl()
-    val dwtbpm = new WaveletBPMDetector()
+    val audioProcessor = new LiveAudioProcessor
     sci.startCapture
-    val sentBytes = dwtbpm.popData()
-    assert(sentBytes != null)
-
+    val dwtbpm = WaveletBPMDetector(
+      sci,
+      audioProcessor,
+      131072,
+      WaveletBPMDetector.Daubechies4).popData()
+    assert(dwtbpm != null)
   }
 
 
