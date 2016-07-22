@@ -1,6 +1,8 @@
 
+import dwtbpm.WaveletBPMDetector
 import org.scalatest._
 import liveaudio.LiveAudioProcessor
+import liveaudio.SoundCaptureImpl
 /**
   * Created by philhannant on 20/07/2016.
   */
@@ -20,4 +22,27 @@ class LiveAudioProcessorTest extends FlatSpec {
     val returnedVal = lap.readFrames(data, 0, numberOfFrames)
     assert(returnedVal == numberOfFrames)
   }
+
+
+}
+
+class SoundCaptureImplTest extends FlatSpec {
+
+  "A SoundCaptureImpl" should "send a byte array" in {
+    val sci = new SoundCaptureImpl()
+    val dwtbpm = new WaveletBPMDetector()
+    sci.startCapture
+    val sentBytes = dwtbpm.popData()
+    assert(sentBytes != null)
+
+  }
+
+
+}
+
+
+class WaveletBPMDetectorTest extends FlatSpec {
+
+
+
 }
