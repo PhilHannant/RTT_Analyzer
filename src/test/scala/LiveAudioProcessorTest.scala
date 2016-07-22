@@ -38,6 +38,7 @@ class SoundCaptureImplTest extends FlatSpec {
       WaveletBPMDetector.Daubechies4)
     sci.dwtbpm(dwtbpm)
     sci.startCapture
+    Thread.sleep(500)
     val result = dwtbpm.popData()
     assert(result != null)
   }
