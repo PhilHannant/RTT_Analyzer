@@ -8,11 +8,11 @@ import realTimeSoundCapture.SoundCapture
 
 class SoundCaptureImpl() {
 
-  private var dwtbpm: WaveletBPMDetector = _
-  def dwtbpm (value: WaveletBPMDetector):Unit = dwtbpm = value
+  private var audioProcessor: LiveAudioProcessor = _
+  def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
 
 
-  val sampleSize = 1024
+  val sampleSize = 4096
   val sampleRate: Float = 44100
   val bitsPerSample: Int = 16
   val channels: Int = 2
@@ -27,7 +27,7 @@ class SoundCaptureImpl() {
   private var bytesRead: Int = 0
   private var streamedBytes: Int = 0
   private var data: Array[Byte] = null
-  private val recordLength: Long = 500
+  private val recordLength: Long = 5000
   private var status: Boolean = false
 
   def startCapture: Int = {
@@ -48,7 +48,7 @@ class SoundCaptureImpl() {
           streamedBytes = input.read(data, 0, sampleSize)
           bytesRead += streamedBytes
           outputStream.write(data, 0, streamedBytes)
-          dwtbpm.addData(outputStream.toByteArray)
+          audioProcessor.addData(outputStream.toByteArray)
         }
       }
       return bytesRead
