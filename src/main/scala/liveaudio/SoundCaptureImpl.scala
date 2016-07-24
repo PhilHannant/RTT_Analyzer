@@ -27,7 +27,7 @@ class SoundCaptureImpl() {
   private var bytesRead: Int = 0
   private var streamedBytes: Int = 0
   private var data: Array[Byte] = null
-  private val recordLength: Long = 5000
+  private val recordLength: Long = 2500
   private var status: Boolean = false
 
   def startCapture: Int = {

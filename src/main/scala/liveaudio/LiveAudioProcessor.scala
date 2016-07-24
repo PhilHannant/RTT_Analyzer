@@ -41,12 +41,10 @@ class LiveAudioProcessor() {
   }
 
   def readFrames(sampleBuffer: Array[Int], numberOfFrames: Int): Int = {
-    println("readframes1")
-    return readFrames(sampleBuffer, 0, numberOfFrames)
+    readFrames(sampleBuffer, 0, numberOfFrames)
   }
 
   def readFrames(sampleBuffer: Array[Int], offset: Int, numberOfFrames: Int): Int = {
-    println("framecountter at start" + frameCounter)
     var pointer = offset
 
     for(i <- 0 until numberOfFrames){
@@ -67,9 +65,7 @@ class LiveAudioProcessor() {
         case _ => acc
       }
     }
-    println("pointer end " + pointer)
-    println("framecountter at end" + frameCounter)
-    return numberOfFrames
+    numberOfFrames
   }
 
   def addData(data: Array[Byte]) = {
@@ -77,8 +73,7 @@ class LiveAudioProcessor() {
   }
 
   def popData(): Array[Byte] = {
-    println(dataBuffer.size)
-    println(dataBuffer.nonEmpty)
+    if(dataBuffer.isEmpty) return null
     dataBuffer.dequeue()
   }
 }
