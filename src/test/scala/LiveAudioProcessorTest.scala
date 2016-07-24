@@ -69,6 +69,7 @@ class WaveletBPMDetectorTest extends FlatSpec {
     val audioProcessor = new LiveAudioProcessor
     sci.audioProcessor(audioProcessor)
     sci.startCapture
+    Thread.sleep(31000)
     val windowsProcessed = sci.getWindowsProcessed()
     assert(windowsProcessed > 10)
   }
