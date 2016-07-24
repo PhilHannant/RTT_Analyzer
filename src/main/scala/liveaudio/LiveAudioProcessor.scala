@@ -17,14 +17,36 @@ class LiveAudioProcessor() {
   val dataBuffer: mutable.Queue[Array[Byte]] = new mutable.Queue[Array[Byte]]
 
   def readSample(): Long = {
+    //      var value : Long = 0L
+    //      for (b <- 0 until bytesPerSample) {
+    ////        if (bufferPointer == bytesRead) {
+    ////          val read : Int = iStream.read(buffer, 0, WavFile.BUFFER_SIZE)
+    ////          if (read == -1) throw new WavFile.WavFileException("Not enough data available");
+    ////          bytesRead = read;
+    ////          println(read)
+    ////          bufferPointer = 0;
+    ////        }
+    //
+    //        var byteValue : Int = data(bufferPointer);
+    //        if (b < bytesPerSample - 1 || bytesPerSample == 1)
+    //          byteValue = byteValue & 0xFF;
+    //        //println("b " + (b * 8))
+    //        value = value + (byteValue << (b * 8));
+    //        bufferPointer = bufferPointer + 1;
+    //      }
+    //      return value;
+
     def sampleReader(value: Long, acc: Int): Long = {
+
+
       acc match {
         case x if x < bytesPerSample => {
-          if(bytesRead == bufferPointer) {
-            data = popData()
-            bytesRead = data.length
-            bufferPointer = 0
-          }
+//          if(bytesRead == 131072) {
+//            println("popping")
+//            data = popData()
+//            bytesRead = data.length
+//            bufferPointer = 0
+//          }
           var v: Int = data(bufferPointer);
           if (acc < bytesPerSample - 1 || bytesPerSample == 1) v = v & 0xFF
             val valueNew = value + (v << (acc * 8))
@@ -41,6 +63,10 @@ class LiveAudioProcessor() {
   }
 
   def readFrames(sampleBuffer: Array[Int], numberOfFrames: Int): Int = {
+    println("popping")
+    data = popData()
+    println(data.length)
+    println(numberOfFrames)
     readFrames(sampleBuffer, 0, numberOfFrames)
   }
 
@@ -48,7 +74,7 @@ class LiveAudioProcessor() {
     var pointer = offset
 
     for(i <- 0 until numberOfFrames){
-      if (dataBuffer.isEmpty) return i
+      //if (dataBuffer.isEmpty) return i
 
       getSample(0)
       frameCounter = frameCounter + 1
@@ -65,12 +91,14 @@ class LiveAudioProcessor() {
         case _ => acc
       }
     }
+    println(bufferPointer)
     numberOfFrames
   }
 
   def addData(data: Array[Byte]) = {
     dataBuffer += data
   }
+
 
   def popData(): Array[Byte] = {
     if(dataBuffer.isEmpty) return null
