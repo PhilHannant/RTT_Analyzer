@@ -137,7 +137,6 @@ class WaveletBPMDetector private (
     * @param an array of <code>windowFrames</code> samples representing the window
     **/
   private def computeWindowBpm(data : Array[Double]) {
-    println(data.length)
     var aC : Array[Double] = null
     var dC : Array[Double] = null
     var dCSum : Array[Double] = null
@@ -197,25 +196,24 @@ class WaveletBPMDetector private (
     // Compute window BPM given the peak
     val realLocation = minIndex + location
     val windowBpm : Double = 60.toDouble / realLocation * (liveAudio.sampleRate.toDouble/maxDecimation)
-    println("windowBpm " + windowBpm)
     instantBpm += windowBpm;
   }
 
   override def bpm() : Double = {
     var count = 0
     if (_bpm == -1) {
-      for (currentWindow <- 0 until windowsToProcess) {
+      while(audioProcessor.popData() != null) {
         val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
         val framesRead = audioProcessor.readFrames(buffer, windowFrames)
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
-        count = count + 1
-        println(count)
         computeWindowBpm(leftChannelSamples)
       }
+      println("out of loop")
       _bpm = instantBpm.toArray.median
     }
-    return _bpm
+    println("at return" + _bpm)
+    _bpm
   }
 
 
