@@ -48,19 +48,29 @@ class SoundCaptureImplTest extends FlatSpec {
 
 class WaveletBPMDetectorTest extends FlatSpec {
 
+//  New test required as Future to be used to process bpm
+//  "A WaveletBPMDectector" should "return an integer (bpm)" in {
+//    val sci = new SoundCaptureImpl()
+//    val audioProcessor = new LiveAudioProcessor
+//    val dwtbpm = WaveletBPMDetector(
+//      sci,
+//      audioProcessor,
+//      131072,
+//      WaveletBPMDetector.Daubechies4)
+//    sci.audioProcessor(audioProcessor)
+//    sci.startCapture
+//    val bpm = dwtbpm.bpm()
+//    println("bpm returned = " + bpm)
+//    assert(bpm > 60)
+//  }
+
   "A WaveletBPMDectector" should "return an integer (bpm)" in {
     val sci = new SoundCaptureImpl()
     val audioProcessor = new LiveAudioProcessor
-    val dwtbpm = WaveletBPMDetector(
-      sci,
-      audioProcessor,
-      131072,
-      WaveletBPMDetector.Daubechies4)
     sci.audioProcessor(audioProcessor)
     sci.startCapture
-    val bpm = dwtbpm.bpm()
-    println("bpm returned = " + bpm)
-    assert(bpm > 60)
+    val windowsProcessed = sci.getWindowsProcessed()
+    assert(windowsProcessed > 10)
   }
 
 }
