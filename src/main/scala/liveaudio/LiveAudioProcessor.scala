@@ -14,6 +14,7 @@ class LiveAudioProcessor() {
   val numberOfChannels: Int = 2
   var frameCounter = 0
   var data: Array[Byte] = _
+  var buffer: Array[Byte] = _
   val dataBuffer: mutable.Queue[Array[Byte]] = new mutable.Queue[Array[Byte]]
 
   def readSample(): Long = {
@@ -47,7 +48,7 @@ class LiveAudioProcessor() {
 //            bytesRead = data.length
 //            bufferPointer = 0
 //          }
-          var v: Int = data(bufferPointer);
+          var v: Int = buffer(bufferPointer);
           if (acc < bytesPerSample - 1 || bytesPerSample == 1) v = v & 0xFF
             val valueNew = value + (v << (acc * 8))
             bufferPointer = bufferPointer + 1
@@ -63,10 +64,11 @@ class LiveAudioProcessor() {
   }
 
   def readFrames(sampleBuffer: Array[Int], numberOfFrames: Int): Int = {
-    println("popping")
-    data = popData()
-    println(data.length)
-    println(numberOfFrames)
+//    println("popping")
+//    data = popData()
+//    println(data.length)
+//    println(numberOfFrames)
+    println(buffer(34))
     readFrames(sampleBuffer, 0, numberOfFrames)
   }
 
@@ -96,7 +98,8 @@ class LiveAudioProcessor() {
   }
 
   def addData(data: Array[Byte]) = {
-    dataBuffer += data
+    buffer = data
+    //dataBuffer += data
   }
 
 

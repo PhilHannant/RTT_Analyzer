@@ -76,12 +76,13 @@ import scala.collection.mutable
   * Class constructor is private, use the companion
   * object instead.
   **/
-class WaveletBPMDetector private (
-                                   private val liveAudio: SoundCaptureImpl,
-                                   private val audioProcessor: LiveAudioProcessor,
-                                   private val windowFrames : Int,
-                                   private val waveletType : WaveletBPMDetector.Wavelet,
-                                   private val windowsToProcess : Int) extends BPMDetector {
+class WaveletBPMDetector (
+                                   val liveAudio: SoundCaptureImpl,
+                                   val audioProcessor: LiveAudioProcessor,
+                                   val windowFrames : Int,
+                                   val waveletType : WaveletBPMDetector.Wavelet
+                                   ) extends BPMDetector {
+//  val windowsToProcess : Int
 
   val wavelet = waveletType match {
     case WaveletBPMDetector.Haar => new Haar1()
@@ -195,9 +196,6 @@ class WaveletBPMDetector private (
 
     // Compute window BPM given the peak
     val realLocation = minIndex + location
-    println("minindex " + minIndex)
-    println("location " + location)
-    println(liveAudio.sampleRate.toDouble/maxDecimation)
     val windowBpm : Double = 60.toDouble / realLocation * (liveAudio.sampleRate.toDouble/maxDecimation)
     println("windownbpm " + windowBpm)
     instantBpm += windowBpm
@@ -274,7 +272,7 @@ object WaveletBPMDetector {
     }
 
 
-    return new WaveletBPMDetector(liveAudio, audioProcessor, windowFrames, waveletType, windowsNumber)
+    return new WaveletBPMDetector(liveAudio, audioProcessor, windowFrames, waveletType )//windowsNumber
   }
 
 }

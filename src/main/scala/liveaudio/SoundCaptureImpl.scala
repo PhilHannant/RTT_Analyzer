@@ -6,13 +6,16 @@ import javax.sound.sampled._
 import dwtbpm.WaveletBPMDetector
 import realTimeSoundCapture.SoundCapture
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class SoundCaptureImpl() {
 
   private var audioProcessor: LiveAudioProcessor = _
   def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
 
-
-  val sampleSize = 4096
+  var windowsProcessed: Int = 0
+  val sampleSize = 524288
   val sampleRate: Float = 44100
   val bitsPerSample: Int = 16
   val channels: Int = 2
@@ -27,7 +30,7 @@ class SoundCaptureImpl() {
   private var bytesRead: Int = 0
   private var streamedBytes: Int = 0
   private var data: Array[Byte] = null
-  private val recordLength: Long = 2500
+  private val recordLength: Long = 30000
   private var status: Boolean = false
 
   def startCapture: Int = {
@@ -37,22 +40,30 @@ class SoundCaptureImpl() {
       input = AudioSystem.getLine(info).asInstanceOf[TargetDataLine]
       input.open(format)
       outputStream = new ByteArrayOutputStream
-      data = new Array[Byte](input.getBufferSize)
+
       input.start
       val currentTime: Long = System.currentTimeMillis
       val finishTime: Long = currentTime + recordLength
       bytesRead = 0
       status = true
-      while (System.currentTimeMillis < finishTime) {
-        {
-          streamedBytes = input.read(data, 0, sampleSize)
-          bytesRead += streamedBytes
-          outputStream.write(data, 0, streamedBytes)
-          audioProcessor.addData(outputStream.toByteArray)
+      while (System.currentTimeMillis() < finishTime) {
+        data = new Array[Byte](sampleSize)
+        while (bytesRead < 524288) {
+
+            streamedBytes = input.read(data, 0, sampleSize)
+            bytesRead += streamedBytes
+            outputStream.write(data, 0, streamedBytes)
+            println(data(34))
+          }
+          val f = Future {
+            run(outputStream.toByteArray)
+          }
+          bytesRead = 0
         }
+
+        return bytesRead
       }
-      return bytesRead
-    }
+
     catch {
       case ex: LineUnavailableException => {
         ex.printStackTrace
@@ -61,8 +72,21 @@ class SoundCaptureImpl() {
     return 0
   }
 
+  def run(toProcess: Array[Byte]) = {
+    windowsProcessed = windowsProcessed + 1
+    println(windowsProcessed)
+    val ap = new LiveAudioProcessor
+    ap.addData(toProcess)
+    val dwtbpm = new WaveletBPMDetector(
+      this,
+      ap,
+      131072,
+      WaveletBPMDetector.Daubechies4).bpm()
+  }
 
-
+  def getWindowsProcessed() ={
+    windowsProcessed
+  }
 }
 
 
