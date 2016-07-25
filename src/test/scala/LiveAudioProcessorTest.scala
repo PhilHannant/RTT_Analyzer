@@ -32,7 +32,6 @@ class SoundCaptureImplTest extends FlatSpec {
     val sci = new SoundCaptureImpl()
     val audioProcessor = new LiveAudioProcessor
     val dwtbpm = WaveletBPMDetector(
-      sci,
       audioProcessor,
       131072,
       WaveletBPMDetector.Daubechies4)

@@ -77,12 +77,14 @@ import scala.collection.mutable
   * object instead.
   **/
 class WaveletBPMDetector (
-                                   val liveAudio: SoundCaptureImpl,
+                                   //val liveAudio: SoundCaptureImpl,
                                    val audioProcessor: LiveAudioProcessor,
                                    val windowFrames : Int,
                                    val waveletType : WaveletBPMDetector.Wavelet
                                    ) extends BPMDetector {
 //  val windowsToProcess : Int
+  val sampleRate = 44100
+  val channels = 2
 
   val wavelet = waveletType match {
     case WaveletBPMDetector.Haar => new Haar1()
@@ -144,8 +146,8 @@ class WaveletBPMDetector (
     var dCMinLength : Int = 0
     val levels = 4
     val maxDecimation = pow(2, levels-1)
-    val minIndex : Int = (60.toDouble / 220 *  liveAudio.sampleRate.toDouble/maxDecimation).toInt
-    val maxIndex : Int = (60.toDouble / 40 * liveAudio.sampleRate.toDouble/maxDecimation).toInt
+    val minIndex : Int = (60.toDouble / 220 *  sampleRate.toDouble/maxDecimation).toInt
+    val maxIndex : Int = (60.toDouble / 40 * sampleRate.toDouble/maxDecimation).toInt
 
     // 4 Level DWT
     for (loop <- 0 until levels) {
@@ -196,7 +198,7 @@ class WaveletBPMDetector (
 
     // Compute window BPM given the peak
     val realLocation = minIndex + location
-    val windowBpm : Double = 60.toDouble / realLocation * (liveAudio.sampleRate.toDouble/maxDecimation)
+    val windowBpm : Double = 60.toDouble / realLocation * (sampleRate.toDouble/maxDecimation)
     println("windownbpm " + windowBpm)
     instantBpm += windowBpm
   }
@@ -205,7 +207,7 @@ class WaveletBPMDetector (
     var count = 0
     if (_bpm == -1) {
 //      for (currentWindow <- 0 until windowsToProcess) {
-        val buffer : Array[Int]  = new Array[Int](windowFrames * liveAudio.channels)
+        val buffer : Array[Int]  = new Array[Int](windowFrames * channels)
         val framesRead = audioProcessor.readFrames(buffer, windowFrames)
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
@@ -256,7 +258,6 @@ object WaveletBPMDetector {
     * @throws WindowSizeException
     **/
   def apply(
-             liveAudio : SoundCaptureImpl,
              audioProcessor: LiveAudioProcessor,
              windowFrames : Int,
              waveletType : Wavelet = Daubechies4,
@@ -272,7 +273,7 @@ object WaveletBPMDetector {
     }
 
 
-    return new WaveletBPMDetector(liveAudio, audioProcessor, windowFrames, waveletType )//windowsNumber
+    return new WaveletBPMDetector(audioProcessor, windowFrames, waveletType )//windowsNumber
   }
 
 }
@@ -282,7 +283,6 @@ object test extends App {
   val liveAudio = new SoundCaptureImpl
   val audioProcessor = new LiveAudioProcessor
   val tempo = WaveletBPMDetector(
-    liveAudio,
     audioProcessor,
     131072,
     WaveletBPMDetector.Daubechies4).bpm()

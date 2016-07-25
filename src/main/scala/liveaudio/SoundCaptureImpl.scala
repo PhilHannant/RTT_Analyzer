@@ -42,23 +42,28 @@ class SoundCaptureImpl() {
       outputStream = new ByteArrayOutputStream
 
       input.start
-      val currentTime: Long = System.currentTimeMillis
+      val currentTime: Long = System.currentTimeMillis()
       val finishTime: Long = currentTime + recordLength
       bytesRead = 0
       status = true
       while (System.currentTimeMillis() < finishTime) {
         data = new Array[Byte](sampleSize)
+        outputStream = new ByteArrayOutputStream
         while (bytesRead < 524288) {
 
             streamedBytes = input.read(data, 0, sampleSize)
             bytesRead += streamedBytes
             outputStream.write(data, 0, streamedBytes)
-            println(data(34))
+
+            println(outputStream.size())
           }
-          val f = Future {
-            run(outputStream.toByteArray)
+          data = outputStream.toByteArray
+          var f = Future {
+            run(data)
           }
           bytesRead = 0
+          outputStream.close()
+
         }
 
         return bytesRead
@@ -78,10 +83,12 @@ class SoundCaptureImpl() {
     val ap = new LiveAudioProcessor
     ap.addData(toProcess)
     val dwtbpm = new WaveletBPMDetector(
-      this,
       ap,
       131072,
-      WaveletBPMDetector.Daubechies4).bpm()
+      WaveletBPMDetector.Daubechies4)
+    println(dwtbpm)
+    println(ap)
+    dwtbpm.bpm()
   }
 
   def getWindowsProcessed() ={
