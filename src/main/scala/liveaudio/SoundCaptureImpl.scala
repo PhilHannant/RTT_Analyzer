@@ -86,8 +86,6 @@ class SoundCaptureImpl() {
       ap,
       131072,
       WaveletBPMDetector.Daubechies4)
-    println(dwtbpm)
-    println(ap)
     dwtbpm.bpm()
   }
 

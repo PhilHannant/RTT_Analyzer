@@ -68,7 +68,6 @@ class LiveAudioProcessor() {
 //    data = popData()
 //    println(data.length)
 //    println(numberOfFrames)
-    println(buffer(34))
     readFrames(sampleBuffer, 0, numberOfFrames)
   }
 
@@ -93,7 +92,6 @@ class LiveAudioProcessor() {
         case _ => acc
       }
     }
-    println(bufferPointer)
     numberOfFrames
   }
 
