@@ -51,6 +51,7 @@ class SoundCaptureImpl() {
         outputStream = new ByteArrayOutputStream
         while (bytesRead < 524288) {
 
+
             streamedBytes = input.read(data, 0, sampleSize)
             bytesRead += streamedBytes
             outputStream.write(data, 0, streamedBytes)
@@ -92,7 +93,14 @@ class SoundCaptureImpl() {
   def getWindowsProcessed() ={
     windowsProcessed
   }
+
+  def getWormInstance(): Boolean = {
+
+  }
+
 }
+
+
 
 
 object SoundCaptureImpl{
