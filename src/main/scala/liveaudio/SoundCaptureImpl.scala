@@ -21,17 +21,17 @@ class SoundCaptureImpl() {
   val channels: Int = 2
   val signed: Boolean = true
   val bigEndian: Boolean = true
-  private var format: AudioFormat = new AudioFormat(sampleRate, bitsPerSample, channels, signed, bigEndian)
-  private var input: TargetDataLine = null
-  private val inputStream: AudioInputStream = null
-  private val sourceDataLine: SourceDataLine = null
-  private val dataLine: DataLine = null
-  private var outputStream: ByteArrayOutputStream = null
-  private var bytesRead: Int = 0
-  private var streamedBytes: Int = 0
-  private var data: Array[Byte] = null
-  private val recordLength: Long = 30000
-  private var status: Boolean = false
+  val format: AudioFormat = new AudioFormat(sampleRate, bitsPerSample, channels, signed, bigEndian)
+  var input: TargetDataLine = null
+  val inputStream: AudioInputStream = null
+  val sourceDataLine: SourceDataLine = null
+  val dataLine: DataLine = null
+  var outputStream: ByteArrayOutputStream = null
+  var bytesRead: Int = 0
+  var streamedBytes: Int = 0
+  var data: Array[Byte] = null
+  val recordLength: Long = 30000
+  var status: Boolean = false
 
   def startCapture: Int = {
     try {
@@ -41,7 +41,7 @@ class SoundCaptureImpl() {
       input.open(format)
       outputStream = new ByteArrayOutputStream
 
-      input.start
+      input.start()
       val currentTime: Long = System.currentTimeMillis()
       val finishTime: Long = currentTime + recordLength
       bytesRead = 0
@@ -95,7 +95,7 @@ class SoundCaptureImpl() {
   }
 
   def getWormInstance(): Boolean = {
-
+    false
   }
 
 }
