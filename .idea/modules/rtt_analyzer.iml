@@ -33,5 +33,6 @@
     <orderEntry type="library" name="de.sciss:jwave:1.0.3" level="project" />
     <orderEntry type="library" name="org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="com.typesafe.akka:akka-actor_2.11:2.4.8" level="project" />
   </component>
 </module>
