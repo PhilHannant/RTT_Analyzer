@@ -6,11 +6,14 @@ import javax.sound.sampled._
 import at.ofai.music.worm.{AudioWorm, Worm}
 import dwtbpm.WaveletBPMDetector
 import realTimeSoundCapture.SoundCapture
+import scala.collection.mutable.Queue
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class SoundCaptureImpl() {
+
+  val dataBuffer = new Queue[Array[Byte]]
 
   private var audioProcessor: LiveAudioProcessor = _
   def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
@@ -51,10 +54,9 @@ class SoundCaptureImpl() {
       bytesRead = 0
       status = true
       while (System.currentTimeMillis() < finishTime) {
-        Thread.sleep(1000)
         data = new Array[Byte](wormChunk)
         outputStream = new ByteArrayOutputStream
-        while (bytesRead < 1764) {
+        while (bytesRead < 17640) {
 
 
             streamedBytes = input.read(data, 0, wormChunk)
@@ -63,9 +65,10 @@ class SoundCaptureImpl() {
             outputStream.write(data, 0, streamedBytes)
 
             data = outputStream.toByteArray
-            Thread.sleep(100)
+            dataBuffer += data
+
             var f = Future {
-              runWorm(data)
+              runWorm(dataBuffer)
             }
 
           }
@@ -109,12 +112,9 @@ class SoundCaptureImpl() {
     wormRun
 }
 
-  def runWorm(bytes: Array[Byte]) = {
+  def runWorm(bytes: Queue[Array[Byte]]) = {
     wormRun = true
-    for(a <- 0 until data.length)
-      println(data(a))
-    Thread.sleep(500)
-    aw.nextBlock(data, wormChunk)
+    aw.nextBlock(bytes, wormChunk)
   }
 }
 

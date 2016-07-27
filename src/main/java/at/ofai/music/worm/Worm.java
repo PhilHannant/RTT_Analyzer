@@ -42,6 +42,7 @@ import javax.swing.WindowConstants;
 
 import at.ofai.music.util.FrameMargins;
 import at.ofai.music.util.Format;
+import scala.collection.mutable.Queue;
 
 public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	static final long serialVersionUID = 0;
@@ -288,7 +289,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 		playButton.repaint();
 		if (state == STOP) {
 			clear();
-			audio = new AudioWorm(this);
+			audio = new AudioWorm();
 		}
 		state = PLAY;
 		audio.start();
@@ -305,7 +306,8 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 				}
 				Thread.sleep(200);	// wait 0.2s
 				try {
-					while ((state == PLAY) && audio.nextBlock())
+                    Queue<byte[]> data = null;
+					while ((state == PLAY) && audio.nextBlock(data, 0))
 						;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					e.printStackTrace();
