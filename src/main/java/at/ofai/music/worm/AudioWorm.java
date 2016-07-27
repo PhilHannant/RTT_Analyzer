@@ -20,6 +20,8 @@
 
 package at.ofai.music.worm;
 
+import akka.actor.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,8 +38,8 @@ import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import java.net.URL;
-import at.ofai.music.util.Format;
-import at.ofai.music.util.EventList;
+
+import liveaudio.SoundCaptureImpl;
 
 /** AudioWorm is the class that does the hard work.
   * The constructor initialises the audio objects which process the data.
@@ -81,40 +83,43 @@ public class AudioWorm {
 	long bytePosition;	// Number of bytes that have been read from input file
 	long jumpPosition;	// Requested new bytePosition (or -1 for none)
 	long fileLength;	// Length of input file in bytes
+	int count = 0;
+    SoundCaptureImpl sc;
 	
-	public AudioWorm(Worm w) {
-		gui = w;
+	public AudioWorm(Worm worm) {
+
+//		gui = w;
 		jumpPosition = -1;
 		targetDataLine = null;
 		// Input from audio file, with optional matchFile data
-		String matchFile = w.getMatchFile();
-		if ((matchFile != null) && !matchFile.equals("")) {
-			try {
-				EventList.setTimingCorrection(w.getTimingOffset());
-				wormData = new WormFile(w, EventList.readMatchFile(matchFile));
-				if (Math.abs(windowTime * averageCount -
-								wormData.outFramePeriod) > 1e-5)
-					throw new Exception("Incompatible parameters in AudioWorm");
-				wormData.smooth(Worm.FULL_GAUSS, 1, 1, 0);
-			} catch (Exception e) {
-				e.printStackTrace();
-				wormData = null;
-			}
-		} else {
-			wormData = w.getWormFile();
-		}
+//		String matchFile = w.getMatchFile();
+//		if ((matchFile != null) && !matchFile.equals("")) {
+//			try {
+//				EventList.setTimingCorrection(w.getTimingOffset());
+//				wormData = new WormFile(w, EventList.readMatchFile(matchFile));
+//				if (Math.abs(windowTime * averageCount -
+//								wormData.outFramePeriod) > 1e-5)
+//					throw new Exception("Incompatible parameters in AudioWorm");
+//				wormData.smooth(Worm.FULL_GAUSS, 1, 1, 0);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				wormData = null;
+//			}
+//		} else {
+//			wormData = w.getWormFile();
+//		}
 		ti = new TempoInducer(windowTime);
 		audioFile = null;
 		audioURL = null;
-		audioFileName = w.getInputFile();
-		audioFilePath = w.getInputPath();
+//		audioFileName = w.getInputFile();
+//		audioFilePath = w.getInputPath();
 		if (audioFileName == null)
 			audioFileName = "";
 		if (audioFilePath == null)
 			audioFilePath = "";
 		isFileInput = (!audioFileName.equals(""));
 		if (!isFileInput) {
-			initSoundCardInput(w);
+			initSoundCardInput();
 			return;
 		}
 		if (audioFileName.startsWith("http:"))
@@ -133,7 +138,7 @@ public class AudioWorm {
 				audioFile = new File("//fichte" + audioFilePath +audioFileName);
 		}
 		resetAudioFile();
-		init(gui);
+//		init(gui);
 		if ((wormData != null) && (wormData.time[0] > 0.5))
 			skipTo(wormData.time[0] - 0.5);
 	} // AudioWorm constructor
@@ -185,7 +190,7 @@ public class AudioWorm {
 	} // resetAudioFile()
 
 	// Live input from microphone, line in, etc (selected by external mixer)
-	protected void initSoundCardInput(Worm w) {
+	protected void initSoundCardInput() {
 		//System.out.println("Entering initSoundCardInput()");
 		if (in != null) {
 			try {
@@ -231,6 +236,8 @@ public class AudioWorm {
 								targetDataLine =
 									(TargetDataLine)AudioSystem.getLine(info);
 								System.out.println("Opening line ... ");
+								System.out.println("framerate " + inputFormat.getFrameRate());
+								System.out.println("framesize " + inputFormat.getFrameSize());
 								targetDataLine.open(inputFormat); // , 16384);
 								// buffer size request ignored
 								//   default size: bach 65536; kiefer 16384
@@ -238,7 +245,7 @@ public class AudioWorm {
 								// 	targetDataLine.getBufferSize());
 								System.out.println("Creating AudioInputStream");
 								in = new AudioInputStream(targetDataLine);
-								init(w);
+								init();
 								return;
 							}
 						} catch (Exception e) {
@@ -256,12 +263,12 @@ public class AudioWorm {
 	/** Normal initialisation of AudioWorm for reading from a PCM file
 		or for reading compressed data which is uncompressed by AudioSystem.
 	 **/
-	protected void init(Worm w) {
+	protected void init() {
 		if (out != null)
 			out.close();
-		gui = w;
-		gui.setDelay(isFileInput? fileDelay / averageCount: 0);
-		gui.setFramePeriod(averageCount * windowTime);
+//		gui = w;
+//		gui.setDelay(isFileInput? fileDelay / averageCount: 0);
+//		gui.setFramePeriod(averageCount * windowTime);
 		try {
 			if (inputFormat.getEncoding() != AudioFormat.Encoding.PCM_SIGNED)
 				throw new UnsupportedAudioFileException("Not PCM_SIGNED but " + 
@@ -324,7 +331,7 @@ public class AudioWorm {
 	public void start() { 
 		System.out.println("Start called");//DEBUG
 		if (isFileInput) {
-			gui.setDelay(fileDelay / averageCount);
+//			gui.setDelay(fileDelay / averageCount);
 			out.start();
 		} else {
 			System.out.println("Flushing targetDataLine");//DEBUG
@@ -357,8 +364,7 @@ public class AudioWorm {
 		//System.out.println("Stop completed");//DEBUG
 	} // stop()
 
-	public boolean nextBlock() throws IOException {
-        System.out.println("nextblock");
+	public boolean nextBlock(byte[] data) throws IOException {
 		double rms = 0, tempo = 0;
 		for (int i = 0; i < averageCount; i++) {	// 5 => 20 FPS
 			int waitCount = 1;//D
@@ -388,7 +394,7 @@ public class AudioWorm {
 			//  of bytes will be different after uncompression, but it is a
 			//  hack to get around the fact that in.available() returns 0.
 			if (avail >= inputBuffer.length) {
-				double tmp = processWindow();
+				double tmp = processWindow(data);
 				if (bytesRead < 0) {
 					System.err.println("nextBlock(): Audio read error");
 					return false;
@@ -420,8 +426,8 @@ public class AudioWorm {
 								Math.log(Math.sqrt(rms / averageCount)));
 		int index = (blockCount - 1) / averageCount;
 		if (wormData != null) {
-			gui.scrollBar.setValueNoFeedback( // don't want to call skipAudio()
-							(int)(1000 * bytePosition / fileLength));
+//			gui.scrollBar.setValueNoFeedback( // don't want to call skipAudio()
+//							(int)(1000 * bytePosition / fileLength));
 			if (index >= wormData.outTempo.length) {
 			//	System.err.println("DEBUG: end of wormfile");
 			//	System.err.println("DEBUG: " + blockCount +
@@ -429,14 +435,14 @@ public class AudioWorm {
 			//					   " " + wormData.outIntensity[index]);
 				return false;
 			}
-			gui.addPoint(wormData.outTempo[index], wormData.outIntensity[index],
-							wormData.label[index]);
+//			gui.addPoint(wormData.outTempo[index], wormData.outIntensity[index],
+//							wormData.label[index]);
 		} else {
-			gui.addPoint(60 / tempo, dB, Format.d((blockCount-1)*windowTime,1));
+//			gui.addPoint(60 / tempo, dB, Format.d((blockCount-1)*windowTime,1));
 			// System.out.println(Format.d(tempo,3) + " " + Format.d(dB, 3));
 		}
 		if (!isFileInput) {
-			gui.repaint();
+//			gui.repaint();
 			return true;
 		}
 		int space = out.available();
@@ -447,7 +453,7 @@ public class AudioWorm {
 		// 				" sec  Space left = " + space +
 		// 				" bytes  Size = " + outputBufferSize);
 		if (buffContents > 0.1) {				// shouldn't starve?
-			gui.repaint();
+//			gui.repaint();
 			try {					// Give it some time to paint.
 				Thread.sleep(75);
 			} catch (InterruptedException e) {}
@@ -463,11 +469,14 @@ public class AudioWorm {
 	 *   Assumes sufficient data is queued, or else blocks while it waits
 	 *   for the buffer to fill sufficiently.
 	 **/
-	protected double processWindow() throws IOException {
+	protected double processWindow(byte[] data) throws IOException {
 		if (jumpPosition >= 0)
 			skipAudio();
+        count++;
+		System.out.println("Window " + count);
 		bytesRead = in.read(inputBuffer);
 		bytePosition += bytesRead;
+		System.out.println("total bytes " + bytePosition);
 		// System.out.println("read(): " + bytePosition);//DEBUG
 		if (wormData != null)		// only need to play audio; no calculation
 			return 0;
@@ -476,20 +485,20 @@ public class AudioWorm {
 		if (sampleSizeInBytes == 1) {		// 8 bit samples
 			if (channels == 1) {
 				for (int i = 0; i < bytesRead; i += frameSize) {
-					sample = ((int)inputBuffer[i]);
+					sample = ((int)data[i]);
 					sum += (double)(sample * sample);
 				}
 			} else if (channels == 2) {
 				for (int i = 0; i < bytesRead; i += frameSize) {
-					sample = ((int)inputBuffer[i]) +
-							 ((int)inputBuffer[i+1]);
+					sample = ((int)data[i]) +
+							 ((int)data[i+1]);
 					sum += (double)(sample * sample);
 				}
 			} else {
 				for (int i = 0; i < bytesRead; ) {
 					sample = 0;
 					for (int c = 0; c < channels; c++, i++)
-						sample += ((int)inputBuffer[i]);
+						sample += ((int)data[i]);
 					sum += (double)(sample * sample);
 				}
 			}
@@ -497,24 +506,24 @@ public class AudioWorm {
 			if (inputFormat.isBigEndian()) {
 				if (channels == 1) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = ((int)inputBuffer[i] << 8) |
-								 ((int)inputBuffer[i+1] & 0xFF);
+						sample = ((int)data[i] << 8) |
+								 ((int)data[i+1] & 0xFF);
 						sum += (double)(sample * sample);
 					}
 				} else if (channels == 2) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = (((int)inputBuffer[i] << 8) |
-								 ((int)inputBuffer[i+1] & 0xFF)) +
-								 (((int)inputBuffer[i+2] << 8) |
-								 ((int)inputBuffer[i+3] & 0xFF));
+						sample = (((int)data[i] << 8) |
+								 ((int)data[i+1] & 0xFF)) +
+								 (((int)data[i+2] << 8) |
+								 ((int)data[i+3] & 0xFF));
 						sum += (double)(sample * sample);
 					}
 				} else {
 					for (int i = 0; i < bytesRead; ) {
 						sample = 0;
 						for (int c = 0; c < channels; c++) {
-							sample += ((int)inputBuffer[i] << 8) |
-									  ((int)inputBuffer[i+1] & 0xFF);
+							sample += ((int)data[i] << 8) |
+									  ((int)data[i+1] & 0xFF);
 							i += 2;
 						}
 						sum += (double)(sample * sample);
@@ -523,24 +532,24 @@ public class AudioWorm {
 			} else {	// little-endian
 				if (channels == 1) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = ((int)inputBuffer[i+1] << 8) |
-								 ((int)inputBuffer[i] & 0xFF);
+						sample = ((int)data[i+1] << 8) |
+								 ((int)data[i] & 0xFF);
 						sum += (double)(sample * sample);
 					}
 				} else if (channels == 2) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = (((int)inputBuffer[i+1] << 8) |
-								 ((int)inputBuffer[i] & 0xFF)) +
-								 (((int)inputBuffer[i+3] << 8) |
-								 ((int)inputBuffer[i+2] & 0xFF));
+						sample = (((int)data[i+1] << 8) |
+								 ((int)data[i] & 0xFF)) +
+								 (((int)data[i+3] << 8) |
+								 ((int)data[i+2] & 0xFF));
 						sum += (double)(sample * sample);
 					}
 				} else {
 					for (int i = 0; i < bytesRead; ) {
 						sample = 0;
 						for (int c = 0; c < channels; c++) {
-							sample += ((int)inputBuffer[i+1] << 8) |
-									  ((int)inputBuffer[i] & 0xFF);
+							sample += ((int)data[i+1] << 8) |
+									  ((int)data[i] & 0xFF);
 							i += 2;
 						}
 						sum += (double)(sample * sample);
@@ -552,15 +561,15 @@ public class AudioWorm {
 				long longSample = 0;
 				for (int c = 0; c < channels; c++) {
 					if (inputFormat.isBigEndian()) {
-						sample = (int)inputBuffer[i++];
+						sample = (int)data[i++];
 						for (int b = 1; b < sampleSizeInBytes; b++, i++)
-							sample = (sample<<8) | ((int)inputBuffer[i] & 0xFF);
+							sample = (sample<<8) | ((int)data[i] & 0xFF);
 					} else {
 						sample = 0;
 						int b;
 						for (b = 0; b < sampleSizeInBytes-1; b++, i++)
-							sample |= ((int)inputBuffer[i] & 0xFF) << (b * 8);
-						sample |= ((int)inputBuffer[i++]) << (b * 8);
+							sample |= ((int)data[i] & 0xFF) << (b * 8);
+						sample |= ((int)data[i++]) << (b * 8);
 					}
 					longSample += sample;
 				}
@@ -647,12 +656,12 @@ public class AudioWorm {
 			int start = Math.max(stop - WormConstants.wormLength, 0);
 			if (currentPoint < stop)
 				start = Math.max(start, currentPoint);
-			else
-				gui.clear();
-			for (int index = start; index < stop; index++)
-				gui.addPoint(wormData.outTempo[index],
-						wormData.outIntensity[index], wormData.label[index]);
-			gui.repaint();
+//			else
+//				gui.clear();
+//                for (int index = start; index < stop; index++)
+//				gui.addPoint(wormData.outTempo[index],
+//						wormData.outIntensity[index], wormData.label[index]);
+//			gui.repaint();
 		}
 		jumpPosition = -1;
 	} // skipAudio()
