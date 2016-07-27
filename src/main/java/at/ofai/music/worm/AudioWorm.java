@@ -86,7 +86,7 @@ public class AudioWorm {
 	int count = 0;
     SoundCaptureImpl sc;
 	
-	public AudioWorm(Worm worm) {
+	public AudioWorm() {
 
 //		gui = w;
 		jumpPosition = -1;
@@ -238,7 +238,7 @@ public class AudioWorm {
 								System.out.println("Opening line ... ");
 								System.out.println("framerate " + inputFormat.getFrameRate());
 								System.out.println("framesize " + inputFormat.getFrameSize());
-								targetDataLine.open(inputFormat); // , 16384);
+								//targetDataLine.open(inputFormat); // , 16384);
 								// buffer size request ignored
 								//   default size: bach 65536; kiefer 16384
 								// System.out.println("Buffer: " +
@@ -368,28 +368,28 @@ public class AudioWorm {
 		double rms = 0, tempo = 0;
 		for (int i = 0; i < averageCount; i++) {	// 5 => 20 FPS
 			int waitCount = 1;//D
-			while ((in.available() < inputBuffer.length) && !isFileInput) {
-				try {
-					int before = in.available();
-					//System.out.print("WAIT: "+(waitCount++)+" "+before);//DEBG
-					Thread.sleep((int)(1000.0 * windowTime));
-					int after = in.available();
-					//System.out.println(" " + after +
-					//					";   input line active/running: " +
-					//					targetDataLine.isActive() + "/" +
-					//					targetDataLine.isRunning());
-					if ((waitCount > 5) && (before == after)) {
-						// bytesRead = in.read(inputBuffer); // HANGS HERE
-					//	System.out.println("Read(): " + bytesRead +
-					//						" " + in.available());
-						break;
-					}
-					if ((waitCount > 3) && (!targetDataLine.isActive() ||
-											!targetDataLine.isRunning()))
-						return false;
-				} catch (InterruptedException e) {}
-			}
-			long avail = (isConverting? orig.available(): in.available());
+//			while ((in.available() < inputBuffer.length) && !isFileInput) {
+//				try {
+//					int before = in.available();
+//					//System.out.print("WAIT: "+(waitCount++)+" "+before);//DEBG
+//					Thread.sleep((int)(1000.0 * windowTime));
+//					int after = in.available();
+//					//System.out.println(" " + after +
+//					//					";   input line active/running: " +
+//					//					targetDataLine.isActive() + "/" +
+//					//					targetDataLine.isRunning());
+//					if ((waitCount > 5) && (before == after)) {
+//						// bytesRead = in.read(inputBuffer); // HANGS HERE
+//					//	System.out.println("Read(): " + bytesRead +
+//					//						" " + in.available());
+//						break;
+//					}
+//					if ((waitCount > 3) && (!targetDataLine.isActive() ||
+//											!targetDataLine.isRunning()))
+//						return false;
+//				} catch (InterruptedException e) {}
+//			}
+			long avail = 1764; //(isConverting? orig.available(): in.available());
 			// This isn't really correct for uncompressing, since the number
 			//  of bytes will be different after uncompression, but it is a
 			//  hack to get around the fact that in.available() returns 0.
@@ -474,7 +474,7 @@ public class AudioWorm {
 			skipAudio();
         count++;
 		System.out.println("Window " + count);
-		bytesRead = in.read(inputBuffer);
+		bytesRead = data.length; //in.read(inputBuffer);
 		bytePosition += bytesRead;
 		System.out.println("total bytes " + bytePosition);
 		// System.out.println("read(): " + bytePosition);//DEBUG
