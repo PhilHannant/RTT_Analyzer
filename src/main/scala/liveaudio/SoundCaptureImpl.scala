@@ -3,6 +3,7 @@ package liveaudio
 import java.io._
 import javax.sound.sampled._
 
+import at.ofai.music.worm.{AudioWorm, Worm}
 import dwtbpm.WaveletBPMDetector
 import realTimeSoundCapture.SoundCapture
 
@@ -14,7 +15,10 @@ class SoundCaptureImpl() {
   private var audioProcessor: LiveAudioProcessor = _
   def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
 
+  val aw: AudioWorm = new AudioWorm
   var windowsProcessed: Int = 0
+  val wormChunk = 1764
+  var wormRun = false
   val sampleSize = 524288
   val sampleRate: Float = 44100
   val bitsPerSample: Int = 16
@@ -30,7 +34,7 @@ class SoundCaptureImpl() {
   var bytesRead: Int = 0
   var streamedBytes: Int = 0
   var data: Array[Byte] = null
-  val recordLength: Long = 30000
+  val recordLength: Long = 5000
   var status: Boolean = false
 
   def startCapture: Int = {
@@ -47,21 +51,28 @@ class SoundCaptureImpl() {
       bytesRead = 0
       status = true
       while (System.currentTimeMillis() < finishTime) {
-        data = new Array[Byte](sampleSize)
+        Thread.sleep(1000)
+        data = new Array[Byte](wormChunk)
         outputStream = new ByteArrayOutputStream
-        while (bytesRead < 524288) {
+        while (bytesRead < 1764) {
 
 
-            streamedBytes = input.read(data, 0, sampleSize)
+            streamedBytes = input.read(data, 0, wormChunk)
             bytesRead += streamedBytes
+
             outputStream.write(data, 0, streamedBytes)
 
-            println(outputStream.size())
+            data = outputStream.toByteArray
+            Thread.sleep(100)
+            var f = Future {
+              runWorm(data)
+            }
+
           }
-          data = outputStream.toByteArray
-          var f = Future {
-            run(data)
-          }
+
+//          var f = Future {
+//            run(data)
+//          }
           bytesRead = 0
           outputStream.close()
 
@@ -95,9 +106,16 @@ class SoundCaptureImpl() {
   }
 
   def getWormInstance(): Boolean = {
-    false
-  }
+    wormRun
+}
 
+  def runWorm(bytes: Array[Byte]) = {
+    wormRun = true
+    for(a <- 0 until data.length)
+      println(data(a))
+    Thread.sleep(500)
+    aw.nextBlock(data, wormChunk)
+  }
 }
 
 
