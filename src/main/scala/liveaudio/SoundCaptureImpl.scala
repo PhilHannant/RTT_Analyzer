@@ -19,7 +19,6 @@ class SoundCaptureImpl() {
   private var audioProcessor: LiveAudioProcessor = _
   def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
 
-  val aw: AudioWorm = new AudioWorm
   var windowsProcessed: Int = 0
   val wormChunk = 1764
   var wormRun = false
@@ -94,6 +93,12 @@ class SoundCaptureImpl() {
     return 0
   }
 
+  def recieve(bytes: Array[Byte]) = {
+    var f = Future {
+      run(bytes)
+    }
+  }
+
   def run(toProcess: Array[Byte]) = {
     windowsProcessed = windowsProcessed + 1
     println(windowsProcessed)
@@ -103,7 +108,9 @@ class SoundCaptureImpl() {
       ap,
       131072,
       WaveletBPMDetector.Daubechies4)
-    dwtbpm.bpm()
+    val res = dwtbpm.bpm()
+    println(res)
+    System.exit(0)
   }
 
   def getWindowsProcessed() ={
@@ -116,7 +123,7 @@ class SoundCaptureImpl() {
 
   def runWorm(bytes: Array[Byte]) = {
     wormRun = true
-    aw.nextBlock(bytes, wormChunk)
+//    aw.nextBlock(bytes, wormChunk)
   }
 }
 
