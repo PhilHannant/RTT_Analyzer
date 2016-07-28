@@ -94,7 +94,7 @@ public class AudioWorm {
 	long jumpPosition;	// Requested new bytePosition (or -1 for none)
 	long fileLength;	// Length of input file in bytes
 	int count = 0;
-    SoundCaptureImpl sc;
+    SoundCaptureImpl sc = new SoundCaptureImpl();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
 	public AudioWorm(Worm w) {
@@ -686,6 +686,10 @@ public class AudioWorm {
         try{
             if(bytePosition >= 524288){
                 byte[] out = outputStream.toByteArray();
+                outputStream.close();
+                outputStream = new ByteArrayOutputStream();
+                bytePosition = 0;
+                sc.recieve(out);
 
             }
             outputStream.write(data);
