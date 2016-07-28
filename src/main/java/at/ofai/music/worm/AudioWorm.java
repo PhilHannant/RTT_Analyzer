@@ -22,6 +22,7 @@ package at.ofai.music.worm;
 
 import akka.actor.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +39,15 @@ import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import java.net.URL;
+import java.util.concurrent.Callable;
+
+import dwtbpm.WaveletBPMDetector;
+import liveaudio.LiveAudioProcessor;
+import scala.collection.mutable.Queue;
+import scala.concurrent.Future;
+import static akka.dispatch.Futures.future;
+import static dwtbpm.WaveletBPMDetector.*;
+
 
 import liveaudio.SoundCaptureImpl;
 
@@ -85,8 +95,9 @@ public class AudioWorm {
 	long fileLength;	// Length of input file in bytes
 	int count = 0;
     SoundCaptureImpl sc;
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
-	public AudioWorm() {
+	public AudioWorm(Worm w) {
 
 //		gui = w;
 		jumpPosition = -1;
@@ -238,7 +249,7 @@ public class AudioWorm {
 								System.out.println("Opening line ... ");
 								System.out.println("framerate " + inputFormat.getFrameRate());
 								System.out.println("framesize " + inputFormat.getFrameSize());
-								//targetDataLine.open(inputFormat); // , 16384);
+								targetDataLine.open(inputFormat); // , 16384);
 								// buffer size request ignored
 								//   default size: bach 65536; kiefer 16384
 								// System.out.println("Buffer: " +
@@ -364,7 +375,8 @@ public class AudioWorm {
 		//System.out.println("Stop completed");//DEBUG
 	} // stop()
 
-	public boolean nextBlock(byte[] data) throws IOException {
+	public synchronized boolean nextBlock() throws IOException {
+
 		double rms = 0, tempo = 0;
 		for (int i = 0; i < averageCount; i++) {	// 5 => 20 FPS
 			int waitCount = 1;//D
@@ -394,7 +406,8 @@ public class AudioWorm {
 			//  of bytes will be different after uncompression, but it is a
 			//  hack to get around the fact that in.available() returns 0.
 			if (avail >= inputBuffer.length) {
-				double tmp = processWindow(data);
+//                byte[] data = queue.dequeue();
+				double tmp = processWindow();
 				if (bytesRead < 0) {
 					System.err.println("nextBlock(): Audio read error");
 					return false;
@@ -402,7 +415,9 @@ public class AudioWorm {
 				rms += tmp * tmp;
 				if (wormData == null)
 					tempo = ti.getTempo(tmp); // rms amp or dB?
-				// tempo = ti.getTempo(120 + 20 / Math.log(10) * Math.log(tmp));
+				System.out.println(i + ", " + inputBuffer[0] + ", " + inputBuffer[1] + ", " + inputBuffer[2] + ", " + inputBuffer[3]);
+				    //tempo = ti.getTempo(120 + 20 / Math.log(10) * Math.log(tmp));
+                    System.out.println("Second tempo " + tempo);
 				if (isFileInput) {
 					if (ti.onset)	// mark detected onsets with a click
 						for (int j = 0; j < 882; ) {
@@ -469,13 +484,14 @@ public class AudioWorm {
 	 *   Assumes sufficient data is queued, or else blocks while it waits
 	 *   for the buffer to fill sufficiently.
 	 **/
-	protected double processWindow(byte[] data) throws IOException {
+	protected double processWindow() throws IOException {
 		if (jumpPosition >= 0)
 			skipAudio();
         count++;
 		System.out.println("Window " + count);
-		bytesRead = data.length; //in.read(inputBuffer);
+		bytesRead = in.read(inputBuffer);
 		bytePosition += bytesRead;
+        addBytes(inputBuffer);
 		System.out.println("total bytes " + bytePosition);
 		// System.out.println("read(): " + bytePosition);//DEBUG
 		if (wormData != null)		// only need to play audio; no calculation
@@ -485,20 +501,20 @@ public class AudioWorm {
 		if (sampleSizeInBytes == 1) {		// 8 bit samples
 			if (channels == 1) {
 				for (int i = 0; i < bytesRead; i += frameSize) {
-					sample = ((int)data[i]);
+					sample = ((int)inputBuffer[i]);
 					sum += (double)(sample * sample);
 				}
 			} else if (channels == 2) {
 				for (int i = 0; i < bytesRead; i += frameSize) {
-					sample = ((int)data[i]) +
-							 ((int)data[i+1]);
+					sample = ((int)inputBuffer[i]) +
+							 ((int)inputBuffer[i+1]);
 					sum += (double)(sample * sample);
 				}
 			} else {
 				for (int i = 0; i < bytesRead; ) {
 					sample = 0;
 					for (int c = 0; c < channels; c++, i++)
-						sample += ((int)data[i]);
+						sample += ((int)inputBuffer[i]);
 					sum += (double)(sample * sample);
 				}
 			}
@@ -506,24 +522,24 @@ public class AudioWorm {
 			if (inputFormat.isBigEndian()) {
 				if (channels == 1) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = ((int)data[i] << 8) |
-								 ((int)data[i+1] & 0xFF);
+						sample = ((int)inputBuffer[i] << 8) |
+								 ((int)inputBuffer[i+1] & 0xFF);
 						sum += (double)(sample * sample);
 					}
 				} else if (channels == 2) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = (((int)data[i] << 8) |
-								 ((int)data[i+1] & 0xFF)) +
-								 (((int)data[i+2] << 8) |
-								 ((int)data[i+3] & 0xFF));
+						sample = (((int)inputBuffer[i] << 8) |
+								 ((int)inputBuffer[i+1] & 0xFF)) +
+								 (((int)inputBuffer[i+2] << 8) |
+								 ((int)inputBuffer[i+3] & 0xFF));
 						sum += (double)(sample * sample);
 					}
 				} else {
 					for (int i = 0; i < bytesRead; ) {
 						sample = 0;
 						for (int c = 0; c < channels; c++) {
-							sample += ((int)data[i] << 8) |
-									  ((int)data[i+1] & 0xFF);
+							sample += ((int)inputBuffer[i] << 8) |
+									  ((int)inputBuffer[i+1] & 0xFF);
 							i += 2;
 						}
 						sum += (double)(sample * sample);
@@ -532,24 +548,24 @@ public class AudioWorm {
 			} else {	// little-endian
 				if (channels == 1) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = ((int)data[i+1] << 8) |
-								 ((int)data[i] & 0xFF);
+						sample = ((int)inputBuffer[i+1] << 8) |
+								 ((int)inputBuffer[i] & 0xFF);
 						sum += (double)(sample * sample);
 					}
 				} else if (channels == 2) {
 					for (int i = 0; i < bytesRead; i += frameSize) {
-						sample = (((int)data[i+1] << 8) |
-								 ((int)data[i] & 0xFF)) +
-								 (((int)data[i+3] << 8) |
-								 ((int)data[i+2] & 0xFF));
+						sample = (((int)inputBuffer[i+1] << 8) |
+								 ((int)inputBuffer[i] & 0xFF)) +
+								 (((int)inputBuffer[i+3] << 8) |
+								 ((int)inputBuffer[i+2] & 0xFF));
 						sum += (double)(sample * sample);
 					}
 				} else {
 					for (int i = 0; i < bytesRead; ) {
 						sample = 0;
 						for (int c = 0; c < channels; c++) {
-							sample += ((int)data[i+1] << 8) |
-									  ((int)data[i] & 0xFF);
+							sample += ((int)inputBuffer[i+1] << 8) |
+									  ((int)inputBuffer[i] & 0xFF);
 							i += 2;
 						}
 						sum += (double)(sample * sample);
@@ -561,15 +577,15 @@ public class AudioWorm {
 				long longSample = 0;
 				for (int c = 0; c < channels; c++) {
 					if (inputFormat.isBigEndian()) {
-						sample = (int)data[i++];
+						sample = (int)inputBuffer[i++];
 						for (int b = 1; b < sampleSizeInBytes; b++, i++)
-							sample = (sample<<8) | ((int)data[i] & 0xFF);
+							sample = (sample<<8) | ((int)inputBuffer[i] & 0xFF);
 					} else {
 						sample = 0;
 						int b;
 						for (b = 0; b < sampleSizeInBytes-1; b++, i++)
-							sample |= ((int)data[i] & 0xFF) << (b * 8);
-						sample |= ((int)data[i++]) << (b * 8);
+							sample |= ((int)inputBuffer[i] & 0xFF) << (b * 8);
+						sample |= ((int)inputBuffer[i++]) << (b * 8);
 					}
 					longSample += sample;
 				}
@@ -665,5 +681,17 @@ public class AudioWorm {
 		}
 		jumpPosition = -1;
 	} // skipAudio()
+
+    public void addBytes(byte[] data){
+        try{
+            if(bytePosition >= 524288){
+                byte[] out = outputStream.toByteArray();
+
+            }
+            outputStream.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 } // class AudioWorm
