@@ -15,6 +15,7 @@ class SoundCaptureImpl() {
 
   val dataBuffer = new Queue[Array[Byte]]
 
+
   private var audioProcessor: LiveAudioProcessor = _
   def audioProcessor (value: LiveAudioProcessor):Unit = audioProcessor = value
 
@@ -28,6 +29,7 @@ class SoundCaptureImpl() {
   val channels: Int = 2
   val signed: Boolean = true
   val bigEndian: Boolean = true
+  val inputFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, 16, 2, 4, sampleRate, false)
   val format: AudioFormat = new AudioFormat(sampleRate, bitsPerSample, channels, signed, bigEndian)
   var input: TargetDataLine = null
   val inputStream: AudioInputStream = null
@@ -37,17 +39,17 @@ class SoundCaptureImpl() {
   var bytesRead: Int = 0
   var streamedBytes: Int = 0
   var data: Array[Byte] = null
-  val recordLength: Long = 5000
+  val recordLength: Long = 15000
   var status: Boolean = false
 
   def startCapture: Int = {
     try {
-      input = AudioSystem.getTargetDataLine(format)
-      val info: DataLine.Info = new DataLine.Info(classOf[TargetDataLine], format)
+      input = AudioSystem.getTargetDataLine(inputFormat)
+      val info: DataLine.Info = new DataLine.Info(classOf[TargetDataLine], inputFormat)
       input = AudioSystem.getLine(info).asInstanceOf[TargetDataLine]
-      input.open(format)
+      input.open(inputFormat)
       outputStream = new ByteArrayOutputStream
-
+      println("frame size" + inputFormat.getFrameSize)
       input.start()
       val currentTime: Long = System.currentTimeMillis()
       val finishTime: Long = currentTime + recordLength
@@ -65,10 +67,10 @@ class SoundCaptureImpl() {
             outputStream.write(data, 0, streamedBytes)
 
             data = outputStream.toByteArray
-            dataBuffer += data
+
 
             var f = Future {
-              runWorm(dataBuffer)
+              runWorm(data)
             }
 
           }
@@ -112,7 +114,7 @@ class SoundCaptureImpl() {
     wormRun
 }
 
-  def runWorm(bytes: Queue[Array[Byte]]) = {
+  def runWorm(bytes: Array[Byte]) = {
     wormRun = true
     aw.nextBlock(bytes, wormChunk)
   }
