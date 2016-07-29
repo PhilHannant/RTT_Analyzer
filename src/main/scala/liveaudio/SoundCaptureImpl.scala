@@ -109,8 +109,10 @@ class SoundCaptureImpl() {
       131072,
       WaveletBPMDetector.Daubechies4)
     val res = dwtbpm.bpm()
-    println(res)
-    System.exit(0)
+    println(res + " bpm")
+    println("dwt")
+    println("returned" + windowsProcessed)
+    if (windowsProcessed == 3) System.exit(0)
   }
 
   def getWindowsProcessed() ={
