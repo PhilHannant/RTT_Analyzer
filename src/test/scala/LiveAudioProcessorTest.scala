@@ -1,7 +1,7 @@
 
 import dwtbpm.WaveletBPMDetector
 import org.scalatest._
-import liveaudio.{LiveAudioProcessor, SoundCaptureImpl, Tempo}
+import liveaudio.{Analyzer, LiveAudioProcessor, SoundCaptureImpl, Tempo}
 import at.ofai.music.worm._
 /**
   * Created by philhannant on 20/07/2016.
@@ -91,6 +91,22 @@ class TempoObjectTest extends FlatSpec {
     val result = t.tempo
     val expected = 120
     assertResult(expected)(result)
+  }
+
+  "An Analyzer" should "take multiple tempo objects" in {
+    val t1 = Tempo(115)
+    val t2 = Tempo(125)
+    val t3 = Tempo(135)
+    val t4 = Tempo(145)
+    val a = Analyzer("test")
+    a.addTempo(t1)
+    a.addTempo(t2)
+    a.addTempo(t3)
+    a.addTempo(t4)
+    val expected = 4
+    val result = a.buffer.length
+    assertResult(expected)(result)
+
   }
 
 }
