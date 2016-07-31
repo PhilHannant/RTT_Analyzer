@@ -3,6 +3,9 @@ import dwtbpm.WaveletBPMDetector
 import org.scalatest._
 import liveaudio.{Analyzer, LiveAudioProcessor, SoundCaptureImpl, Tempo}
 import at.ofai.music.worm._
+import data.JSONParser
+
+import scala.collection.mutable.ArrayBuffer
 /**
   * Created by philhannant on 20/07/2016.
   */
@@ -98,7 +101,8 @@ class TempoObjectTest extends FlatSpec {
     val t2 = Tempo(125)
     val t3 = Tempo(135)
     val t4 = Tempo(145)
-    val a = Analyzer("test")
+    val buffer = new ArrayBuffer[Tempo]
+    val a = Analyzer("test", buffer)
     a.addTempo(t1)
     a.addTempo(t2)
     a.addTempo(t3)
@@ -106,8 +110,30 @@ class TempoObjectTest extends FlatSpec {
     val expected = 4
     val result = a.buffer.length
     assertResult(expected)(result)
-
   }
 
 }
 
+class JSONParserTest extends FlatSpec {
+
+  "A JSONParser" should "takes a class and produce a JSON string" in {
+    val jp = JSONParser
+    val t1 = Tempo(115)
+    val t2 = Tempo(125)
+    val t3 = Tempo(135)
+    val t4 = Tempo(145)
+    val a = Analyzer("test")
+    a.addTempo(t1)
+    a.addTempo(t2)
+    a.addTempo(t3)
+    a.addTempo(t4)
+    val result = jp.stringify(a)
+
+
+
+
+  }
+
+
+
+}
