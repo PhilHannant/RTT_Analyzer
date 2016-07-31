@@ -90,17 +90,17 @@ class WaveletBPMDetectorTest extends FlatSpec {
 class TempoObjectTest extends FlatSpec {
 
   "A Tempo object " should "hold a tempo value" in {
-    val t = Tempo(120)
+    val t = Tempo(120, 120)
     val result = t.tempo
     val expected = 120
     assertResult(expected)(result)
   }
 
   "An Analyzer" should "take multiple tempo objects" in {
-    val t1 = Tempo(115)
-    val t2 = Tempo(125)
-    val t3 = Tempo(135)
-    val t4 = Tempo(145)
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val t3 = Tempo(135, 120)
+    val t4 = Tempo(145, 120)
     val buffer = new ArrayBuffer[Tempo]
     val a = Analyzer("test", buffer)
     a.addTempo(t1)
@@ -118,16 +118,17 @@ class JSONParserTest extends FlatSpec {
 
   "A JSONParser" should "takes a class and produce a JSON string" in {
     val jp = JSONParser
-    val t1 = Tempo(115)
-    val t2 = Tempo(125)
-    val t3 = Tempo(135)
-    val t4 = Tempo(145)
-    val a = Analyzer("test")
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val t3 = Tempo(135, 120)
+    val t4 = Tempo(145, 120)
+    val buffer = new ArrayBuffer[Tempo]
+    val a = Analyzer("test", buffer)
     a.addTempo(t1)
     a.addTempo(t2)
     a.addTempo(t3)
     a.addTempo(t4)
-    val result = jp.stringify(a)
+    val result = jp.write(a)
 
 
 
