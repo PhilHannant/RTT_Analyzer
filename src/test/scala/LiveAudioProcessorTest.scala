@@ -3,6 +3,7 @@ import dwtbpm.WaveletBPMDetector
 import org.scalatest._
 import liveaudio.LiveAudioProcessor
 import liveaudio.SoundCaptureImpl
+import at.ofai.music.worm._
 /**
   * Created by philhannant on 20/07/2016.
   */
@@ -42,6 +43,15 @@ class SoundCaptureImplTest extends FlatSpec {
     assert(result != null)
   }
 
+  "A SoundCaptureImpl" should "send an line to a Worm" in {
+    val sci = new SoundCaptureImpl()
+    val audioProcessor = new LiveAudioProcessor
+    sci.audioProcessor(audioProcessor)
+    sci.startCapture
+    Thread.sleep(180000)
+    val aw = sci.getWormInstance
+    assert(aw == true)
+  }
 
 }
 
@@ -74,3 +84,10 @@ class WaveletBPMDetectorTest extends FlatSpec {
   }
 
 }
+
+class TempoObjectTest extends FlatSpec {
+
+
+
+}
+
