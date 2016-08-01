@@ -4,8 +4,10 @@ import org.scalatest._
 import liveaudio._
 import at.ofai.music.worm._
 import data.JSONParser
+import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ArrayBuffer
+import scala.io.Source
 /**
   * Created by philhannant on 20/07/2016.
   */
@@ -137,9 +139,26 @@ class JSONParserTest extends FlatSpec {
     a.addTempo(t4)
     val result = jp.write(a)
     assert(result != null)
+  }
 
-
-
+  "A JSONParser" should "write a json object to file" in {
+    val jp = JSONParser()
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val t3 = Tempo(135, 120)
+    val t4 = Tempo(145, 120)
+    val buffer = new ArrayBuffer[Tempo]
+    val a = DWTAnalyser("test", buffer)
+    a.addTempo(t1)
+    a.addTempo(t2)
+    a.addTempo(t3)
+    a.addTempo(t4)
+    val expected = jp.write(a)
+    jp.flush
+    val source: String = Source.fromFile("/Users/philhannant/Desktop/Tempo.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val result = json.toString()
+    assertResult(expected)(result)
 
   }
 
