@@ -96,9 +96,11 @@ public class AudioWorm {
 	int count = 0;
     SoundCaptureImpl sc = new SoundCaptureImpl();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ActorRef liveAudioActor;
 	
-	public AudioWorm(Worm w) {
+	public AudioWorm(Worm w, ActorRef liveAudioActor) {
 
+	    this.liveAudioActor = liveAudioActor;
 //		gui = w;
 		jumpPosition = -1;
 		targetDataLine = null;
@@ -415,9 +417,9 @@ public class AudioWorm {
 				rms += tmp * tmp;
 				if (wormData == null)
 					tempo = ti.getTempo(tmp); // rms amp or dB?
-				System.out.println(i + ", " + inputBuffer[0] + ", " + inputBuffer[1] + ", " + inputBuffer[2] + ", " + inputBuffer[3]);
+//				System.out.println(i + ", " + inputBuffer[0] + ", " + inputBuffer[1] + ", " + inputBuffer[2] + ", " + inputBuffer[3]);
 				    //tempo = ti.getTempo(120 + 20 / Math.log(10) * Math.log(tmp));
-                    System.out.println("Second tempo " + tempo);
+
 				if (isFileInput) {
 					if (ti.onset)	// mark detected onsets with a click
 						for (int j = 0; j < 882; ) {
@@ -488,7 +490,7 @@ public class AudioWorm {
 		if (jumpPosition >= 0)
 			skipAudio();
         count++;
-		System.out.println("Window " + count);
+//		System.out.println("Window " + count);
 		bytesRead = in.read(inputBuffer);
 		bytePosition += bytesRead;
         addBytes(inputBuffer);
@@ -592,7 +594,7 @@ public class AudioWorm {
 				sum += (double)longSample * (double)longSample;
 			}
 		}
-        System.out.println("processWindow returns " + Math.sqrt(sum) / normalise);
+//        System.out.println("processWindow returns " + Math.sqrt(sum) / normalise);
 		return Math.sqrt(sum) / normalise;
 	} // processWindow()
 
