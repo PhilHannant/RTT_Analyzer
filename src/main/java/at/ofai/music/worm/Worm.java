@@ -40,6 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.WindowConstants;
 
+import akka.actor.ActorRef;
 import at.ofai.music.util.FrameMargins;
 import at.ofai.music.util.Format;
 import scala.collection.mutable.Queue;
@@ -101,7 +102,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	WormFile wormFile;
 	Thread playThread;
 
-	public Worm() {
+	public Worm(ActorRef LiveAudioActor) {
 		x = new double[WormConstants.wormLength];
 		y = new double[WormConstants.wormLength];
 		labels = new String[WormConstants.wormLength];
@@ -678,7 +679,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 
 	public static Worm createInFrame(String[] args) {
 		JFrame f = new JFrame(WormConstants.title);
-		Worm w = new Worm();
+		Worm w = new Worm(null);
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].startsWith("-d")) {
 				if (args[i].length() == 2)
