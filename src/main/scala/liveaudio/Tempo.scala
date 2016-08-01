@@ -29,10 +29,26 @@ case class DWTAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyse
   }
 }
 
+object DWTAnalyser{
+
+  def apply (name: String): DWTAnalyser = {
+    val buffer = new ArrayBuffer[Tempo]()
+    DWTAnalyser(name, buffer)
+  }
+}
+
+
 case class WormAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyser{
 
 
   def addTempo(tempo: Tempo) = {
     buffer += tempo
+  }
+}
+object WormAnalyser{
+
+  def apply (name: String): DWTAnalyser = {
+    val buffer = new ArrayBuffer[Tempo]()
+    DWTAnalyser(name, buffer)
   }
 }
