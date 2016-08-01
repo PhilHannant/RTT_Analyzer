@@ -284,12 +284,12 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	} // setAxis()
 	
 	// Starts/continues ing in a separate thread; immediately returns
-	void play() {
+	public void play() {
 		playButton.setText("Pause");
 		playButton.repaint();
 		if (state == STOP) {
 			clear();
-			audio = new AudioWorm();
+			audio = new AudioWorm(this);
 		}
 		state = PLAY;
 		audio.start();
@@ -306,8 +306,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 				}
 				Thread.sleep(200);	// wait 0.2s
 				try {
-                    Queue<byte[]> data = null;
-					while ((state == PLAY) && audio.nextBlock(data, 0))
+					while ((state == PLAY) && audio.nextBlock())
 						;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					e.printStackTrace();
