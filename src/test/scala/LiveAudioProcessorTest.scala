@@ -96,6 +96,13 @@ class TempoObjectTest extends FlatSpec {
     assertResult(expected)(result)
   }
 
+  "A Tempo object" should "calculate the difference between 2 tempos" in {
+    val t = Tempo(119.983827, 120)
+    val result = t.difference
+    val expected = 0.016173
+    assertResult(expected)(result)
+  }
+
   "An Analyzer" should "take multiple tempo objects" in {
     val t1 = Tempo(115, 120)
     val t2 = Tempo(125, 120)
@@ -117,7 +124,7 @@ class TempoObjectTest extends FlatSpec {
 class JSONParserTest extends FlatSpec {
 
   "A JSONParser" should "takes a class and produce a JSON string" in {
-    val jp = JSONParser
+    val jp = JSONParser()
     val t1 = Tempo(115, 120)
     val t2 = Tempo(125, 120)
     val t3 = Tempo(135, 120)
