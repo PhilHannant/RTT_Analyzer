@@ -12,11 +12,10 @@ import data.StartLiveAudio
 class LiveAudioActor extends Actor with ActorLogging{
    def receive = {
      case StartLiveAudio =>
-       val w = new Worm
-       val wcp: WormControlPanel = new WormControlPanel(w)
-       wcp.actionPerformed("Play")
+       val w = new Worm(self)
+       w.play()
        Thread.sleep(15000)
-       wcp.actionPerformed("Quit")
+       System.exit(0)
        System.out.print("end")
    }
 }
