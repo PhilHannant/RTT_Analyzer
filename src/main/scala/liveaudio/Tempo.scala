@@ -8,7 +8,9 @@ trait Analyser {
 /**
   * Created by philhannant on 31/07/2016.
   */
-case class Tempo(tempo: Double, baseTempo: Double)
+case class Tempo(tempo: Double, baseTempo: Double){
+  val difference: Double = {baseTempo - tempo}
+}
 
 
 case class DWTAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyser{
