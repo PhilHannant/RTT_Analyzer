@@ -14,7 +14,8 @@ case class JSONParser() {
     implicit val tempoWrites = new Writes[Tempo] {
       def writes(tempo: Tempo) = Json.obj(
         "tempo" -> tempo.tempo,
-        "expectedTempo" -> tempo.baseTempo
+        "expectedTempo" -> tempo.baseTempo,
+        "difference" -> tempo.difference
       )
     }
 
