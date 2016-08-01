@@ -101,8 +101,10 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	WormScrollBar scrollBar;
 	WormFile wormFile;
 	Thread playThread;
+	ActorRef liveAudioActor;
 
-	public Worm(ActorRef LiveAudioActor) {
+	public Worm(ActorRef liveAudioActor) {
+		this.liveAudioActor = liveAudioActor;
 		x = new double[WormConstants.wormLength];
 		y = new double[WormConstants.wormLength];
 		labels = new String[WormConstants.wormLength];
@@ -290,7 +292,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 		playButton.repaint();
 		if (state == STOP) {
 			clear();
-			audio = new AudioWorm(this);
+			audio = new AudioWorm(this, liveAudioActor);
 		}
 		state = PLAY;
 		audio.start();
