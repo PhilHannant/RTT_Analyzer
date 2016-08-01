@@ -99,7 +99,7 @@ class TempoObjectTest extends FlatSpec {
   "A Tempo object" should "calculate the difference between 2 tempos" in {
     val t = Tempo(119.983827, 120)
     val result = t.difference
-    val expected = 0.016173
+    val expected = 120 - 119.983827
     assertResult(expected)(result)
   }
 
