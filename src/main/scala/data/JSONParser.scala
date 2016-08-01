@@ -1,5 +1,7 @@
 package data
 
+import java.io.FileWriter
+
 import play.api.libs.json._
 import liveaudio.Tempo
 import liveaudio.DWTAnalyser
@@ -8,6 +10,7 @@ import liveaudio.DWTAnalyser
   */
 case class JSONParser() {
 
+  var json: String = ""
 
   def write(obj: DWTAnalyser): String = {
 
@@ -26,8 +29,18 @@ case class JSONParser() {
       )
     }
 
-    val json2 = Json.toJson(obj)
-    println(json2)
-    json2.toString()
+    val jsonNew = Json.toJson(obj)
+    println(jsonNew)
+    json += jsonNew.toString()
+    json
+  }
+
+  def flush() = {
+
+    val file = new FileWriter("/Users/philhannant/Desktop/Tempo.json")
+    file.write(json)
+    file.flush()
+    file.close()
+
   }
 }
