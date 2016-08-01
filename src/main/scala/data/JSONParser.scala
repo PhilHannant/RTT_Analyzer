@@ -3,7 +3,6 @@ package data
 import java.io.FileWriter
 
 import play.api.libs.json._
-import liveaudio.Tempo
 import liveaudio.DWTAnalyser
 /**
   * Created by philhannant on 31/07/2016.
