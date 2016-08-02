@@ -18,7 +18,7 @@ case class WormAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analys
 object WormAnalyser{
   val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
 
-  def apply (name: String): DWTAnalyser = {
+  def apply (name: String): WormAnalyser = {
     val buffer = new ArrayBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
     val fullName = name + " WormAnalyser: " + sdf.format(resultDate)
