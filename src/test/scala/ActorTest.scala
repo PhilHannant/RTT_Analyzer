@@ -1,5 +1,5 @@
 import akka.actor.{ActorSystem, Props}
-import data.StartLiveAudio
+import data.{EndLiveAudio, StartLiveAudio}
 import liveaudio.LiveAudioActor
 
 /**
@@ -10,7 +10,10 @@ object ActorTest extends App{
   val system = ActorSystem("liveaudioActors")
   val coord = system.actorOf(Props(new LiveAudioActor()))
   //First message sent to coordinator to begin calculation
+
   coord ! StartLiveAudio
+  Thread.sleep(2500)
+//  coord ! EndLiveAudio
 
 
 }
