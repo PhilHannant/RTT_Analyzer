@@ -151,7 +151,7 @@ class JSONParserTest extends FlatSpec {
     a.addTempo(t3)
     a.addTempo(t4)
     val expected = jp.write(a)
-    jp.flush
+    jp.flush("/Users/philhannant/Desktop/Tempo.json")
     val source: String = Source.fromFile("/Users/philhannant/Desktop/Tempo.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val result = json.toString()
@@ -171,7 +171,7 @@ class JSONParserTest extends FlatSpec {
     a.addTempo(t3)
     a.addTempo(t4)
     val expected = jp.write(a)
-    jp.flush
+    jp.flush("/Users/philhannant/Desktop/Tempo.json")
     val source: String = Source.fromFile("/Users/philhannant/Desktop/Tempo.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val result = json.toString()
@@ -179,5 +179,26 @@ class JSONParserTest extends FlatSpec {
 
   }
 
-
+  "A JSONParser" should "merge to json objects together and write to file" in {
+    val jp2 = JSONParser()
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val t3 = Tempo(135, 120)
+    val t4 = Tempo(145, 120)
+    val a = WormAnalyser("test: a")
+    val b = DWTAnalyser("test: b")
+    a.addTempo(t1)
+    a.addTempo(t2)
+    b.addTempo(t3)
+    b.addTempo(t4)
+    jp2.write(a)
+    val expectedNew =  jp2.write(b)
+    println(expectedNew.toString)
+    jp2.flush("/Users/philhannant/Desktop/TempoNew.json")
+    val source: String = Source.fromFile("/Users/philhannant/Desktop/TempoNew.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val result = json.toString()
+    println(result)
+    assertResult(expectedNew)(result)
+  }
 }
