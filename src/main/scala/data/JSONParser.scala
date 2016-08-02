@@ -9,7 +9,7 @@ import play.api.libs.json._
   */
 case class JSONParser() {
 
-  var json: String = ""
+  var json: String = "["
 
   def write(obj: WormAnalyser): String = {
 
@@ -30,8 +30,8 @@ case class JSONParser() {
     }
 
     val jsonNew = Json.toJson(obj)
-    println(jsonNew)
     json += jsonNew.toString()
+    println("json at end of worm " + json)
     json
   }
 
@@ -54,14 +54,14 @@ case class JSONParser() {
 
 
     val jsonNew = Json.toJson(obj)
-    println(jsonNew)
-    json += jsonNew.toString()
+    json += "," + jsonNew.toString() + "]"
+    println("json at end of dwt " + json)
     json
   }
 
-  def flush() = {
+  def flush(path: String) = {
 
-    val file = new FileWriter("/Users/philhannant/Desktop/Tempo.json")
+    val file = new FileWriter(path)
     file.write(json)
     file.flush()
     file.close()
