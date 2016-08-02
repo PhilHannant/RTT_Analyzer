@@ -7,4 +7,5 @@ sealed trait Messages
 case class StartLiveAudio() extends Messages
 case class EndLiveAudio() extends Messages
 case class ProcessBytes(data: Array[Byte]) extends Messages
-case class NewTempo(tempo: Double, expected: Double) extends Messages
+case class NewTempoWorm(tempo: Double, expected: Double) extends Messages
+case class NewTempoDwt(tempo: Double, expected: Double) extends Messages
