@@ -20,7 +20,10 @@
 
 package at.ofai.music.worm;
 
+import data.EndLiveAudio;
+import data.Messages.*;
 import akka.actor.*;
+import akka.actor.UntypedActor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,8 +42,10 @@ import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
+import data.ProcessBytes;
 import dwtbpm.WaveletBPMDetector;
 import liveaudio.LiveAudioProcessor;
 import scala.collection.mutable.Queue;
@@ -686,12 +691,19 @@ public class AudioWorm {
 
     public void addBytes(byte[] data){
         try{
-            if(bytePosition >= 524288){
+            if(bytePosition == 525672){
+                outputStream.write(data);
                 byte[] out = outputStream.toByteArray();
                 outputStream.close();
                 outputStream = new ByteArrayOutputStream();
                 bytePosition = 0;
-                sc.recieve(out);
+                System.out.println(liveAudioActor.toString());
+                System.out.println(out.length);
+                liveAudioActor.tell(new ProcessBytes(out), liveAudioActor);
+//                Object obj = "help";
+//                liveAudioActor.tell(obj, liveAudioActor);
+
+                //sc.recieve(out);
 
             }
             outputStream.write(data);
