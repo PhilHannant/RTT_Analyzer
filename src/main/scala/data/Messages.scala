@@ -6,3 +6,4 @@ package data
 sealed trait Messages
 case class StartLiveAudio() extends Messages
 case class EndLiveAudio() extends Messages
+case class ProcessBytes() extends Messages
