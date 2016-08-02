@@ -8,6 +8,16 @@ import akka.actor.{Actor, ActorLogging}
   */
 class DataCollectorActor extends Actor with ActorLogging{
 
-  def receive = ???
+  val wormAnalyser = WormAnalyser(null, null)//placeholders
+  val dWtAnalyser = DWTAnalyser(null, null)//placeholders
+
+  def receive = {
+    case NewTempoDwt(tempo, expected) =>
+      val tempo = Tempo(tempo, expected)
+      dWtAnalyser.addTempo(tempo)
+    case NewTempoWorm(tempo, expected) =>
+      val tempo = Tempo(tempo, expected)
+      wormAnalyser.addTempo(tempo)
+  }
 
 }
