@@ -10,14 +10,20 @@ class DataCollectorActor extends Actor with ActorLogging{
 
   val wormAnalyser = WormAnalyser(null, null)//placeholders
   val dWtAnalyser = DWTAnalyser(null, null)//placeholders
+  val jsonParser = JSONParser()
 
   def receive = {
     case NewTempoDwt(tempo, expected) =>
-      val tempo = Tempo(tempo, expected)
-      dWtAnalyser.addTempo(tempo)
+      val t = Tempo(tempo, expected)
+      dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo, expected) =>
-      val tempo = Tempo(tempo, expected)
-      wormAnalyser.addTempo(tempo)
+      val t = Tempo(tempo, expected)
+      wormAnalyser.addTempo(t)
+    case ParseJSON =>
+      jsonParser.write(wormAnalyser)
+      jsonParser.write(dWtAnalyser)
+      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest.json")
+
   }
 
 }
