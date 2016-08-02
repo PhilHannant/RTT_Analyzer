@@ -1,5 +1,8 @@
 package data
 
+import java.sql.Date
+import java.text.SimpleDateFormat
+
 import scala.collection.mutable.ArrayBuffer
 
 trait Analyser {
@@ -30,10 +33,13 @@ case class DWTAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyse
 }
 
 object DWTAnalyser{
+  val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
 
   def apply (name: String): DWTAnalyser = {
     val buffer = new ArrayBuffer[Tempo]()
-    DWTAnalyser(name, buffer)
+    val resultDate = new Date(System.currentTimeMillis())
+    val fullName = name + " WormAnalyser: " + sdf.format(resultDate)
+    DWTAnalyser(fullName, buffer)
   }
 }
 
@@ -46,9 +52,12 @@ case class WormAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analys
   }
 }
 object WormAnalyser{
+  val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
 
   def apply (name: String): DWTAnalyser = {
     val buffer = new ArrayBuffer[Tempo]()
-    DWTAnalyser(name, buffer)
+    val resultDate = new Date(System.currentTimeMillis())
+    val fullName = name + " WormAnalyser: " + sdf.format(resultDate)
+    DWTAnalyser(fullName, buffer)
   }
 }

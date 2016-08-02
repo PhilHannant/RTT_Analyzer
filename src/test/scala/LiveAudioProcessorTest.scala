@@ -3,7 +3,7 @@ import dwtbpm.WaveletBPMDetector
 import org.scalatest._
 import liveaudio._
 import at.ofai.music.worm._
-import data.JSONParser
+import data.{DWTAnalyser, JSONParser, Tempo}
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ArrayBuffer
@@ -110,8 +110,7 @@ class TempoObjectTest extends FlatSpec {
     val t2 = Tempo(125, 120)
     val t3 = Tempo(135, 120)
     val t4 = Tempo(145, 120)
-    val buffer = new ArrayBuffer[Tempo]
-    val a = DWTAnalyser("test", buffer)
+    val a = DWTAnalyser("test")
     a.addTempo(t1)
     a.addTempo(t2)
     a.addTempo(t3)
@@ -131,8 +130,7 @@ class JSONParserTest extends FlatSpec {
     val t2 = Tempo(125, 120)
     val t3 = Tempo(135, 120)
     val t4 = Tempo(145, 120)
-    val buffer = new ArrayBuffer[Tempo]
-    val a = DWTAnalyser("test", buffer)
+    val a = DWTAnalyser("test")
     a.addTempo(t1)
     a.addTempo(t2)
     a.addTempo(t3)
@@ -147,8 +145,7 @@ class JSONParserTest extends FlatSpec {
     val t2 = Tempo(125, 120)
     val t3 = Tempo(135, 120)
     val t4 = Tempo(145, 120)
-    val buffer = new ArrayBuffer[Tempo]
-    val a = DWTAnalyser("test", buffer)
+    val a = DWTAnalyser("test")
     a.addTempo(t1)
     a.addTempo(t2)
     a.addTempo(t3)
