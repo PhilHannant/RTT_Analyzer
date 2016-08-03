@@ -112,6 +112,8 @@ class SoundCaptureImpl() {
     println(res + " bpm")
     println("dwt")
     println("returned" + windowsProcessed)
+    Thread.sleep(1000)
+    System.exit(0)
     if (windowsProcessed == 3) System.exit(0)
   }
 
@@ -136,3 +138,4 @@ object SoundCaptureImpl{
 
   def apply: SoundCaptureImpl = new SoundCaptureImpl()
 }
+
