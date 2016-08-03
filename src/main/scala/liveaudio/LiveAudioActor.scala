@@ -18,7 +18,7 @@ class LiveAudioActor extends Actor with ActorLogging{
 
   val soundCaptureImpl = new SoundCaptureImpl
   val processingActor = context.actorOf(Props[ProcessingActor], "processor")
-  val w: Worm = new Worm(processingActor )
+  val w: Worm = new Worm(processingActor)
 
    def receive = {
      case StartLiveAudio =>
@@ -30,8 +30,8 @@ class LiveAudioActor extends Actor with ActorLogging{
        System.exit(0)
      case _ =>
        println("help")
-       context.system.terminate()
-       System.exit(0)
+       processingActor ! ParseJSON
+
    }
 }
 
