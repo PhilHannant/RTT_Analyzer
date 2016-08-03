@@ -98,8 +98,8 @@ class WaveletBPMDetector (
    * Overall BPM is computed as the median of this collection
    **/
   private var instantBpm = ArrayBuffer[Double]()
-  val windowsToProcess : Int = _
-  val dwt: ActorRef
+  val windowsToProcess : Int = 0
+
 
   /**
     * The tempo in beats-per-minute computed for the track
@@ -223,7 +223,7 @@ class WaveletBPMDetector (
     _bpm
   }
 
-  def bpm(dwtProcessor: ActorRef) : Double = {
+  def bpm(processor: ActorRef) : Double = {
     var count = 0
     if (_bpm == -1) {
       val buffer : Array[Int]  = new Array[Int](windowFrames * channels)
@@ -234,7 +234,7 @@ class WaveletBPMDetector (
 
       _bpm = instantBpm(0)//.toArray.median
     }
-    dwtProcessor ! NewTempoDwt(_bpm, 120)
+    processor ! NewTempoDwt(_bpm, 120)
     _bpm
   }
 
