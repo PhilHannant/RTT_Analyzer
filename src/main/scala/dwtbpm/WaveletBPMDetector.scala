@@ -15,6 +15,7 @@ import jwave.transforms.wavelets.daubechies._
 import jwave.transforms.wavelets.haar._
 import liveaudio._
 import ArrayOperations._
+import akka.actor.ActorRef
 
 import scala.collection.mutable
 
@@ -82,7 +83,7 @@ class WaveletBPMDetector (
                                    val windowFrames : Int,
                                    val waveletType : WaveletBPMDetector.Wavelet
                                    ) extends BPMDetector {
-//  val windowsToProcess : Int
+
   val sampleRate = 44100
   val channels = 2
 
@@ -96,7 +97,7 @@ class WaveletBPMDetector (
    * Overall BPM is computed as the median of this collection
    **/
   private var instantBpm = ArrayBuffer[Double]()
-
+  val windowsToProcess : Int
 
   /**
     * The tempo in beats-per-minute computed for the track
@@ -203,20 +204,34 @@ class WaveletBPMDetector (
     instantBpm += windowBpm
   }
 
-  override def bpm() : Double = {
+  def bpm() : Double = {
     var count = 0
     if (_bpm == -1) {
-//      for (currentWindow <- 0 until windowsToProcess) {
+      for (currentWindow <- 0 until windowsToProcess) {
         val buffer : Array[Int]  = new Array[Int](windowFrames * channels)
         val framesRead = audioProcessor.readFrames(buffer, windowFrames)
         val leftChannelSamples : Array[Double] =
           buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
-        computeWindowBpm(leftChannelSamples)
-//      }
-      println("out of loop")
+          computeWindowBpm(leftChannelSamples)
+        }
+
+        _bpm = instantBpm(0)//.toArray.median
+
+    }
+    _bpm
+  }
+
+  def bpm(liveAudioProcessorActor: ActorRef) : Double = {
+    var count = 0
+    if (_bpm == -1) {
+      val buffer : Array[Int]  = new Array[Int](windowFrames * channels)
+      val framesRead = audioProcessor.readFrames(buffer, windowFrames)
+      val leftChannelSamples : Array[Double] =
+        buffer.zipWithIndex.filter(_._2 % 2 == 0).map(_._1.toDouble)
+      computeWindowBpm(leftChannelSamples)
+
       _bpm = instantBpm(0)//.toArray.median
     }
-    println("at return" + _bpm)
     _bpm
   }
 
