@@ -101,11 +101,11 @@ public class AudioWorm {
 	int count = 0;
     SoundCaptureImpl sc = new SoundCaptureImpl();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    ActorRef liveAudioActor;
+    ActorRef processingActor;
 	
-	public AudioWorm(Worm w, ActorRef liveAudioActor) {
+	public AudioWorm(Worm w, ActorRef processingActor) {
 
-	    this.liveAudioActor = liveAudioActor;
+	    this.processingActor = processingActor;
 //		gui = w;
 		jumpPosition = -1;
 		targetDataLine = null;
@@ -697,9 +697,8 @@ public class AudioWorm {
                 outputStream.close();
                 outputStream = new ByteArrayOutputStream();
                 bytePosition = 0;
-                System.out.println(liveAudioActor.toString());
                 System.out.println(out.length);
-                liveAudioActor.tell(new ProcessBytes(out), liveAudioActor);
+                processingActor.tell(new ProcessBytes(out), processingActor);
 //                Object obj = "help";
 //                liveAudioActor.tell(obj, liveAudioActor);
 
