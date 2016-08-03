@@ -5,13 +5,16 @@ import akka.actor.{Actor, ActorLogging}
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
   * Created by philhannant on 02/08/2016.
   */
 class ProcessingActor extends Actor with ActorLogging{
 
-  val wormAnalyser = WormAnalyser(null, null)//placeholders
-  val dWtAnalyser = DWTAnalyser(null, null)//placeholders
+
+  val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo]())//placeholders
+  val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
 
   def receive = {
@@ -33,6 +36,8 @@ class ProcessingActor extends Actor with ActorLogging{
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
       jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest.json")
+      context.system.terminate()
+      System.exit(0)
 
   }
 
