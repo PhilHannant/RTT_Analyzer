@@ -297,12 +297,4 @@ object WaveletBPMDetector {
 }
 
 
-object test extends App {
-  val liveAudio = new SoundCaptureImpl
-  val audioProcessor = new LiveAudioProcessor
-  val tempo = WaveletBPMDetector(
-    audioProcessor,
-    131072,
-    WaveletBPMDetector.Daubechies4).bpm()
-  println(tempo)
-}
+
