@@ -17,9 +17,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class LiveAudioActor extends Actor with ActorLogging{
 
   val soundCaptureImpl = new SoundCaptureImpl
-  val liveAudioProcessorActor = context.actorOf(Props[LiveAudioProcessorActor], "dwtProcessor")
-  val dataCollectionActor = context.actorOf(Props[DataCollectorActor], "dataCollector")
-  val w: Worm = new Worm(dataCollectionActor)
+  val processingActor = context.actorOf(Props[ProcessingActor], "processor")
+  val w: Worm = new Worm(processingActor )
 
    def receive = {
      case StartLiveAudio =>
