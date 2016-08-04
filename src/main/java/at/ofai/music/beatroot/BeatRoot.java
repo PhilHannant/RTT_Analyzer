@@ -251,7 +251,7 @@ public class BeatRoot {
 		audioPlayer = new AudioPlayer(null, fileChooser);
 		if (!batchMode) {
 			gui = new GUI(audioPlayer, audioProcessor, fileChooser);
-			gui.setVisible(true);
+			gui.setVisible(false);
 			if (audioIn != null) {
 				gui.loadAudioData(audioIn);
 				if (beatsIn != null)
