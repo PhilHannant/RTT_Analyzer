@@ -16,6 +16,7 @@ class ProcessingActor extends Actor with ActorLogging{
   val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo]())//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
+  val dwtBpmBuffer = ArrayBuffer[Double]()
 
   def receive = {
     case ProcessBytes(data: Array[Byte]) =>
@@ -28,6 +29,7 @@ class ProcessingActor extends Actor with ActorLogging{
         WaveletBPMDetector.Daubechies4).bpm(self)
     case NewTempoDwt(tempo, expected) =>
       val t = Tempo(tempo, expected)
+      dwtBpmBuffer += tempo
       dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo, expected) =>
       val t = Tempo(tempo, expected)
