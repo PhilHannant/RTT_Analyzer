@@ -19,17 +19,12 @@
 
 package at.ofai.music.beatroot;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -217,6 +212,7 @@ public class AudioProcessor {
 	/** Maximum file length in seconds. Used for static allocation of arrays. */
 	public static final int MAX_LENGTH = 3600;	// i.e. 1 hour
 
+	InputStream in;
 
 	/** Constructor: note that streams are not opened until the input file is set
 	 *  (see <code>setInputFile()</code>). */
@@ -439,10 +435,10 @@ public class AudioProcessor {
 	 *  to null.
 	 */
 	public boolean getFrame() {
-		if (pcmInputStream == null)
+		if (in == null)
 			return false;
 		try {
-			int bytesRead = (int) pcmInputStream.read(inputBuffer);
+			int bytesRead = (int) in.read(inputBuffer);
 			if ((audioOut != null) && (bytesRead > 0))
 				if (audioOut.write(inputBuffer, 0, bytesRead) != bytesRead)
 					System.err.println("Error writing to audio device");
@@ -581,8 +577,9 @@ public class AudioProcessor {
 	} // processFrame()
 
 	/** Processes a complete file of audio data. */
-	public void processFile() {
-		while (pcmInputStream != null) {
+	public void processFile(byte[] array) {
+		in = new ByteArrayInputStream(array);
+		while (in != null) {
 			// Profile.start(0);
 			processFrame();
 			// Profile.log(0);
