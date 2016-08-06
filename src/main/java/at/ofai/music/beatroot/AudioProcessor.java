@@ -477,11 +477,8 @@ public class AudioProcessor {
             for (int i = 0; i < fftSize; i++)
                 window[i] *= Math.sqrt(fftSize);
         }
-        if (pcmInputStream == rawInputStream)
-            totalFrames = (int) (pcmInputStream.getFrameLength() / hopSize);
-        else {
-            totalFrames = (int) (MAX_LENGTH / hopTime);
-        }
+        totalFrames = (int) (MAX_LENGTH / hopTime);
+
         if ((newFrame == null) || (newFrame.length != freqMapSize)) {
             newFrame = new double[freqMapSize];
             frames = new double[totalFrames][freqMapSize];
