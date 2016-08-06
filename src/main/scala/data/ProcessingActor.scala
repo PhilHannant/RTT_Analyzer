@@ -2,6 +2,7 @@ package data
 
 import akka.actor.Actor.Receive
 import akka.actor.{Actor, ActorLogging}
+import at.ofai.music.beatroot.BeatRoot
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
@@ -17,6 +18,10 @@ class ProcessingActor extends Actor with ActorLogging{
   val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
+  val arg: Array[String] = Array("")
+  val b: BeatRoot = new BeatRoot(arg)
+  b.audioProcessor.setInputFile("/Users/philhannant/Desktop/Wavs/120-2.wav")
+
 
   def receive = {
     case ProcessBytes(data: Array[Byte]) =>
@@ -27,6 +32,10 @@ class ProcessingActor extends Actor with ActorLogging{
         ap,
         131072,
         WaveletBPMDetector.Daubechies4).bpm(self)
+      b.audioProcessor.processFile(data)
+      b.audioProcessor.setDisplay(b.gui.displayPanel) // after processing
+      b.gui.updateDisplay(true)
+      b.gui.displayPanel.beatTrack()
     case NewTempoDwt(tempo, expected) =>
       val t = Tempo(tempo, expected)
       dwtBpmBuffer += tempo
