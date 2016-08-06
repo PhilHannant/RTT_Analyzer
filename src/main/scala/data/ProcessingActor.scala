@@ -19,7 +19,7 @@ class ProcessingActor extends Actor with ActorLogging{
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
   val b: BeatRoot = new BeatRoot()
-  b.audioProcessor.setInputFile("/Users/philhannant/Desktop/Wavs/120-2.wav")
+  b.audioProcessor.setInput()
 
 
   def receive = {
