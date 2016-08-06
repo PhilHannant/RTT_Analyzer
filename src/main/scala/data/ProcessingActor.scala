@@ -18,8 +18,7 @@ class ProcessingActor extends Actor with ActorLogging{
   val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
-  val arg: Array[String] = Array("")
-  val b: BeatRoot = new BeatRoot(arg)
+  val b: BeatRoot = new BeatRoot()
   b.audioProcessor.setInputFile("/Users/philhannant/Desktop/Wavs/120-2.wav")
 
 
