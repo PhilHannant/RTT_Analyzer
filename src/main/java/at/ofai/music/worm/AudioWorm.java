@@ -20,6 +20,7 @@
 
 package at.ofai.music.worm;
 
+import at.ofai.music.beatroot.BeatRoot;
 import data.EndLiveAudio;
 import data.Messages.*;
 import akka.actor.*;
@@ -500,7 +501,7 @@ public class AudioWorm {
 		bytesRead = in.read(inputBuffer);
 		bytePosition += bytesRead;
         addBytes(inputBuffer);
-		System.out.println("total bytes " + bytePosition);
+		//System.out.println("total bytes " + bytePosition);
 		// System.out.println("read(): " + bytePosition);//DEBUG
 		if (wormData != null)		// only need to play audio; no calculation
 			return 0;
@@ -698,7 +699,6 @@ public class AudioWorm {
                 outputStream.close();
                 outputStream = new ByteArrayOutputStream();
                 bytePosition = 0;
-                System.out.println(out.length);
                 processingActor.tell(new ProcessBytes(out), processingActor);
 //                Object obj = "help";
 //                liveAudioActor.tell(obj, liveAudioActor);
