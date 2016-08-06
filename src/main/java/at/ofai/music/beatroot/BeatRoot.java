@@ -67,13 +67,13 @@ import at.ofai.music.util.EventList;
 public class BeatRoot {
 
 	/** The graphical user interface (frame) object */
-	protected GUI gui;
+    public GUI gui;
 	
 	/** The object that deals with audio output */
 	protected AudioPlayer audioPlayer;
 	
 	/** The object that deals with processing the audio data */
-	protected AudioProcessor audioProcessor;
+    public AudioProcessor audioProcessor;
 
 	/** The dialog window for selecting files for opening and saving data */
 	protected Chooser fileChooser;
@@ -234,17 +234,16 @@ public class BeatRoot {
 
 	/** Constructor. Initialises the BeatRoot application,
 	 *  including the GUI, and processes any command line arguments.
-	 *  @param args Optional command line arguments.
 	 *  @see #processArgs(String[])
 	 */
-	public BeatRoot(String[] args) {
+	public BeatRoot() {
 		batchMode = false;
 		playWithBeats = false;
 		argsFile = null;
 		reader = null;
 		fileChooser = null;
 		gui = null;
-		processArgs(args);
+		//processArgs(args);
 		audioProcessor = new AudioProcessor();
 		if (!batchMode)
 			fileChooser = new Chooser();
@@ -264,17 +263,17 @@ public class BeatRoot {
 		} else {
 			while (true) {					// loop for each line of args file
 				if (argsFile != null) {
-					args = getArgs();
-					if (args != null)
-						processArgs(args);
-					else
-						break;
+					//args = getArgs();
+					//if (args != null)
+					//	processArgs(args);
+					//else
+					//	break;
 				}
 				if (featureFile != null) {	// for ICASSP'07 paper
 					audioProcessor.processFeatures(featureFile, 512.0 / 44100.0);
 				} else if (audioIn != null) {
 					audioProcessor.setInputFile(audioIn);
-					audioProcessor.processFile();
+					audioProcessor.processFile(null);
 					if (onsetOnly && (textOutputFile != null)) {
 						if (textOutputFile.endsWith(".obj"))
 							audioProcessor.onsetList.writeBinary(textOutputFile);
@@ -433,7 +432,8 @@ public class BeatRoot {
 	 *  @param args Optional command line arguments (see constructor for details)
 	 */
 	public static void main(String[] args) {
-		new BeatRoot(args);
+		new BeatRoot();
+
 	} // main()
 
 } // class BeatRoot
