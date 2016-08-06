@@ -442,7 +442,6 @@ public class AudioProcessor {
                 defaultSampleRate, 16, 2, 4, defaultSampleRate, false);
         channels = audioFormat.getChannels();
         sampleRate = audioFormat.getSampleRate();
-        pcmInputStream = rawInputStream;
         if ((audioFormat.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) ||
                 (audioFormat.getFrameSize() != channels * 2) ||
                 audioFormat.isBigEndian()) {
@@ -454,15 +453,7 @@ public class AudioProcessor {
             audioFormat = desiredFormat;
         }
         init();
-    } catch(
-    Exception e)
-
-    {
-        e.printStackTrace();
-        closeStreams();    // make sure it exits in a consistent state
-    }
-
-} // setInputFile()
+    } // setInputFile()
 
     /**
      * Allocates memory for arrays, based on parameter settings
