@@ -12,7 +12,7 @@ object ActorTest extends App{
   //First message sent to coordinator to begin calculation
 
   coord ! StartLiveAudio
-  Thread.sleep(5000)
+  Thread.sleep(50000)
   coord ! ParseJSON
   Thread.sleep(2500)
   coord ! EndLiveAudio
