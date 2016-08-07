@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class BeatrootAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyser{
+case class BeatrootAnalyser(name: String, buffer: ArrayBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
 
   def addTempo(tempo: Tempo) = {
@@ -24,6 +24,6 @@ object BeatrootAnalyser{
     val buffer = new ArrayBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
     val fullName = name + " BeatrootAnalyser: " + sdf.format(resultDate)
-    BeatrootAnalyser(fullName, buffer)
+    BeatrootAnalyser(fullName, buffer, None)
   }
 }
