@@ -14,6 +14,7 @@ case class BeatrootAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends An
   def addTempo(tempo: Tempo) = {
     buffer += tempo
   }
+
 }
 
 object BeatrootAnalyser{
