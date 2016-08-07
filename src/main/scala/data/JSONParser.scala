@@ -69,13 +69,6 @@ case class JSONParser() {
       )
     }
 
-    implicit val beatrootAnalyzerWrites = new Writes[BeatrootAnalyser] {
-      def writes(analyzer: BeatrootAnalyser) = Json.obj(
-        "name" -> analyzer.name,
-        "buffer" -> analyzer.buffer
-      )
-    }
-
     implicit val statsWrites = new Writes[Stats] {
       def writes(stats: Stats) = Json.obj(
         "averageTempo" -> stats.averageTempo,
@@ -85,8 +78,18 @@ case class JSONParser() {
       )
     }
 
+    implicit val beatrootAnalyzerWrites = new Writes[BeatrootAnalyser] {
+      def writes(analyser: BeatrootAnalyser) = Json.obj(
+        "name" -> analyser.name,
+        "buffer" -> analyser.buffer,
+        "stats" -> analyser.stats
+      )
+    }
+
+
+
     val jsonNew = Json.toJson(obj)
-    json += jsonNew.toString()
+    json += jsonNew.toString() + "]"
     println("json at end of beatroot " + json)
     json
   }
