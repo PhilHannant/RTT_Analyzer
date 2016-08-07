@@ -5,4 +5,6 @@ package data
   */
 trait Analyser {
   def addTempo(tempo: Tempo)
+
+  def addStats(stats: Stats)
 }
