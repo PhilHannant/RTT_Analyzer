@@ -19,6 +19,8 @@ class ProcessingActor extends Actor with ActorLogging{
   val beatrootAnalyser = BeatrootAnalyser("beatroot", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
+  val wormBpmBuffer = ArrayBuffer[Double]()
+  val beatrootBpmBuffer = ArrayBuffer[Double]()
   val b: BeatRoot = new BeatRoot()
   b.audioProcessor.setInput()
 
@@ -54,5 +56,7 @@ class ProcessingActor extends Actor with ActorLogging{
       System.exit(0)
 
   }
+
+
 
 }
