@@ -76,8 +76,17 @@ case class JSONParser() {
       )
     }
 
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff
+      )
+    }
+
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString() + "]"
+    json += jsonNew.toString()
     println("json at end of beatroot " + json)
     json
   }
