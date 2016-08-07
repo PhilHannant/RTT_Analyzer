@@ -213,8 +213,8 @@ class JSONParserTest extends FlatSpec {
     a.addTempo(t2)
     a.stats = Some(s)
     val expected = jp.write(a)
-    jp.flush("/Users/philhannant/Desktop/Tempo.json")
-    val source: String = Source.fromFile("/Users/philhannant/Desktop/Tempo.json").getLines.mkString
+    jp.flush("/Users/philhannant/Desktop/TempoTest1.json")
+    val source: String = Source.fromFile("/Users/philhannant/Desktop/TempoTest1.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val result = json.toString()
     assertResult(expected)(result)
