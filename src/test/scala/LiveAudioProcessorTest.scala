@@ -3,7 +3,7 @@ import dwtbpm.WaveletBPMDetector
 import org.scalatest._
 import liveaudio._
 import at.ofai.music.worm._
-import data.{DWTAnalyser, JSONParser, Tempo, WormAnalyser}
+import data._
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ArrayBuffer
@@ -120,6 +120,7 @@ class TempoObjectTest extends FlatSpec {
     assertResult(expected)(result)
   }
 
+
 }
 
 class JSONParserTest extends FlatSpec {
@@ -201,4 +202,22 @@ class JSONParserTest extends FlatSpec {
     println(result)
     assertResult(expectedNew)(result)
   }
+
+  "A JSONParser" should "take a stats object to" in {
+    val jp = JSONParser()
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val a = BeatrootAnalyser("test")
+    val s = Stats(1, 2, 3, 4)
+    a.addTempo(t1)
+    a.addTempo(t2)
+    val expected = jp.write(a, s)
+    jp.flush("/Users/philhannant/Desktop/Tempo.json")
+    val source: String = Source.fromFile("/Users/philhannant/Desktop/Tempo.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val result = json.toString()
+    assertResult(expected)(result)
+  }
+
+
 }
