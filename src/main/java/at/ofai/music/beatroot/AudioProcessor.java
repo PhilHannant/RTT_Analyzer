@@ -721,15 +721,22 @@ public class AudioProcessor {
      * Processes a complete file of audio data.
      */
     public void processFile(byte[] array) {
-        in = new ByteArrayInputStream(array);
-        while (totalBytesRead < 525672) {
-            // Profile.start(0);
-            processFrame();
-            // Profile.log(0);
-            if (Thread.currentThread().isInterrupted()) {
-                System.err.println("info: INTERRUPTED in processFile()");
-                return;
+        try {
+            in = new ByteArrayInputStream(array);
+            while (totalBytesRead < 525672) {
+                // Profile.start(0);
+                processFrame();
+                // Profile.log(0);
+                if (Thread.currentThread().isInterrupted()) {
+                    System.err.println("info: INTERRUPTED in processFile()");
+                    return;
+                }
+
             }
+            in.close();
+            totalBytesRead = 0;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 //		double[] x1 = new double[phaseDeviation.length];
