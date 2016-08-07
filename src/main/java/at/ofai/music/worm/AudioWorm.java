@@ -426,7 +426,7 @@ public class AudioWorm {
 					tempo = ti.getTempo(tmp); // rms amp or dB?
 //				System.out.println(i + ", " + inputBuffer[0] + ", " + inputBuffer[1] + ", " + inputBuffer[2] + ", " + inputBuffer[3]);
 				    //tempo = ti.getTempo(120 + 20 / Math.log(10) * Math.log(tmp));
-                processingActor.tell(new NewTempoWorm(tempo, 120), processingActor);
+                processingActor.tell(new NewTempoWorm(60/tempo, 120), processingActor);
 				if (isFileInput) {
 					if (ti.onset)	// mark detected onsets with a click
 						for (int j = 0; j < 882; ) {
