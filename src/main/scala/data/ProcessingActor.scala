@@ -16,6 +16,7 @@ class ProcessingActor extends Actor with ActorLogging{
 
   val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo]())//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
+  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ArrayBuffer[Tempo]())//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
   val b: BeatRoot = new BeatRoot()
