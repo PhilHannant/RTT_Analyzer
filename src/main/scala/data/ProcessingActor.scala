@@ -43,6 +43,9 @@ class ProcessingActor extends Actor with ActorLogging{
     case NewTempoWorm(tempo, expected) =>
       val t = Tempo(tempo, expected)
       wormAnalyser.addTempo(t)
+    case NewTempoBeatroot(tempo, expected) =>
+      val t = Tempo(tempo, expected)
+      beatrootAnalyser.addTempo(t)
     case ParseJSON =>
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
