@@ -52,10 +52,33 @@ case class JSONParser() {
       )
     }
 
-
     val jsonNew = Json.toJson(obj)
     json += "," + jsonNew.toString() + "]"
     println("json at end of dwt " + json)
+    json
+  }
+
+
+  def write(obj: BeatrootAnalyser): String = {
+
+    implicit val tempoWrites = new Writes[Tempo] {
+      def writes(tempo: Tempo) = Json.obj(
+        "tempo" -> tempo.tempo,
+        "expectedTempo" -> tempo.baseTempo,
+        "difference" -> tempo.difference
+      )
+    }
+
+    implicit val beatrootAnalyzerWrites = new Writes[BeatrootAnalyser] {
+      def writes(analyzer: BeatrootAnalyser) = Json.obj(
+        "name" -> analyzer.name,
+        "buffer" -> analyzer.buffer
+      )
+    }
+
+    val jsonNew = Json.toJson(obj)
+    json += "," + jsonNew.toString() + "]"
+    println("json at end of beatroot " + json)
     json
   }
 
