@@ -1,6 +1,4 @@
-package dwtbpm
-
-import data.Tempo
+package data
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
