@@ -53,7 +53,8 @@ class ProcessingActor extends Actor with ActorLogging{
     case ParseJSON =>
 
       dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
-
+      wormAnalyser.stats = Some(addStats(wormStatsuffer))
+      beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
 
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
