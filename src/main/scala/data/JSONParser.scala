@@ -21,11 +21,21 @@ case class JSONParser() {
       )
     }
 
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff
+      )
+    }
 
     implicit val wormAnalyzerWrites = new Writes[WormAnalyser] {
-      def writes(analyzer: WormAnalyser) = Json.obj(
-        "name" -> analyzer.name,
-        "buffer" -> analyzer.buffer
+      def writes(analyser: WormAnalyser) = Json.obj(
+        "name" -> analyser.name,
+        "buffer" -> analyser.buffer,
+        "stats" -> analyser.stats
+
       )
     }
 
@@ -45,10 +55,20 @@ case class JSONParser() {
       )
     }
 
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff
+      )
+    }
+
     implicit val dwtAnalyzerWrites = new Writes[DWTAnalyser] {
-      def writes(analyzer: DWTAnalyser) = Json.obj(
-        "name" -> analyzer.name,
-        "buffer" -> analyzer.buffer
+      def writes(analyser: DWTAnalyser) = Json.obj(
+        "name" -> analyser.name,
+        "buffer" -> analyser.buffer,
+        "stats" -> analyser.stats
       )
     }
 
