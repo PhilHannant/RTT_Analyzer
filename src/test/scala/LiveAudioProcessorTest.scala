@@ -257,4 +257,20 @@ class JSONParserTest extends FlatSpec {
       assertResult(expected)(result)
     }
 
+    "A StatsCalculator" should "return an average" in {
+      val s = new StatsCalculator
+      val buff = new ListBuffer[Tempo]()
+      val t1 = Tempo(115, 120)
+      val t2 = Tempo(125, 120)
+      val t3 = Tempo(135, 120)
+      val t4 = Tempo(145, 120)
+      buff += t1
+      buff += t2
+      buff += t3
+      buff += t4
+      val result = s.getAverage(buff, "tempo")
+      val expected = (115+125+135+145)/4
+      assertResult(expected)(result)
+    }
+
   }
