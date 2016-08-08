@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class WormAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyser{
+case class WormAnalyser(name: String, buffer: ArrayBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
   def addTempo(tempo: Tempo) = {
     buffer += tempo
@@ -22,6 +22,6 @@ object WormAnalyser{
     val buffer = new ArrayBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
     val fullName = name + " WormAnalyser: " + sdf.format(resultDate)
-    WormAnalyser(fullName, buffer)
+    WormAnalyser(fullName, buffer, None)
   }
 }
