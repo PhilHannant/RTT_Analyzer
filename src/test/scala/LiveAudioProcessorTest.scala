@@ -253,7 +253,7 @@ class JSONParserTest extends FlatSpec {
       val s = new StatsCalculator
       val buff = List[Tempo](Tempo(115, 120), Tempo(125, 112), Tempo(135, 121), Tempo(145, 132))
       val result = s.getDiffs(buff)
-      val expected = List[Double](120, 112, 121, 132)
+      val expected = List[Double](120-115, 112-125, 121-135, 132-145)
       assertResult(expected)(result)
     }
 
