@@ -6,7 +6,7 @@ import at.ofai.music.beatroot.BeatRoot
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
   * Created by philhannant on 02/08/2016.
@@ -14,9 +14,9 @@ import scala.collection.mutable.ArrayBuffer
 class ProcessingActor extends Actor with ActorLogging{
 
 
-  val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo](), None)//placeholders
-  val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo](), None)//placeholders
-  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ArrayBuffer[Tempo](), None)//placeholders
+  val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
+  val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
+  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ListBuffer[Tempo](), None)//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
   val wormBpmBuffer = ArrayBuffer[Double]()
