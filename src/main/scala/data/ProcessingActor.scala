@@ -18,9 +18,9 @@ class ProcessingActor extends Actor with ActorLogging{
   val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
   val beatrootAnalyser = BeatrootAnalyser("beatroot", new ListBuffer[Tempo](), None)//placeholders
   val jsonParser = JSONParser()
-  val dwtBpmBuffer = ArrayBuffer[Double]()
-  val wormBpmBuffer = ArrayBuffer[Double]()
-  val beatrootBpmBuffer = ArrayBuffer[Double]()
+  val dwtStatsBuffer = ListBuffer[Tempo]()
+  val wormStatsuffer = ListBuffer[Tempo]()
+  val beatStatsBpmBuffer = ListBuffer[Tempo]()
   val b: BeatRoot = new BeatRoot()
   b.audioProcessor.setInput()
 
@@ -40,13 +40,15 @@ class ProcessingActor extends Actor with ActorLogging{
       b.gui.displayPanel.beatTrack()
     case NewTempoDwt(tempo, expected) =>
       val t = Tempo(tempo, expected)
-      dwtBpmBuffer += tempo
+      dwtStatsBuffer += t
       dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo, expected) =>
       val t = Tempo(tempo, expected)
+      wormStatsuffer += t
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, expected) =>
       val t = Tempo(tempo, expected)
+      beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
       jsonParser.write(wormAnalyser)
