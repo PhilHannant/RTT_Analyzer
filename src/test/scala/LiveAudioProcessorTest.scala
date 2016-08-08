@@ -1,5 +1,6 @@
 
 import dwtbpm.WaveletBPMDetector
+import dwtbpm.ArrayOperations
 import org.scalatest._
 import liveaudio._
 import at.ofai.music.worm._
@@ -220,5 +221,19 @@ class JSONParserTest extends FlatSpec {
     assertResult(expected)(result)
   }
 
-
 }
+
+  class StatsObjectTest extends FlatSpec {
+    val buff = new ArrayBuffer[Tempo]()
+    val t1 = Tempo(115, 120)
+    val t2 = Tempo(125, 120)
+    val t3 = Tempo(135, 120)
+    val t4 = Tempo(145, 120)
+    buff += t1
+    buff += t2
+    buff += t3
+    buff += t4
+    val result = buff.toArray.median
+    val expected = 130
+    assertResult(expected)(result)
+  }
