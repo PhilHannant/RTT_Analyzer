@@ -53,11 +53,8 @@ class ProcessingActor extends Actor with ActorLogging{
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
 
-      dWtAnalyser.stats =
-        Some(Stats(sc.getAverage(dwtStatsBuffer, "tempo"),
-        sc.getMedian(dwtStatsBuffer, "tempo"),
-        sc.getAverage(dwtStatsBuffer, "diffs"),
-        sc.getMedian(dwtStatsBuffer, "diffs")))
+      dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
+
 
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
@@ -67,6 +64,11 @@ class ProcessingActor extends Actor with ActorLogging{
 
   }
 
-
+  def addStats(lb: ListBuffer[Tempo]): Stats = {
+    Stats(sc.getAverage(lb, "tempo"),
+      sc.getMedian(lb, "tempo"),
+      sc.getAverage(lb, "diffs"),
+      sc.getMedian(lb, "diffs"))
+  }
 
 }
