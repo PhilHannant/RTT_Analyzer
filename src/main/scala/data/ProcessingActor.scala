@@ -21,7 +21,6 @@ class ProcessingActor extends Actor with ActorLogging{
   val dwtStatsBuffer = ListBuffer[Tempo]()
   val wormStatsuffer = ListBuffer[Tempo]()
   val beatStatsBpmBuffer = ListBuffer[Tempo]()
-  val sc = StatsCalculator()
   val b: BeatRoot = new BeatRoot()
   b.audioProcessor.setInput()
 
@@ -65,6 +64,7 @@ class ProcessingActor extends Actor with ActorLogging{
   }
 
   def addStats(lb: ListBuffer[Tempo]): Stats = {
+    val sc = StatsCalculator()
     Stats(sc.getAverage(lb, "tempo"),
       sc.getMedian(lb, "tempo"),
       sc.getAverage(lb, "diffs"),
