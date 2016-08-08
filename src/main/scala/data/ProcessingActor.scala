@@ -58,6 +58,7 @@ class ProcessingActor extends Actor with ActorLogging{
 
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
+      jsonParser.write(beatrootAnalyser)
       jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest.json")
       context.system.terminate()
       System.exit(0)
