@@ -2,6 +2,7 @@ package dwtbpm
 
 import data.Tempo
 
+import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -20,6 +21,26 @@ case class StatsCalculator() {
     val (lower, upper) = list.sortWith(_<_).splitAt(list.size / 2)
     if (list.size % 2 == 0) (lower.last + upper.head) / 2.0 else upper.head
   }
+
+  def getAverage(listBuff: ListBuffer[Tempo], identifer: String): Double =
+    identifer match {
+      case "tempo" =>  val list = getTempos(listBuff.toList); average(list)
+      case "diffs" => val list = getTempos(listBuff.toList); average(list)
+    }
+
+
+  def average(list: List[Double]): Double = {
+
+    @tailrec
+    def averageTR(list: List[Double], size: Double, total: Double): Double = list match {
+      case x :: xs => averageTR(xs, size + 1, total + x)
+      case Nil => total/size
+    }
+
+    averageTR(list, 0, 0)
+  }
+
+
 
   def getTempos(lst: List[Tempo]): List[Double] =
      lst match {
