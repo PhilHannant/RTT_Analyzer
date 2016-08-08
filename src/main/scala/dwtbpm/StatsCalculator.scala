@@ -9,15 +9,15 @@ import scala.collection.mutable.ListBuffer
   */
 case class StatsCalculator() {
 
-//  def median(listBuff: ListBuffer[Tempo]): Double = {
-//
-//
-//
-//
-//    val (lower, upper) = array.sortWith(_<_).splitAt(array.size / 2)
-//    if (array.size % 2 == 0) (lower.last + upper.head) / 2.0 else upper.head
-//
-//  }
+  def median(listBuff: ListBuffer[Tempo]): Double = {
+
+    val list = getTempos(listBuff.toList)
+
+    //adapted from the sample at Rosetta code
+    val (lower, upper) = list.sortWith(_<_).splitAt(list.size / 2)
+    if (list.size % 2 == 0) (lower.last + upper.head) / 2.0 else upper.head
+
+  }
 
   def getTempos(lst: List[Tempo]): List[Double] =
      lst match {
