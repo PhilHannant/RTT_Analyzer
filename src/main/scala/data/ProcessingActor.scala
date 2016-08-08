@@ -14,9 +14,9 @@ import scala.collection.mutable.ArrayBuffer
 class ProcessingActor extends Actor with ActorLogging{
 
 
-  val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo]())//placeholders
-  val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo]())//placeholders
-  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ArrayBuffer[Tempo]())//placeholders
+  val wormAnalyser = WormAnalyser("worm", new ArrayBuffer[Tempo](), None)//placeholders
+  val dWtAnalyser = DWTAnalyser("dwt", new ArrayBuffer[Tempo](), None)//placeholders
+  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ArrayBuffer[Tempo](), None)//placeholders
   val jsonParser = JSONParser()
   val dwtBpmBuffer = ArrayBuffer[Double]()
   val wormBpmBuffer = ArrayBuffer[Double]()
