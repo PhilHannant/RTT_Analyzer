@@ -217,7 +217,7 @@ class WaveletBPMDetector (
           computeWindowBpm(leftChannelSamples)
         }
 
-        _bpm = instantBpm(0)//.toArray.median
+        _bpm = instantBpm.toArray.median
 
     }
     _bpm
