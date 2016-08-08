@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class DWTAnalyser(name: String, buffer: ArrayBuffer[Tempo]) extends Analyser{
+case class DWTAnalyser(name: String, buffer: ArrayBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
 
   def addTempo(tempo: Tempo) = {
@@ -23,6 +23,6 @@ object DWTAnalyser{
     val buffer = new ArrayBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
     val fullName = name + " DWTAnalyser: " + sdf.format(resultDate)
-    DWTAnalyser(fullName, buffer)
+    DWTAnalyser(fullName, buffer, None)
   }
 }
