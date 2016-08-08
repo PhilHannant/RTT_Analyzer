@@ -225,21 +225,21 @@ class JSONParserTest extends FlatSpec {
   class StatsObjectTest extends FlatSpec {
 
 
-//    "A StatsCalculator" should "return a median of a listbuffer" in {
-//      val s = new StatsCalculator
-//      val buff = new ListBuffer[Tempo]()
-//      val t1 = Tempo(115, 120)
-//      val t2 = Tempo(125, 120)
-//      val t3 = Tempo(135, 120)
-//      val t4 = Tempo(145, 120)
-//      buff += t1
-//      buff += t2
-//      buff += t3
-//      buff += t4
-//      val result = s.getTempos(buff)
-//      val expected = 130
-//      assertResult(expected)(result)
- //   }
+    "A StatsCalculator" should "return a median of a listbuffer" in {
+      val s = new StatsCalculator
+      val buff = new ListBuffer[Tempo]()
+      val t1 = Tempo(115, 120)
+      val t2 = Tempo(125, 120)
+      val t3 = Tempo(135, 120)
+      val t4 = Tempo(145, 120)
+      buff += t1
+      buff += t2
+      buff += t3
+      buff += t4
+      val result = s.median(buff)
+      val expected = 130
+      assertResult(expected)(result)
+    }
 
     "A StatsCalculator" should "return a list of tempo values" in {
       val s = new StatsCalculator
