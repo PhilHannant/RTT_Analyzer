@@ -24,4 +24,10 @@ case class StatsCalculator() {
        case x :: xs => x.tempo :: getTempos(xs)
        case Nil => Nil
   }
+
+  def getDiffs(lst: List[Tempo]): List[Double] =
+    lst match {
+      case x :: xs => x.difference :: getDiffs(xs)
+      case Nil => Nil
+    }
 }
