@@ -236,7 +236,7 @@ class JSONParserTest extends FlatSpec {
       buff += t2
       buff += t3
       buff += t4
-      val result = s.median(buff)
+      val result = s.getMedian(buff, "tempo")
       val expected = 130
       assertResult(expected)(result)
     }
