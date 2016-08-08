@@ -21,6 +21,7 @@ class ProcessingActor extends Actor with ActorLogging{
   val dwtStatsBuffer = ListBuffer[Tempo]()
   val wormStatsuffer = ListBuffer[Tempo]()
   val beatStatsBpmBuffer = ListBuffer[Tempo]()
+  val sc = StatsCalculator()
   val b: BeatRoot = new BeatRoot()
   b.audioProcessor.setInput()
 
@@ -51,6 +52,13 @@ class ProcessingActor extends Actor with ActorLogging{
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
+
+      dWtAnalyser.stats =
+        Some(Stats(sc.getAverage(dwtStatsBuffer, "tempo"),
+        sc.getMedian(dwtStatsBuffer, "tempo"),
+        sc.getAverage(dwtStatsBuffer, "diffs"),
+        sc.getMedian(dwtStatsBuffer, "diffs")))
+
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
       jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest.json")
