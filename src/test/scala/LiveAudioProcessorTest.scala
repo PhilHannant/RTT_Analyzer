@@ -249,4 +249,12 @@ class JSONParserTest extends FlatSpec {
       assertResult(expected)(result)
     }
 
+    "A StatsCalculator" should "return a list if difference values" in {
+      val s = new StatsCalculator
+      val buff = List[Tempo](Tempo(115, 120), Tempo(125, 112), Tempo(135, 121), Tempo(145, 132))
+      val result = s.getDiffs(buff)
+      val expected = List[Double](120, 112, 121, 132)
+      assertResult(expected)(result)
+    }
+
   }
