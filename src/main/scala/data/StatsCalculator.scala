@@ -11,7 +11,7 @@ case class StatsCalculator() {
   def getMedian(listBuff: ListBuffer[Tempo], identifer: String): Double =
     identifer match {
       case "tempo" =>  val list = getTempos(listBuff.toList); median(list)
-      case "diffs" => val list = getTempos(listBuff.toList); median(list)
+      case "diffs" => val list = getDiffs(listBuff.toList); median(list)
   }
 
   def median(list: List[Double]): Double = {
@@ -23,7 +23,7 @@ case class StatsCalculator() {
   def getAverage(listBuff: ListBuffer[Tempo], identifer: String): Double =
     identifer match {
       case "tempo" =>  val list = getTempos(listBuff.toList); average(list)
-      case "diffs" => val list = getTempos(listBuff.toList); average(list)
+      case "diffs" => val list = getDiffs(listBuff.toList); average(list)
     }
 
 
@@ -31,8 +31,9 @@ case class StatsCalculator() {
 
     @tailrec
     def averageTR(list: List[Double], size: Double, total: Double): Double = list match {
+      case Nil => println(total); println(size); total/size
       case x :: xs => averageTR(xs, size + 1, total + x)
-      case Nil => total/size
+
     }
 
     averageTR(list, 0, 0)
