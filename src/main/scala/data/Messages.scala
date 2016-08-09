@@ -9,5 +9,5 @@ case class EndLiveAudio() extends Messages
 case class ProcessBytes(data: Array[Byte]) extends Messages
 case class NewTempoWorm(tempo: Double, expected: Double) extends Messages
 case class NewTempoDwt(tempo: Double, expected: Double) extends Messages
-case class NewTempoBeatroot(tempo: Double, expected: Double) extends Messages
+case class NewTempoBeatroot(tempo: Double, expected: Double, beatCount: Double) extends Messages
 case class ParseJSON() extends Messages
