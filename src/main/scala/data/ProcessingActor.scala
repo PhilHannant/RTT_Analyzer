@@ -37,7 +37,7 @@ class ProcessingActor extends Actor with ActorLogging{
       b.audioProcessor.processFile(data)
       b.audioProcessor.setDisplay(b.gui.displayPanel) // after processing
       b.gui.updateDisplay(true)
-      b.gui.displayPanel.beatTrack()
+      b.gui.displayPanel.beatTrack(self)
     case NewTempoDwt(tempo, expected) =>
       val t = Tempo(tempo, expected)
       dwtStatsBuffer += t
