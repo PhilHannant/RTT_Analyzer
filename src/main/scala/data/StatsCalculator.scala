@@ -39,19 +39,20 @@ case class StatsCalculator() {
     averageTR(list, 0, 0)
   }
 
-  def totalbeatCount(list: List[Any]): Double = {
+  def getTotal(listBuff: ListBuffer[Tempo]): Double = {
+    val list = getBeatCounts(listBuff.toList); totalbeatCount(list)
+  }
 
-    def totalHelper(lst: List[Any], total: Double): Double =
+  def totalbeatCount(list: List[Double]): Double = {
+
+    @tailrec
+    def totalHelper(lst: List[Double], total: Double): Double =
       lst match {
         case Nil => total
         case x :: xs => totalHelper(xs, total + x)
       }
 
-    totalHelper(list, 0)  def getDiffs(lst: List[Tempo]): List[Double] =
-    lst match {
-      case x :: xs => x.difference :: getDiffs(xs)
-      case Nil => Nil
-    }
+    totalHelper(list, 0)
   }
 
 
@@ -69,9 +70,15 @@ case class StatsCalculator() {
       case Nil => Nil
     }
 
-  def getBeatCounts(lst: List[Tempo]): List[Any] =
+  def getBeatCounts(lst: List[Tempo]): List[Double] =
     lst match {
-      case x :: xs => x :: getBeatCounts(xs)
+      case x :: xs => unwrapOption(x.beatCount) :: getBeatCounts(xs)
       case Nil => Nil
+    }
+
+  def unwrapOption(head: Option[Double]): Double =
+    head match {
+      case Some(value) => value
+      case None => throw new RuntimeException("blah")
     }
 }
