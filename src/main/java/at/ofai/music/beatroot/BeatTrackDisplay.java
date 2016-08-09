@@ -30,8 +30,10 @@ import java.util.ListIterator;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import akka.actor.ActorRef;
 import at.ofai.music.util.Event;
 import at.ofai.music.util.EventList;
+import data.NewTempoBeatroot;
 
 /** Main panel of BeatRoot's GUI, which displays the audio and beat data
 *  and allows editing, scrolling, selecting, etc
@@ -1202,6 +1204,54 @@ public class BeatTrackDisplay
             System.err.println("No best agent");
 	} // beatTrack()
 
+	public void beatTrack(ActorRef processingActor) {
+		System.out.println("beatTrack2");
+		System.out.println(beats.size());
+		AgentList agents = null;
+		double beatTime = -1.0;
+		int count = 0;
+		clearBeats();							// clears the selected region
+		EventList endBeats = new EventList();
+		while (beatPtr.hasNext()) {				// save beats after the selected region
+			endBeats.add(beatPtr.next());
+			beatPtr.remove();
+		}
+		System.out.println("b" + beats.size());
+		if (beats.size() > 1) {					// tempo given by mean of initial beats
+			count = beats.size() - 1;
+			beatTime = beats.l.getLast().keyDown;
+			double ioi = (beatTime - beats.l.getFirst().keyDown) / count;
+			System.out.println("ioi = " + ioi);
+			agents = new AgentList(new Agent(ioi), null);
+		} else if (endBeats.size() > 1) {		// tempo given by mean of final beats
+			double ioi = (endBeats.l.getLast().keyDown - endBeats.l.getFirst().keyDown) /
+					(endBeats.size() - 1);
+			System.out.println("ioi = " + ioi);
+			agents = new AgentList(new Agent(ioi), null);
+		} else									// tempo not given; use tempo induction
+			System.out.println(onsetList.size());
+		agents = Induction.beatInduction(onsetList);
+		for (AgentList ptr = agents; ptr.ag != null; ptr = ptr.next) {
+			ptr.ag.beatTime = beatTime;
+			System.out.println("beatTime = " + beatTime);
+			ptr.ag.beatCount = count;
+			System.out.println("count = " + count);
+			ptr.ag.events = new EventList(beats);
+			System.out.println("pae1 = " + (60/ptr.ag.beatInterval));
+		}
+		//onsetList.print();
+		agents.beatTrack(onsetList, endSelection);
+		Agent best = agents.bestAgent();
+		System.out.println(60/best.beatInterval + "here");
+		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, 120), processingActor);
+		System.out.println(best.beatCount);
+		if (best != null) {
+			best.fillBeats(startSelection);
+			best.events.add(endBeats);
+			gui.setBeatData(best.events);
+		} else
+			System.err.println("No best agent");
+	} // beatTrack()
 	/** Constant representing an unknown relationship between metrical levels */
 	protected static final double UNKNOWN = -1.0;
 	
