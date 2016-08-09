@@ -1,5 +1,5 @@
 
-import dwtbpm.{ArrayOperations, StatsCalculator, WaveletBPMDetector}
+import dwtbpm.{ArrayOperations, WaveletBPMDetector}
 import org.scalatest._
 import liveaudio._
 import at.ofai.music.worm._
