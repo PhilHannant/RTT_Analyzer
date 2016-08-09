@@ -1243,7 +1243,7 @@ public class BeatTrackDisplay
 		agents.beatTrack(onsetList, endSelection);
 		Agent best = agents.bestAgent();
 		System.out.println(60/best.beatInterval + "here");
-		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, 120), processingActor);
+		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, 120, best.beatCount), processingActor);
 		System.out.println(best.beatCount);
 		if (best != null) {
 			best.fillBeats(startSelection);
