@@ -273,4 +273,20 @@ class JSONParserTest extends FlatSpec {
       assertResult(expected)(result)
     }
 
+    "A StatsCalculator" should "return the total beatCount" in {
+      val s = new StatsCalculator
+      val buff = new ListBuffer[Tempo]()
+      val t1 = Tempo(115, 120, Some(4))
+      val t2 = Tempo(125, 120, Some(3))
+      val t3 = Tempo(135, 120, Some(5))
+      val t4 = Tempo(145, 120, Some(9))
+      buff += t1
+      buff += t2
+      buff += t3
+      buff += t4
+      val result = s.getTotal(buff)
+      val expected = 21
+      assertResult(expected)(result)
+    }
+
   }
