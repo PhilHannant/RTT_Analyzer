@@ -228,10 +228,10 @@ class JSONParserTest extends FlatSpec {
     "A StatsCalculator" should "return a median of a listbuffer" in {
       val s = new StatsCalculator
       val buff = new ListBuffer[Tempo]()
-      val t1 = Tempo(115, 120)
-      val t2 = Tempo(125, 120)
-      val t3 = Tempo(135, 120)
-      val t4 = Tempo(145, 120)
+      val t1 = Tempo(115, 120, None)
+      val t2 = Tempo(125, 120, None)
+      val t3 = Tempo(135, 120, None)
+      val t4 = Tempo(145, 120, None)
       buff += t1
       buff += t2
       buff += t3
@@ -243,7 +243,7 @@ class JSONParserTest extends FlatSpec {
 
     "A StatsCalculator" should "return a list of tempo values" in {
       val s = new StatsCalculator
-      val buff = List[Tempo](Tempo(115, 120), Tempo(125, 120), Tempo(135, 120), Tempo(145, 120))
+      val buff = List[Tempo](Tempo(115, 120, None), Tempo(125, 120, None), Tempo(135, 120, None), Tempo(145, 120, None))
       val result = s.getTempos(buff)
       val expected = List[Double](115, 125, 135, 145)
       assertResult(expected)(result)
@@ -251,7 +251,7 @@ class JSONParserTest extends FlatSpec {
 
     "A StatsCalculator" should "return a list if difference values" in {
       val s = new StatsCalculator
-      val buff = List[Tempo](Tempo(115, 120), Tempo(125, 112), Tempo(135, 121), Tempo(145, 132))
+      val buff = List[Tempo](Tempo(115, 120, None), Tempo(125, 112, None), Tempo(135, 121, None), Tempo(145, 132, None))
       val result = s.getDiffs(buff)
       val expected = List[Double](120-115, 112-125, 121-135, 132-145)
       assertResult(expected)(result)
@@ -260,10 +260,10 @@ class JSONParserTest extends FlatSpec {
     "A StatsCalculator" should "return an average" in {
       val s = new StatsCalculator
       val buff = new ListBuffer[Tempo]()
-      val t1 = Tempo(115, 120)
-      val t2 = Tempo(125, 120)
-      val t3 = Tempo(135, 120)
-      val t4 = Tempo(145, 120)
+      val t1 = Tempo(115, 120, None)
+      val t2 = Tempo(125, 120, None)
+      val t3 = Tempo(135, 120, None)
+      val t4 = Tempo(145, 120, None)
       buff += t1
       buff += t2
       buff += t3
