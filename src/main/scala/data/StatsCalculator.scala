@@ -39,6 +39,22 @@ case class StatsCalculator() {
     averageTR(list, 0, 0)
   }
 
+  def totalbeatCount(list: List[Any]): Double = {
+
+    def totalHelper(lst: List[Any], total: Double): Double =
+      lst match {
+        case Nil => total
+        case x :: xs => totalHelper(xs, total + x)
+      }
+
+    totalHelper(list, 0)  def getDiffs(lst: List[Tempo]): List[Double] =
+    lst match {
+      case x :: xs => x.difference :: getDiffs(xs)
+      case Nil => Nil
+    }
+  }
+
+
 
 
   def getTempos(lst: List[Tempo]): List[Double] =
@@ -50,6 +66,12 @@ case class StatsCalculator() {
   def getDiffs(lst: List[Tempo]): List[Double] =
     lst match {
       case x :: xs => x.difference :: getDiffs(xs)
+      case Nil => Nil
+    }
+
+  def getBeatCounts(lst: List[Tempo]): List[Any] =
+    lst match {
+      case x :: xs => x :: getBeatCounts(xs)
       case Nil => Nil
     }
 }
