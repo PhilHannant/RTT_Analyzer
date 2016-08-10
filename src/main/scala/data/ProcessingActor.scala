@@ -70,7 +70,8 @@ class ProcessingActor extends Actor with ActorLogging{
     Stats(sc.getAverage(lb, "tempo"),
       sc.getMedian(lb, "tempo"),
       sc.getAverage(lb, "diffs"),
-      sc.getMedian(lb, "diffs"))
+      sc.getMedian(lb, "diffs"),
+      sc.getTotal(lb))
   }
 
 }
