@@ -79,6 +79,6 @@ case class StatsCalculator() {
   def unwrapOption(head: Option[Double]): Double =
     head match {
       case Some(value) => value
-      case None => throw new RuntimeException("blah")
+      case None => 0 //throw new RuntimeException("None present")
     }
 }
