@@ -208,7 +208,7 @@ class JSONParserTest extends FlatSpec {
     val t1 = Tempo(115, 120, None)
     val t2 = Tempo(125, 120, None)
     val a = BeatrootAnalyser("test")
-    val s = Stats(1, 2, 3, 4)
+    val s = Stats(1, 2, 3, 4, 4)
     a.addTempo(t1)
     a.addTempo(t2)
     a.stats = Some(s)
