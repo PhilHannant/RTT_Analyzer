@@ -145,7 +145,7 @@ public class TempoInducer {
 	} // constructor
 
 	public double getTempo(double amp) {
-        System.out.println("ampl " + amp);
+//        System.out.println("ampl " + amp);
 		int i;
 		counter++;
 		for (i = 0; i < SLOPE_POINTS - 1; i++) {
@@ -182,7 +182,7 @@ public class TempoInducer {
 			addPeak(timeBase * (counter - MID_POINT), envelope[MID_POINT]);
 		} else
 			onset = false;
-		System.out.println("tempo " + 60/tempo);
+		//System.out.println("tempo " + 60/tempo);
 		return tempo;
 	} // getTempo
 	
