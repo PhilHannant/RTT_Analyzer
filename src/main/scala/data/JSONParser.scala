@@ -95,7 +95,8 @@ case class JSONParser() {
         "averageTempo" -> stats.averageTempo,
         "medianTempo" -> stats.medianDiff,
         "averageDiff" -> stats.averageDiff,
-        "medianDiff" -> stats.medianDiff
+        "medianDiff" -> stats.medianDiff,
+        "totalBeatCount" -> stats.totalBeatCount
       )
     }
 
