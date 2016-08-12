@@ -25,6 +25,21 @@ object GUI extends JFXApp {
     height = 450
     scene = new Scene {
 
+      val headingBox = new HBox
+      headingBox.padding = Insets(20)
+      headingBox.children = Seq(
+        new Text {
+          text = "RTT_ANalyser "
+          style = "-fx-font-size: 36pt"
+          fill = new LinearGradient(
+            endX = 0,
+            stops = Stops(DarkGray, Gray))
+        })
+
+      val startButton = new Button("Start")
+      startButton.layoutX = 300
+      startButton.layoutY = 225
+
       val enterBpm = new Label("Enter expected BPM")
       enterBpm.layoutX = 200
       enterBpm.layoutY = 100
@@ -34,22 +49,9 @@ object GUI extends JFXApp {
       expectedBpm.layoutY = 100
       expectedBpm.promptText = "BPM?"
 
-      content = Set(new Button("Start") {
-        layoutX = 300
-        layoutY = 225
-      }, new HBox {
-        padding = Insets(20)
-        children = Seq(
-          new Text {
-            text = "RTT_ANalyser "
-            style = "-fx-font-size: 36pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(DarkGray, Gray))
-          }
-        )
-      }, enterBpm, expectedBpm
-      )
+
+      content = List(startButton, headingBox, enterBpm, expectedBpm)
+
     }
   }
 }
