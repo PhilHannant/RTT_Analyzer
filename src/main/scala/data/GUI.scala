@@ -4,7 +4,7 @@ import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.{Button, Label, TextField}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
@@ -29,7 +29,10 @@ object GUI extends JFXApp {
       enterBpm.layoutX = 200
       enterBpm.layoutY = 100
 
-      
+      val expectedBpm = new TextField
+      expectedBpm.layoutX = 300
+      expectedBpm.layoutY = 100
+      expectedBpm.promptText = "BPM?"
 
       content = Set(new Button("Start") {
         layoutX = 300
@@ -45,7 +48,7 @@ object GUI extends JFXApp {
               stops = Stops(DarkGray, Gray))
           }
         )
-      }
+      }, enterBpm, expectedBpm
       )
     }
   }
