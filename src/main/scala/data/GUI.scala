@@ -3,6 +3,7 @@ package data
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
+import scalafx.scene.control.Button
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
@@ -14,17 +15,12 @@ import scalafx.scene.shape.Rectangle
 object GUI extends JFXApp {
 
   stage = new JFXApp.PrimaryStage {
-    title = "Hello World"
+    title = "RTT_Analyser"
     width = 600
     height = 450
     scene = new Scene {
-      fill = Color.LIGHTGREEN
-      content = Set(new Rectangle {
-        x = 25
-        y = 40
-        width = 100
-        height = 100
-        fill <== when(hover) choose Color.GREEN otherwise Color.RED
+      content = Set(new Button("Start") {
+
       })
     }
   }
