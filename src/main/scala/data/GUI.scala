@@ -1,7 +1,8 @@
 package data
 
 import scalafx.Includes._
-import scalafx.application.JFXApp
+import scalafx.application.JFXApp.PrimaryStage
+import scalafx.application.{JFXApp, Platform}
 import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
@@ -21,6 +22,10 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
+  val startButton = new Button("Start")
+  startButton.layoutX = 300
+  startButton.layoutY = 225
+
   stage = new JFXApp.PrimaryStage {
     title = "RTT_Analyser"
     width = 600
@@ -38,13 +43,10 @@ object GUI extends JFXApp {
             stops = Stops(DarkGray, Gray))
         })
 
-      val startButton = new Button("Start")
-      startButton.layoutX = 300
-      startButton.layoutY = 225
 
       val stopButton = new Button("Stop")
-      startButton.layoutX = 300
-      startButton.layoutY = 225
+      stopButton.layoutX = 300
+      stopButton.layoutY = 300
 
       val enterBpm = new Label("Enter expected BPM")
       enterBpm.layoutX = 200
@@ -56,16 +58,18 @@ object GUI extends JFXApp {
       expectedBpm.promptText = "BPM?"
 
 
-      content = List(startButton, headingBox, enterBpm, expectedBpm)
+      content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm)
 
-      startButton.onAction = (e: ActionEvent) =>{
+      startButton.onAction = (e: ActionEvent) => {
         //will need to call start in actor
-      }
+
 
       stopButton.onAction = (e: ActionEvent) => {
         //will need to call start in actor
       }
 
     }
+
   }
+
 }
