@@ -42,6 +42,10 @@ object GUI extends JFXApp {
       startButton.layoutX = 300
       startButton.layoutY = 225
 
+      val stopButton = new Button("Stop")
+      startButton.layoutX = 300
+      startButton.layoutY = 225
+
       val enterBpm = new Label("Enter expected BPM")
       enterBpm.layoutX = 200
       enterBpm.layoutY = 100
@@ -55,12 +59,11 @@ object GUI extends JFXApp {
       content = List(startButton, headingBox, enterBpm, expectedBpm)
 
       startButton.onAction = (e: ActionEvent) =>{
-        new Alert(AlertType.Information) {
-          initOwner(stage)
-          title = "Information Dialog"
-          headerText = "Look, an Information Dialog."
-          contentText = "I have a great message for you!"
-        }.showAndWait()
+        //will need to call start in actor
+      }
+
+      stopButton.onAction = (e: ActionEvent) => {
+        //will need to call start in actor
       }
 
     }
