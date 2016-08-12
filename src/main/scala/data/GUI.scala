@@ -2,9 +2,11 @@ package data
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
+import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.{Alert, Button, Label, TextField}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
@@ -51,6 +53,15 @@ object GUI extends JFXApp {
 
 
       content = List(startButton, headingBox, enterBpm, expectedBpm)
+
+      startButton.onAction = (e: ActionEvent) =>{
+        new Alert(AlertType.Information) {
+          initOwner(stage)
+          title = "Information Dialog"
+          headerText = "Look, an Information Dialog."
+          contentText = "I have a great message for you!"
+        }.showAndWait()
+      }
 
     }
   }
