@@ -31,6 +31,7 @@ class ProcessingActor extends Actor with ActorLogging{
   def receive = {
     case SendExpectedBPM(bpm: Double) =>
       expectedBpm(bpm)
+      println(bpm)
     case ProcessBytes(data: Array[Byte]) =>
       println("got it")
       val ap = new LiveAudioProcessor
