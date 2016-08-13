@@ -67,7 +67,7 @@ object GUI extends JFXApp {
 
         startButton.onAction = (e: ActionEvent) => {
           //will need to call start in actor
-          Ops.coord ! StartLiveAudio
+          Ops.coord ! StartLiveAudio(expectedBpm.getText.toDouble)
         }
 
         stopButton.onAction = (e: ActionEvent) => {
