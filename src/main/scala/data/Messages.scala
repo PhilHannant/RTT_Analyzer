@@ -7,8 +7,8 @@ sealed trait Messages
 case class StartLiveAudio(expectedBPM: Double) extends Messages
 case class EndLiveAudio() extends Messages
 case class ProcessBytes(data: Array[Byte]) extends Messages
-case class NewTempoWorm(tempo: Double, expected: Double) extends Messages
-case class NewTempoDwt(tempo: Double, expected: Double) extends Messages
-case class NewTempoBeatroot(tempo: Double, expected: Double, beatCount: Double) extends Messages
+case class NewTempoWorm(tempo: Double) extends Messages
+case class NewTempoDwt(tempo: Double) extends Messages
+case class NewTempoBeatroot(tempo: Double, beatCount: Double) extends Messages
 case class ParseJSON() extends Messages
 case class SendExpectedBPM(bpm: Double) extends Messages
