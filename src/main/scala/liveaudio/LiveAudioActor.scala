@@ -21,9 +21,10 @@ class LiveAudioActor extends Actor with ActorLogging{
   val w: Worm = new Worm(processingActor)
 
    def receive = {
-     case StartLiveAudio =>
+     case StartLiveAudio(expectedBPM: Double) =>
        println(self.toString())
        w.play()
+       processingActor ! SendExpectedBPM(expectedBPM)
      case EndLiveAudio =>
        println("end")
        context.system.terminate()
