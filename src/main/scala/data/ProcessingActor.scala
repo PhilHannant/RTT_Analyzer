@@ -15,7 +15,7 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 class ProcessingActor extends Actor with ActorLogging{
 
   private var expectedBpm: Double = _
-  def audioProcessor (value: Double):Unit = expectedBpm = value
+  def expectedBpm (value: Double):Unit = expectedBpm = value
 
   val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
@@ -30,7 +30,7 @@ class ProcessingActor extends Actor with ActorLogging{
 
   def receive = {
     case SendExpectedBPM(bpm: Double) =>
-
+      expectedBpm(bpm)
     case ProcessBytes(data: Array[Byte]) =>
       println("got it")
       val ap = new LiveAudioProcessor
@@ -44,15 +44,15 @@ class ProcessingActor extends Actor with ActorLogging{
       b.gui.updateDisplay(true)
       b.gui.displayPanel.beatTrack(self)
     case NewTempoDwt(tempo, expected) =>
-      val t = Tempo(tempo, expected, None)
+      val t = Tempo(tempo, expectedBpm, None)
       dwtStatsBuffer += t
       dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo, expected) =>
-      val t = Tempo(tempo, expected, None)
+      val t = Tempo(tempo, expectedBpm, None)
       wormStatsuffer += t
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, expected, beatCount) =>
-      val t = Tempo(tempo, expected, Some(beatCount))
+      val t = Tempo(tempo, expectedBpm, Some(beatCount))
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
