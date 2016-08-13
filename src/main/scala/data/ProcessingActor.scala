@@ -6,6 +6,7 @@ import at.ofai.music.beatroot.BeatRoot
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
+import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
@@ -13,6 +14,8 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
   */
 class ProcessingActor extends Actor with ActorLogging{
 
+  private var expectedBpm: Double = _
+  def audioProcessor (value: Double):Unit = expectedBpm = value
 
   val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
@@ -26,6 +29,8 @@ class ProcessingActor extends Actor with ActorLogging{
 
 
   def receive = {
+    case SendExpectedBPM(bpm: Double) =>
+
     case ProcessBytes(data: Array[Byte]) =>
       println("got it")
       val ap = new LiveAudioProcessor
