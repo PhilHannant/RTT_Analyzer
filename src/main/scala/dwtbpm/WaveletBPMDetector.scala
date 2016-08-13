@@ -234,7 +234,7 @@ class WaveletBPMDetector (
 
       _bpm = instantBpm(0)//.toArray.median
     }
-    processor ! NewTempoDwt(_bpm, 120)
+    processor ! NewTempoDwt(_bpm)
     _bpm
   }
 
