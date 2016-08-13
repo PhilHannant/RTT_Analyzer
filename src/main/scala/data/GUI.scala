@@ -26,66 +26,72 @@ import scalafx.scene.paint.Color._
 object GUI extends JFXApp {
 
 
-  val system = ActorSystem("liveaudioActors")
-  val coord = system.actorOf(Props(new LiveAudioActor()))
-  //First message sent to coordinator to begin calculation
+
+    val startButton = new Button("Start")
+    startButton.layoutX = 300
+    startButton.layoutY = 225
+
+    stage = new JFXApp.PrimaryStage {
+      title = "RTT_Analyser"
+      width = 600
+      height = 450
+      scene = new Scene {
+
+        val headingBox = new HBox
+        headingBox.padding = Insets(20)
+        headingBox.children = Seq(
+          new Text {
+            text = "RTT_ANalyser "
+            style = "-fx-font-size: 36pt"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(DarkGray, Gray))
+          })
 
 
+        val stopButton = new Button("Stop")
+        stopButton.layoutX = 300
+        stopButton.layoutY = 300
+
+        val enterBpm = new Label("Enter expected BPM")
+        enterBpm.layoutX = 200
+        enterBpm.layoutY = 100
+
+        val expectedBpm = new TextField
+        expectedBpm.layoutX = 300
+        expectedBpm.layoutY = 100
+        expectedBpm.promptText = "BPM?"
 
 
+        content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm)
 
+        startButton.onAction = (e: ActionEvent) => {
+          //will need to call start in actor
+          Ops.coord ! StartLiveAudio
+        }
 
-  val startButton = new Button("Start")
-  startButton.layoutX = 300
-  startButton.layoutY = 225
+        stopButton.onAction = (e: ActionEvent) => {
+          //will need to call start in actor
+          Ops.coord ! EndLiveAudio
+        }
 
-  stage = new JFXApp.PrimaryStage {
-    title = "RTT_Analyser"
-    width = 600
-    height = 450
-    scene = new Scene {
-
-      val headingBox = new HBox
-      headingBox.padding = Insets(20)
-      headingBox.children = Seq(
-        new Text {
-          text = "RTT_ANalyser "
-          style = "-fx-font-size: 36pt"
-          fill = new LinearGradient(
-            endX = 0,
-            stops = Stops(DarkGray, Gray))
-        })
-
-
-      val stopButton = new Button("Stop")
-      stopButton.layoutX = 300
-      stopButton.layoutY = 300
-
-      val enterBpm = new Label("Enter expected BPM")
-      enterBpm.layoutX = 200
-      enterBpm.layoutY = 100
-
-      val expectedBpm = new TextField
-      expectedBpm.layoutX = 300
-      expectedBpm.layoutY = 100
-      expectedBpm.promptText = "BPM?"
-
-
-      content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm)
-
-      startButton.onAction = (e: ActionEvent) => {
-        //will need to call start in actor
-        coord ! StartLiveAudio
-      }
-
-      stopButton.onAction = (e: ActionEvent) => {
-        //will need to call start in actor
-        coord ! EndLiveAudio
       }
 
     }
 
-  }
+}
+
+object Ops extends App{
+
+
+  val system = ActorSystem("liveaudioActors")
+  val coord = system.actorOf(Props(new LiveAudioActor()))
+  //First message sent to coordinator to begin calculation
+
+  val gui = GUI
+  gui.main(args: Array[String])
+
+
 
 
 
