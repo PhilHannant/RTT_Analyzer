@@ -44,15 +44,15 @@ class ProcessingActor extends Actor with ActorLogging{
       b.audioProcessor.setDisplay(b.gui.displayPanel) // after processing
       b.gui.updateDisplay(true)
       b.gui.displayPanel.beatTrack(self)
-    case NewTempoDwt(tempo, expected) =>
+    case NewTempoDwt(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
       dwtStatsBuffer += t
       dWtAnalyser.addTempo(t)
-    case NewTempoWorm(tempo, expected) =>
+    case NewTempoWorm(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
       wormStatsuffer += t
       wormAnalyser.addTempo(t)
-    case NewTempoBeatroot(tempo, expected, beatCount) =>
+    case NewTempoBeatroot(tempo, beatCount) =>
       val t = Tempo(tempo, expectedBpm, Some(beatCount))
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
