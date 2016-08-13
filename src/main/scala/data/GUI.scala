@@ -1,5 +1,8 @@
 package data
 
+import akka.actor.{ActorSystem, Props}
+import liveaudio.LiveAudioActor
+
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
@@ -21,6 +24,16 @@ import scalafx.scene.paint.Color._
 
 
 object GUI extends JFXApp {
+
+
+  val system = ActorSystem("liveaudioActors")
+  val coord = system.actorOf(Props(new LiveAudioActor()))
+  //First message sent to coordinator to begin calculation
+
+
+
+
+
 
   val startButton = new Button("Start")
   startButton.layoutX = 300
@@ -62,14 +75,18 @@ object GUI extends JFXApp {
 
       startButton.onAction = (e: ActionEvent) => {
         //will need to call start in actor
-
+        coord ! StartLiveAudio
+      }
 
       stopButton.onAction = (e: ActionEvent) => {
         //will need to call start in actor
+        coord ! EndLiveAudio
       }
 
     }
 
   }
+
+
 
 }
