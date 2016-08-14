@@ -54,13 +54,20 @@ object GUI extends JFXApp {
 
         val enterBpm = new Label("Expected BPM")
         enterBpm.setTextFill(DarkGray)
-        enterBpm.layoutX = 200
-        enterBpm.layoutY = 100
+//        enterBpm.layoutX = 200
+//        enterBpm.layoutY = 100
 
-        val fileName = new Label("File Name")
-        fileName.setTextFill(DarkGray)
-        fileName.layoutX = 200
-        fileName.layoutY = 100
+        val expectedBpm = new TextField
+//        expectedBpm.layoutX = 300
+//        expectedBpm.layoutY = 100
+        expectedBpm.promptText = "BPM?"
+
+        val fileNameLabel = new Label("File Name")
+        fileNameLabel.setTextFill(DarkGray)
+//        fileName.layoutX = 200
+//        fileName.layoutY = 100
+
+        val fileName = new TextField
 
 //        val controlBar = new ButtonBar {id = "buttonBar"; buttons = List(startButton, stopButton)}
 //        controlBar.layoutX = 300
@@ -73,19 +80,28 @@ object GUI extends JFXApp {
         controlBar.id = "controlBar"
 
 
+        val beatRootLabel = new Label("Beatroot")
+        val dwtLabel = new Label("DWT")
+        val wormLabel = new Label("AudioWorm")
+
+        val gridPane = new GridPane
+        gridPane.padding = Insets(0,0,0,50)
+        gridPane.hgap = 10
+        gridPane.vgap = 25
+        gridPane.add(enterBpm, 1, 0)
+        gridPane.add(fileNameLabel, 4, 0)
+        gridPane.add(expectedBpm, 2, 0)
+        gridPane.add(fileName, 5, 0)
+        gridPane.add(beatRootLabel, 1, 1)
+        gridPane.add(dwtLabel, 1, 2)
+        gridPane.add(wormLabel, 1, 3)
+
+
+
         val bPane = new BorderPane
         bPane.setBottom(controlBar)
         bPane.setTop(headingBox)
-
-
-
-
-        val expectedBpm = new TextField
-        expectedBpm.layoutX = 300
-        expectedBpm.layoutY = 100
-        expectedBpm.promptText = "BPM?"
-
-
+        bPane.setCenter(gridPane)
         //content = List(headingBox, enterBpm, expectedBpm, bPane)
 
         root = bPane
