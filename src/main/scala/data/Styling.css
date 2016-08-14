@@ -1,9 +1,15 @@
 .root {
     -fx-background-color: Black;
+
 }
 
 #controlBar {
     -fx-alignment: bottom-center;
+}
+
+#tempoBox{
+    -fx-background-color: Black;
+    -fx-font-color: White;
 }
 
 /*

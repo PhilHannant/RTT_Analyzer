@@ -17,6 +17,8 @@ class ProcessingActor extends Actor with ActorLogging{
   private var expectedBpm: Double = _
   def expectedBpm (value: Double):Unit = expectedBpm = value
 
+  val gui = GUI
+
   val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
   val beatrootAnalyser = BeatrootAnalyser("beatroot", new ListBuffer[Tempo](), None)//placeholders
@@ -54,6 +56,7 @@ class ProcessingActor extends Actor with ActorLogging{
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, beatCount) =>
       val t = Tempo(tempo, expectedBpm, Some(beatCount))
+      gui.updatebrt(tempo)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
