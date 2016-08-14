@@ -25,107 +25,114 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
-    stage = new JFXApp.PrimaryStage {
-      title = "RTT_Analyser"
-      width = 800
-      height = 500
-      scene = new Scene {
+  var text = ""
 
-        stylesheets += getClass.getResource("Styling.css").toExternalForm
-
-        val headingBox = new HBox
-        headingBox.padding = Insets(20)
-        headingBox.children = Seq(
-          new Text {
-            text = "RTT_Analyser"
-            style = "-fx-font-size: 36pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(DarkGray, Gray))
-          })
+  val headingBox = new HBox
+  headingBox.padding = Insets(20)
+  headingBox.children = Seq(
+    new Text {
+      text = "RTT_Analyser"
+      style = "-fx-font-size: 36pt"
+      fill = new LinearGradient(
+        endX = 0,
+        stops = Stops(DarkGray, Gray))
+    })
 
 
-        val startButton = new Button("Start")
-        startButton.prefWidth = 100
+  val startButton = new Button("Start")
+  startButton.prefWidth = 100
 
-        val stopButton = new Button("Stop")
-        stopButton.prefWidth = 100
+  val stopButton = new Button("Stop")
+  stopButton.prefWidth = 100
 
-        val enterBpm = new Label("Expected BPM")
-        enterBpm.setTextFill(DarkGray)
-//        enterBpm.layoutX = 200
-//        enterBpm.layoutY = 100
+  val enterBpm = new Label("Expected BPM")
+  enterBpm.setTextFill(DarkGray)
+  //        enterBpm.layoutX = 200
+  //        enterBpm.layoutY = 100
 
-        val expectedBpm = new TextField
-//        expectedBpm.layoutX = 300
-//        expectedBpm.layoutY = 100
-        expectedBpm.promptText = "BPM?"
+  val expectedBpm = new TextField
+  //        expectedBpm.layoutX = 300
+  //        expectedBpm.layoutY = 100
+  expectedBpm.promptText = "BPM?"
 
-        val fileNameLabel = new Label("File Name")
-        fileNameLabel.setTextFill(DarkGray)
-//        fileName.layoutX = 200
-//        fileName.layoutY = 100
+  val fileNameLabel = new Label("File Name")
+  fileNameLabel.setTextFill(DarkGray)
+  //        fileName.layoutX = 200
+  //        fileName.layoutY = 100
 
-        val fileName = new TextField
+  val fileName = new TextField
 
-//        val controlBar = new ButtonBar {id = "buttonBar"; buttons = List(startButton, stopButton)}
-//        controlBar.layoutX = 300
-//        controlBar.layoutY = 425
-//        controlBar.minWidth = 400
+  //        val controlBar = new ButtonBar {id = "buttonBar"; buttons = List(startButton, stopButton)}
+  //        controlBar.layoutX = 300
+  //        controlBar.layoutY = 425
+  //        controlBar.minWidth = 400
 
-        val controlBar = new HBox(startButton, stopButton)
-        controlBar.prefWidth = 800
-        controlBar.spacing = 25
-        controlBar.id = "controlBar"
-
-
-        val beatRootLabel = new Label("Beatroot")
-        val beatRootTempo = new TextField()
-        beatRootTempo.setId("tempoBox")
-        beatRootTempo.promptText = "0"
-        val dwtLabel = new Label("DWT")
-        val wormLabel = new Label("AudioWorm")
-
-        val gridPane = new GridPane
-        gridPane.padding = Insets(0,0,0,50)
-        gridPane.hgap = 10
-        gridPane.vgap = 25
-        gridPane.add(enterBpm, 1, 0)
-        gridPane.add(fileNameLabel, 4, 0)
-        gridPane.add(expectedBpm, 2, 0)
-        gridPane.add(fileName, 5, 0)
-        gridPane.add(beatRootLabel, 1, 1)
-        gridPane.add(beatRootTempo, 2, 1)
-        gridPane.add(dwtLabel, 1, 2)
-        gridPane.add(wormLabel, 1, 3)
+  val controlBar = new HBox(startButton, stopButton)
+  controlBar.prefWidth = 800
+  controlBar.spacing = 25
+  controlBar.id = "controlBar"
 
 
+  val beatRootLabel = new Label("Beatroot")
+  val beatRootTempo = new Label("0")
+  val dwtLabel = new Label("DWT")
+  val wormLabel = new Label("AudioWorm")
 
-        val bPane = new BorderPane
-        bPane.setBottom(controlBar)
-        bPane.setTop(headingBox)
-        bPane.setCenter(gridPane)
-        //content = List(headingBox, enterBpm, expectedBpm, bPane)
+  val gridPane = new GridPane
+  gridPane.padding = Insets(0, 0, 0, 50)
+  gridPane.hgap = 10
+  gridPane.vgap = 25
+  gridPane.add(enterBpm, 1, 0)
+  gridPane.add(fileNameLabel, 4, 0)
+  gridPane.add(expectedBpm, 2, 0)
+  gridPane.add(fileName, 5, 0)
+  gridPane.add(beatRootLabel, 1, 1)
+  gridPane.add(beatRootTempo, 2, 1)
+  gridPane.add(dwtLabel, 1, 2)
+  gridPane.add(wormLabel, 1, 3)
 
-        root = bPane
 
-        startButton.onAction = (e: ActionEvent) => {
-          //will need to call start in actor
-          Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
-        }
+  val bPane = new BorderPane
+  bPane.setBottom(controlBar)
+  bPane.setTop(headingBox)
+  bPane.setCenter(gridPane)
+  //content = List(headingBox, enterBpm, expectedBpm, bPane)
 
-        stopButton.onAction = (e: ActionEvent) => {
-          //will need to call start in actor
-          Operator.liveAudioActor ! EndLiveAudio
-        }
 
-      }
+  startButton.onAction = (e: ActionEvent) => {
+    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
 
+  }
+
+  stopButton.onAction = (e: ActionEvent) => {
+    //will need to call start in actor
+    Operator.liveAudioActor ! EndLiveAudio
+  }
+
+
+  stage = new JFXApp.PrimaryStage {
+    title = "RTT_Analyser"
+    width = 800
+    height = 500
+    scene = new Scene {
+
+      stylesheets += getClass.getResource("Styling.css").toExternalForm
+      root = bPane
     }
+
+  }
+
+  def updatebrt(tempo: Double) = {
+    println(tempo)
+    text = tempo.toString
+    Platform.runLater{
+      beatRootTempo.text = text
+    }
+  }
 
 }
 
-object Operator extends App{
+object Operator extends App {
 
 
   val system = ActorSystem("liveAudioSystem")
@@ -134,8 +141,6 @@ object Operator extends App{
 
   val gui = GUI
   gui.main(args: Array[String])
-
-
 
 
 
