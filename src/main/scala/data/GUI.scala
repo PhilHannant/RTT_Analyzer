@@ -10,7 +10,7 @@ import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.{Alert, Button, Label, TextField}
+import scalafx.scene.control._
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
@@ -25,18 +25,15 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
-
-
-    val startButton = new Button("Start")
-    startButton.layoutX = 300
-    startButton.layoutY = 225
-
     stage = new JFXApp.PrimaryStage {
       title = "RTT_Analyser"
-      width = 600
-      height = 450
+      width = 800
+      height = 500
       scene = new Scene {
 
+        stylesheets += getClass.getResource("Styling.css").toExternalForm
+
+        fill = Black
         val headingBox = new HBox
         headingBox.padding = Insets(20)
         headingBox.children = Seq(
@@ -49,13 +46,23 @@ object GUI extends JFXApp {
           })
 
 
+        val startButton = new Button("Start")
+        startButton.layoutX = 300
+        startButton.layoutY = 225
+
         val stopButton = new Button("Stop")
         stopButton.layoutX = 300
         stopButton.layoutY = 300
 
         val enterBpm = new Label("Enter expected BPM")
+        enterBpm.setTextFill(DarkGray)
         enterBpm.layoutX = 200
         enterBpm.layoutY = 100
+
+        val contolBar = new ButtonBar {buttons = List(startButton, stopButton)}
+//        contolBar.layoutX = 200
+//        contolBar.layoutY = 450
+        contolBar.centerShape
 
         val expectedBpm = new TextField
         expectedBpm.layoutX = 300
@@ -63,7 +70,7 @@ object GUI extends JFXApp {
         expectedBpm.promptText = "BPM?"
 
 
-        content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm)
+        content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm, contolBar)
 
         startButton.onAction = (e: ActionEvent) => {
           //will need to call start in actor
@@ -84,7 +91,7 @@ object GUI extends JFXApp {
 object Operator extends App{
 
 
-  val system = ActorSystem("liveaudioSystem")
+  val system = ActorSystem("liveAudioSystem")
   val liveAudioActor = system.actorOf(Props[LiveAudioActor], "liveAudioActor")
   val processingActor = system.actorOf(Props[ProcessingActor], "processor")
 
