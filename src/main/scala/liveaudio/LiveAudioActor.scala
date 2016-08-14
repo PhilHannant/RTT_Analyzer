@@ -17,11 +17,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class LiveAudioActor extends Actor with ActorLogging{
 
   val soundCaptureImpl = new SoundCaptureImpl
-  val processingActor = context.actorOf(Props[ProcessingActor], "processor")
-  val w: Worm = new Worm(processingActor)
+
+
 
    def receive = {
-     case StartLiveAudio(expectedBPM: Double) =>
+     case StartLiveAudio(expectedBPM: Double, processingActor: ActorRef) =>
+       val w: Worm = new Worm(processingActor)
        println(self.toString())
        w.play()
        processingActor ! SendExpectedBPM(expectedBPM)
@@ -31,7 +32,7 @@ class LiveAudioActor extends Actor with ActorLogging{
        System.exit(0)
      case _ =>
        println("help")
-       processingActor ! ParseJSON
+
 
    }
 }
