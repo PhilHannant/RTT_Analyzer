@@ -7,12 +7,12 @@ import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
 import scalafx.event.ActionEvent
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.effect.DropShadow
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.{GridPane, HBox}
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
@@ -47,22 +47,33 @@ object GUI extends JFXApp {
 
 
         val startButton = new Button("Start")
-        startButton.layoutX = 300
-        startButton.layoutY = 225
+        startButton.prefWidth = 100
 
         val stopButton = new Button("Stop")
-        stopButton.layoutX = 300
-        stopButton.layoutY = 300
+        stopButton.prefWidth = 100
 
-        val enterBpm = new Label("Enter expected BPM")
+
+        val enterBpm = new Label("Expected BPM")
         enterBpm.setTextFill(DarkGray)
         enterBpm.layoutX = 200
         enterBpm.layoutY = 100
 
-        val contolBar = new ButtonBar {buttons = List(startButton, stopButton)}
-//        contolBar.layoutX = 200
-//        contolBar.layoutY = 450
-        contolBar.centerShape
+        val fileName = new Label("File Name")
+        fileName.setTextFill(DarkGray)
+        fileName.layoutX = 200
+        fileName.layoutY = 100
+
+        val controlBar = new ButtonBar {id = "buttonBar"; buttons = List(startButton, stopButton)}
+        controlBar.layoutX = 300
+        controlBar.layoutY = 425
+        controlBar.minWidth = 400
+
+        val test = new HBox(startButton, stopButton)
+        test.prefWidth = 800
+        test.spacing = 25
+        test.alignment = Pos.Center
+
+
 
         val expectedBpm = new TextField
         expectedBpm.layoutX = 300
@@ -70,7 +81,7 @@ object GUI extends JFXApp {
         expectedBpm.promptText = "BPM?"
 
 
-        content = List(startButton, stopButton, headingBox, enterBpm, expectedBpm, contolBar)
+        content = List(headingBox, enterBpm, expectedBpm, test)
 
         startButton.onAction = (e: ActionEvent) => {
           //will need to call start in actor
