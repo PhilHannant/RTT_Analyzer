@@ -67,7 +67,7 @@ object GUI extends JFXApp {
 
         startButton.onAction = (e: ActionEvent) => {
           //will need to call start in actor
-          Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble)
+          Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
         }
 
         stopButton.onAction = (e: ActionEvent) => {
@@ -84,9 +84,9 @@ object GUI extends JFXApp {
 object Operator extends App{
 
 
-  val system = ActorSystem("liveaudioActors")
-  val liveAudioActor = system.actorOf(Props(new LiveAudioActor()))
-  //First message sent to coordinator to begin calculation
+  val system = ActorSystem("liveaudioSystem")
+  val liveAudioActor = system.actorOf(Props[LiveAudioActor], "liveAudioActor")
+  val processingActor = system.actorOf(Props[ProcessingActor], "processor")
 
   val gui = GUI
   gui.main(args: Array[String])
