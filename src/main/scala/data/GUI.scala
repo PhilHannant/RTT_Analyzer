@@ -33,12 +33,11 @@ object GUI extends JFXApp {
 
         stylesheets += getClass.getResource("Styling.css").toExternalForm
 
-        fill = Black
         val headingBox = new HBox
         headingBox.padding = Insets(20)
         headingBox.children = Seq(
           new Text {
-            text = "RTT_Analyser "
+            text = "RTT_Analyser"
             style = "-fx-font-size: 36pt"
             fill = new LinearGradient(
               endX = 0,
@@ -81,6 +80,9 @@ object GUI extends JFXApp {
 
 
         val beatRootLabel = new Label("Beatroot")
+        val beatRootTempo = new TextField()
+        beatRootTempo.setId("tempoBox")
+        beatRootTempo.promptText = "0"
         val dwtLabel = new Label("DWT")
         val wormLabel = new Label("AudioWorm")
 
@@ -93,6 +95,7 @@ object GUI extends JFXApp {
         gridPane.add(expectedBpm, 2, 0)
         gridPane.add(fileName, 5, 0)
         gridPane.add(beatRootLabel, 1, 1)
+        gridPane.add(beatRootTempo, 2, 1)
         gridPane.add(dwtLabel, 1, 2)
         gridPane.add(wormLabel, 1, 3)
 
