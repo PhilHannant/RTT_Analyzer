@@ -25,9 +25,6 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
-
-  var text = ""
-
   val headingBox = new HBox
   headingBox.padding = Insets(20)
   headingBox.children = Seq(
@@ -133,10 +130,8 @@ object GUI extends JFXApp {
   }
 
   def updatebrt(tempo: Double) = {
-    println(f"$tempo%1.2f")
-    text = f"$tempo%1.2f"//tempo.toString
     Platform.runLater{
-      beatRootTempo.text = text
+      beatRootTempo.text = f"$tempo%1.2f"
     }
   }
 
