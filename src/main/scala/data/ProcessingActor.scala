@@ -1,18 +1,20 @@
 package data
 
 import akka.actor.Actor.Receive
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import at.ofai.music.beatroot.BeatRoot
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by philhannant on 02/08/2016.
   */
-class ProcessingActor extends Actor with ActorLogging{
+class ProcessingActor(beatrootWorker: ActorRef) extends Actor with ActorLogging{
 
   private var expectedBpm: Double = _
   def expectedBpm (value: Double):Unit = expectedBpm = value
@@ -30,6 +32,7 @@ class ProcessingActor extends Actor with ActorLogging{
   b.audioProcessor.setInput()
 
 
+
   def receive = {
     case SendExpectedBPM(bpm: Double) =>
       expectedBpm(bpm)
@@ -42,10 +45,8 @@ class ProcessingActor extends Actor with ActorLogging{
         ap,
         131072,
         WaveletBPMDetector.Daubechies4).bpm(self)
-      b.audioProcessor.processFile(data)
-      b.audioProcessor.setDisplay(b.gui.displayPanel) // after processing
-      b.gui.updateDisplay(true)
-      b.gui.displayPanel.beatTrack(self)
+      beatrootWorker ! SendBeatRoot(data, self)
+
     case NewTempoDwt(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
       gui.updateDwt(tempo)
@@ -85,4 +86,8 @@ class ProcessingActor extends Actor with ActorLogging{
       sc.getTotal(lb))
   }
 
+}
+
+object ProcessingActor {
+  def props(name: String): Props = Props(new ProcessingActor)
 }
