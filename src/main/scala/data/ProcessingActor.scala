@@ -53,6 +53,7 @@ class ProcessingActor extends Actor with ActorLogging{
       dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
+      gui.updateWorm(tempo)
       wormStatsuffer += t
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, beatCount) =>
