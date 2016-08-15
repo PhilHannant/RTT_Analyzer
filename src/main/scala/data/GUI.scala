@@ -155,8 +155,9 @@ object Operator extends App {
 
   val system = ActorSystem("liveAudioSystem")
   val liveAudioActor = system.actorOf(Props[LiveAudioActor], "liveAudioActor")
-  val processingActor = system.actorOf(Props[ProcessingActor], "processor")
   val beatrootActor = system.actorOf(Props[BeatrootActor], "beatrootActor")
+  val dwtActor = system.actorOf(Props[DwtActor], "dwtActor")
+  val processingActor = system.actorOf(Props(new ProcessingActor(beatrootActor, dwtActor)))
 
   val gui = GUI
   gui.main(args: Array[String])

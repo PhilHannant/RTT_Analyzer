@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by philhannant on 02/08/2016.
   */
-class ProcessingActor(beatrootWorker: ActorRef) extends Actor with ActorLogging{
+class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Actor with ActorLogging{
 
   private var expectedBpm: Double = _
   def expectedBpm (value: Double):Unit = expectedBpm = value
@@ -39,14 +39,8 @@ class ProcessingActor(beatrootWorker: ActorRef) extends Actor with ActorLogging{
       println(bpm)
     case ProcessBytes(data: Array[Byte]) =>
       println("got it")
-      val ap = new LiveAudioProcessor
-      ap.addData(data)
-      val dwtbpm = new WaveletBPMDetector(
-        ap,
-        131072,
-        WaveletBPMDetector.Daubechies4).bpm(self)
       beatrootWorker ! SendBeatRoot(data, self)
-
+      dwtWorker ! SendDwt(data, self)
     case NewTempoDwt(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
       gui.updateDwt(tempo)
@@ -88,6 +82,3 @@ class ProcessingActor(beatrootWorker: ActorRef) extends Actor with ActorLogging{
 
 }
 
-object ProcessingActor {
-  def props(name: String): Props = Props(new ProcessingActor)
-}
