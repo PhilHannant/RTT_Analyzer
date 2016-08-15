@@ -141,7 +141,7 @@ object GUI extends JFXApp {
 
   def updateDwt(tempo: Double) = {
     Platform.runLater{
-
+      dwtTempo.text = tempo.toString
     }
   }
 
