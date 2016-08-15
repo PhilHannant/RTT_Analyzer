@@ -25,6 +25,7 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
+
   var text = ""
 
   val headingBox = new HBox
@@ -132,8 +133,8 @@ object GUI extends JFXApp {
   }
 
   def updatebrt(tempo: Double) = {
-    println(tempo)
-    text = tempo.toString
+    println(f"$tempo%1.2f")
+    text = f"$tempo%1.2f"//tempo.toString
     Platform.runLater{
       beatRootTempo.text = text
     }
@@ -141,7 +142,13 @@ object GUI extends JFXApp {
 
   def updateDwt(tempo: Double) = {
     Platform.runLater{
-      dwtTempo.text = tempo.toString
+      dwtTempo.text = f"$tempo%1.2f"
+    }
+  }
+
+  def updateWorm(tempo: Double) = {
+    Platform.runLater{
+      wormTempo.text = f"$tempo%1.2f"
     }
   }
 
