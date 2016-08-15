@@ -74,14 +74,22 @@ object GUI extends JFXApp {
 
 
   val beatRootLabel = new Label("Beatroot")
+  beatRootLabel.id = "tempo"
   val beatRootTempo = new Label("0")
+  beatRootTempo.id = "tempo"
   val dwtLabel = new Label("DWT")
+  dwtLabel.id = "tempo"
+  val dwtTempo = new Label("0")
+  dwtTempo.id = "tempo"
   val wormLabel = new Label("AudioWorm")
+  wormLabel.id = "tempo"
+  val wormTempo = new Label("0")
+  wormTempo.id = "tempo"
 
   val gridPane = new GridPane
   gridPane.padding = Insets(0, 0, 0, 50)
   gridPane.hgap = 10
-  gridPane.vgap = 25
+  gridPane.vgap = 35
   gridPane.add(enterBpm, 1, 0)
   gridPane.add(fileNameLabel, 4, 0)
   gridPane.add(expectedBpm, 2, 0)
@@ -89,8 +97,9 @@ object GUI extends JFXApp {
   gridPane.add(beatRootLabel, 1, 1)
   gridPane.add(beatRootTempo, 2, 1)
   gridPane.add(dwtLabel, 1, 2)
+  gridPane.add(dwtTempo, 2, 2)
   gridPane.add(wormLabel, 1, 3)
-
+  gridPane.add(wormTempo, 2, 3)
 
   val bPane = new BorderPane
   bPane.setBottom(controlBar)
@@ -129,6 +138,13 @@ object GUI extends JFXApp {
       beatRootTempo.text = text
     }
   }
+
+  def updateDwt(tempo: Double) = {
+    Platform.runLater{
+
+    }
+  }
+
 
 }
 
