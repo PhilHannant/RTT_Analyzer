@@ -15,3 +15,4 @@ case class NewTempoDwt(tempo: Double) extends Messages
 case class NewTempoBeatroot(tempo: Double, beatCount: Double) extends Messages
 case class ParseJSON() extends Messages
 case class SendExpectedBPM(bpm: Double) extends Messages
+case class StartWorm() extends Messages
