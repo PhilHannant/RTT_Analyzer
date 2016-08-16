@@ -73,7 +73,7 @@ case class JSONParser() {
     }
 
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString() + "]"
+    json += "," + jsonNew.toString()
     println("json at end of dwt " + json)
     json
   }
@@ -111,7 +111,7 @@ case class JSONParser() {
 
 
     val jsonNew = Json.toJson(obj)
-    json += jsonNew.toString() + "]"
+    json += "," + jsonNew.toString() + "]"
     println("json at end of beatroot " + json)
     json
   }
