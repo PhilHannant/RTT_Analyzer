@@ -25,10 +25,10 @@ class LiveAudioActor extends Actor with ActorLogging{
        println(self.toString())
        w.play()
        processingActor ! SendExpectedBPM(expectedBPM)
-     case EndLiveAudio =>
+     case EndLiveAudio(processingActor) =>
        println("end")
        w.stop()
-
+       processingActor ! ParseJSON
      case Close =>
        context.system.terminate()
        System.exit(0)

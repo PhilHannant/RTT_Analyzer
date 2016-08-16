@@ -12,7 +12,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.effect.DropShadow
-import scalafx.scene.layout.{BorderPane, GridPane, HBox}
+import scalafx.scene.layout.{BorderPane, GridPane, HBox, StackPane}
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
@@ -76,16 +76,21 @@ object GUI extends JFXApp {
 
   val beatRootLabel = new Label("Beatroot")
   beatRootLabel.id = "tempo"
-  val beatRootTempo = new Label("0")
+  val beatRootTempo = new Label("0.00")
   beatRootTempo.id = "tempo"
   val dwtLabel = new Label("DWT")
   dwtLabel.id = "tempo"
-  val dwtTempo = new Label("0")
+  val dwtTempo = new Label("0.00")
   dwtTempo.id = "tempo"
   val wormLabel = new Label("AudioWorm")
   wormLabel.id = "tempo"
-  val wormTempo = new Label("0")
+  val wormTempo = new Label("0.00")
   wormTempo.id = "tempo"
+
+ // val pb = new ProgressBar()
+ // pb.setProgress(-1.0)
+
+
 
   val gridPane = new GridPane
   gridPane.padding = Insets(0, 0, 0, 50)
@@ -101,6 +106,7 @@ object GUI extends JFXApp {
   gridPane.add(dwtTempo, 2, 2)
   gridPane.add(wormLabel, 1, 3)
   gridPane.add(wormTempo, 2, 3)
+  //gridPane.add(pb, 3, 4)
 
   val bPane = new BorderPane
   bPane.setBottom(controlBar)
@@ -117,7 +123,7 @@ object GUI extends JFXApp {
 
   stopButton.onAction = (e: ActionEvent) => {
     //will need to call start in actor
-    Operator.liveAudioActor ! EndLiveAudio
+    Operator.liveAudioActor ! EndLiveAudio(Operator.processingActor)
   }
 
   exitButton.onAction = (e: ActionEvent) => {
