@@ -71,9 +71,18 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
       jsonParser.write(beatrootAnalyser)
-      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest.json")
+      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest_1.json")
       context.system.terminate()
       System.exit(0)
+    case WriteStatsJSON =>
+      dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
+      wormAnalyser.stats = Some(addStats(wormStatsuffer))
+      beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
+
+      jsonParser.writeStats(wormAnalyser)
+      jsonParser.writeStats(dWtAnalyser)
+      jsonParser.writeStats(beatrootAnalyser)
+      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest_2.json")
 
   }
 
