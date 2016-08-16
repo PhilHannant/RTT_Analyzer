@@ -16,7 +16,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class LiveAudioActor extends Actor with ActorLogging{
 
-  val soundCaptureImpl = new SoundCaptureImpl
   val w: Worm = new Worm()
 
 
