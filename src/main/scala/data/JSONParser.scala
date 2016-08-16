@@ -124,4 +124,72 @@ case class JSONParser() {
     file.close()
 
   }
+
+  def writeStats(obj: WormAnalyser): String = {
+
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff
+      )
+    }
+
+    implicit val wormAnalyzerWrites = new Writes[WormAnalyser] {
+      def writes(analyser: WormAnalyser) = Json.obj(
+        "stats" -> analyser.stats
+      )
+    }
+    val jsonNew = Json.toJson(obj)
+    json += jsonNew.toString()
+    json
+  }
+
+
+  def writeStats(obj: DWTAnalyser): String = {
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff
+      )
+    }
+
+    implicit val dwtAnalyzerWrites = new Writes[DWTAnalyser] {
+      def writes(analyser: DWTAnalyser) = Json.obj(
+        "stats" -> analyser.stats
+      )
+    }
+
+    val jsonNew = Json.toJson(obj)
+    json += "," + jsonNew.toString()
+    println("json at end of dwt " + json)
+    json
+  }
+
+  def writeStats(obj: BeatrootAnalyser): String = {
+    implicit val statsWrites = new Writes[Stats] {
+      def writes(stats: Stats) = Json.obj(
+        "averageTempo" -> stats.averageTempo,
+        "medianTempo" -> stats.medianDiff,
+        "averageDiff" -> stats.averageDiff,
+        "medianDiff" -> stats.medianDiff,
+        "totalBeatCount" -> stats.totalBeatCount
+      )
+    }
+
+    implicit val beatrootAnalyzerWrites = new Writes[BeatrootAnalyser] {
+      def writes(analyser: BeatrootAnalyser) = Json.obj(
+        "stats" -> analyser.stats
+      )
+    }
+
+
+
+    val jsonNew = Json.toJson(obj)
+    json += "," + jsonNew.toString() + "]"
+    json
+  }
 }
