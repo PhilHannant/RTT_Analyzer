@@ -21,6 +21,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 
   val gui = GUI
 
+  var count: Int = 0
   val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
   val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
   val beatrootAnalyser = BeatrootAnalyser("beatroot", new ListBuffer[Tempo](), None)//placeholders
@@ -48,11 +49,16 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       dWtAnalyser.addTempo(t)
     case NewTempoWorm(tempo) =>
       val t = Tempo(tempo, expectedBpm, None)
-      gui.updateWorm(tempo)
+      if (count == 5) {
+        gui.updateWorm(tempo)
+        count = 0
+      }
+      count = count + 1
       wormStatsuffer += t
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, beatCount) =>
       val t = Tempo(tempo, expectedBpm, Some(beatCount))
+
       gui.updatebrt(tempo)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
