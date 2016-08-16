@@ -28,7 +28,7 @@ class LiveAudioActor extends Actor with ActorLogging{
      case EndLiveAudio(processingActor) =>
        println("end")
        w.stop()
-       processingActor ! ParseJSON
+       processingActor ! WriteStatsJSON
      case Close =>
        context.system.terminate()
        System.exit(0)
