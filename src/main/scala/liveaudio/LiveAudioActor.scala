@@ -28,8 +28,9 @@ class LiveAudioActor extends Actor with ActorLogging{
      case EndLiveAudio =>
        println("end")
        w.stop()
-       context.system.terminate()
+
      case Close =>
+       context.system.terminate()
        System.exit(0)
 
      case _ =>
