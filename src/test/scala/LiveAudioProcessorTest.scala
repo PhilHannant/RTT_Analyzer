@@ -220,6 +220,43 @@ class JSONParserTest extends FlatSpec {
     assertResult(expected)(result)
   }
 
+  "A JSONParser" should "be able to write just the Stats" in  {
+    val jp = JSONParser
+    val w = WormAnalyser("wt")
+    val d = DWTAnalyser("dt")
+    val b = BeatrootAnalyser("bt")
+    val s = StatsCalculator()
+    val buff = new ListBuffer[Tempo]()
+    val t1 = Tempo(115, 120, None)
+    val t2 = Tempo(125, 120, None)
+    val t3 = Tempo(135, 120, None)
+    val t4 = Tempo(145, 120, None)
+    buff += t1
+    buff += t2
+    buff += t3
+    buff += t4
+    w.stats = Some(Stats(s.getAverage(buff, "tempo"),
+      s.getMedian(buff, "tempo"),
+      s.getAverage(buff, "diffs"),
+      s.getMedian(buff, "diffs"),
+      s.getTotal(buff)))
+    d.stats = Some(Stats(s.getAverage(buff, "tempo"),
+      s.getMedian(buff, "tempo"),
+      s.getAverage(buff, "diffs"),
+      s.getMedian(buff, "diffs"),
+      s.getTotal(buff)))
+    b.stats = Some(Stats(s.getAverage(buff, "tempo"),
+      s.getMedian(buff, "tempo"),
+      s.getAverage(buff, "diffs"),
+      s.getMedian(buff, "diffs"),
+      s.getTotal(buff)))
+    jp.writeStats(w)
+    jp.writeStats(d)
+    jp.writeStats(b)
+
+
+  }
+
 }
 
   class StatsObjectTest extends FlatSpec {
