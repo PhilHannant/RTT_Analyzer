@@ -103,8 +103,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 	Thread playThread;
 	ActorRef processingActor;
 
-	public Worm(ActorRef processingActor) {
-		this.processingActor = processingActor;
+	public Worm() {
 		x = new double[WormConstants.wormLength];
 		y = new double[WormConstants.wormLength];
 		labels = new String[WormConstants.wormLength];
@@ -126,6 +125,10 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 		setSize(xSize, ySize);
 		repaint();
 	} // default constructor
+
+	public void setActor(ActorRef processingActor){
+		this.processingActor = processingActor;
+	}
 
 	public void setGlow(boolean flag) {
 		if (flag)
@@ -345,8 +348,8 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 
 	public void stop() {
 		state = STOP;
-		playButton.setText("Play");
-		playButton.repaint();
+		//playButton.setText("Play");
+		//playButton.repaint();
 		if (audio != null)
 			audio.stop();
 	} // stop()
@@ -681,7 +684,7 @@ public class Worm extends JPanel implements Runnable, HierarchyBoundsListener {
 
 	public static Worm createInFrame(String[] args) {
 		JFrame f = new JFrame(WormConstants.title);
-		Worm w = new Worm(null);
+		Worm w = new Worm();
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].startsWith("-d")) {
 				if (args[i].length() == 2)
