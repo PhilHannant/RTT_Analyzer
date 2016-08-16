@@ -110,6 +110,7 @@ object GUI extends JFXApp {
 
 
   startButton.onAction = (e: ActionEvent) => {
+    if (expectedBpm.getText == "") expectedBpm.text = "0"
     Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
 
   }
@@ -118,7 +119,7 @@ object GUI extends JFXApp {
     //will need to call start in actor
     Operator.liveAudioActor ! EndLiveAudio
   }
-  
+
   exitButton.onAction = (e: ActionEvent) => {
     Operator.liveAudioActor ! Close
   }
