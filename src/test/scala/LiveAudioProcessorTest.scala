@@ -221,7 +221,7 @@ class JSONParserTest extends FlatSpec {
   }
 
   "A JSONParser" should "be able to write just the Stats" in  {
-    val jp = JSONParser
+    val jp = JSONParser()
     val w = WormAnalyser("wt")
     val d = DWTAnalyser("dt")
     val b = BeatrootAnalyser("bt")
@@ -252,7 +252,12 @@ class JSONParserTest extends FlatSpec {
       s.getTotal(buff)))
     jp.writeStats(w)
     jp.writeStats(d)
-    jp.writeStats(b)
+    val expected = jp.writeStats(b)
+    jp.flush("/Users/philhannant/Desktop/StatsTest.json")
+    val source: String = Source.fromFile("/Users/philhannant/Desktop/StatsTest.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val result = json.toString()
+    assertResult(expected)(result)
 
 
   }
