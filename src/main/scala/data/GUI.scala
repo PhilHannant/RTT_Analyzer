@@ -43,6 +43,9 @@ object GUI extends JFXApp {
   val stopButton = new Button("Stop")
   stopButton.prefWidth = 100
 
+  val exitButton = new Button("Exit")
+  exitButton.prefWidth = 100
+
   val enterBpm = new Label("Expected BPM")
   enterBpm.setTextFill(DarkGray)
   //        enterBpm.layoutX = 200
@@ -65,7 +68,7 @@ object GUI extends JFXApp {
   //        controlBar.layoutY = 425
   //        controlBar.minWidth = 400
 
-  val controlBar = new HBox(startButton, stopButton)
+  val controlBar = new HBox(startButton, stopButton, exitButton)
   controlBar.prefWidth = 800
   controlBar.spacing = 25
   controlBar.id = "controlBar"
@@ -114,6 +117,10 @@ object GUI extends JFXApp {
   stopButton.onAction = (e: ActionEvent) => {
     //will need to call start in actor
     Operator.liveAudioActor ! EndLiveAudio
+  }
+  
+  exitButton.onAction = (e: ActionEvent) => {
+    Operator.liveAudioActor ! Close
   }
 
 
