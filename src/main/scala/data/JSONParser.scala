@@ -138,6 +138,7 @@ case class JSONParser() {
 
     implicit val wormAnalyzerWrites = new Writes[WormAnalyser] {
       def writes(analyser: WormAnalyser) = Json.obj(
+        "name" -> analyser.name,
         "stats" -> analyser.stats
       )
     }
@@ -159,6 +160,7 @@ case class JSONParser() {
 
     implicit val dwtAnalyzerWrites = new Writes[DWTAnalyser] {
       def writes(analyser: DWTAnalyser) = Json.obj(
+        "name" -> analyser.name,
         "stats" -> analyser.stats
       )
     }
@@ -182,6 +184,7 @@ case class JSONParser() {
 
     implicit val beatrootAnalyzerWrites = new Writes[BeatrootAnalyser] {
       def writes(analyser: BeatrootAnalyser) = Json.obj(
+        "name" -> analyser.name,
         "stats" -> analyser.stats
       )
     }
