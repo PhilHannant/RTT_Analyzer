@@ -332,3 +332,11 @@ class JSONParserTest extends FlatSpec {
     }
 
   }
+
+class HtmlWriterTest extends FlatSpec{
+
+  "An htmlWriter" should "write html" in {
+
+  }
+
+}
