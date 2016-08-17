@@ -1,5 +1,8 @@
 package data
 
+import java.awt.Desktop
+import java.net.URL
+
 import akka.actor.{ActorSystem, Props}
 import liveaudio.LiveAudioActor
 
@@ -24,6 +27,7 @@ import scalafx.scene.paint.Color._
 
 
 object GUI extends JFXApp {
+
 
   val headingBox = new HBox
   headingBox.padding = Insets(20)
@@ -68,7 +72,9 @@ object GUI extends JFXApp {
   //        controlBar.layoutY = 425
   //        controlBar.minWidth = 400
 
-  val controlBar = new HBox(startButton, stopButton, exitButton)
+  val openResults = new Button("Results")
+
+  val controlBar = new HBox(startButton, stopButton, openResults, exitButton)
   controlBar.prefWidth = 800
   controlBar.spacing = 25
   controlBar.id = "controlBar"
@@ -124,6 +130,10 @@ object GUI extends JFXApp {
   stopButton.onAction = (e: ActionEvent) => {
     //will need to call start in actor
     Operator.liveAudioActor ! EndLiveAudio(Operator.processingActor)
+  }
+
+  openResults.onAction = (e: ActionEvent) => {
+    Desktop.getDesktop().browse(new URL("file:///Users/philhannant/Desktop/HtmlTest.html").toURI());
   }
 
   exitButton.onAction = (e: ActionEvent) => {

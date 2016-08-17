@@ -143,6 +143,7 @@ case class JSONParser() {
       )
     }
     val jsonNew = Json.toJson(obj)
+
     json += jsonNew.toString()
     json
   }
@@ -193,6 +194,8 @@ case class JSONParser() {
 
     val jsonNew = Json.toJson(obj)
     json += "," + jsonNew.toString() + "]"
+    val test = Json.prettyPrint(jsonNew)
+    println(test)
     json
   }
 }
