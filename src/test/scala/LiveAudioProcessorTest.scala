@@ -366,7 +366,8 @@ class HtmlWriterTest extends FlatSpec{
       s.getMedian(buff, "diffs"),
       s.getTotal(buff)))
     val expected = ht.writeHtml(w, d, s)
-    val result: String = Source.fromFile("/Users/philhannant/Desktop/StatsTest.json").getLines.mkString
+    ht.flush("/Users/philhannant/Desktop/HtmlTest.html")
+    val result: String = Source.fromFile("/Users/philhannant/Desktop/HtmlTest.html").getLines.mkString
     assertResult(expected)(result)
   }
 
