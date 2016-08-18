@@ -19,4 +19,4 @@ case class SendExpectedBPM(bpm: Double) extends Messages
 case class SendBeatRoot(data: Array[Byte], processingActor: ActorRef) extends Messages
 case class SendDwt(data: Array[Byte], processingActor: ActorRef) extends Messages
 case class Close() extends Messages
-case class StartTestTimer(processingActor: ActorRef) extends Messages
+case class StartTestTimer(processingActor: ActorRef, liveAudioActor: ActorRef) extends Messages

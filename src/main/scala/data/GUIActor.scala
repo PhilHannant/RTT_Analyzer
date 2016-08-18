@@ -8,5 +8,10 @@ import akka.actor.{Actor, ActorLogging}
   */
 class GUIActor extends Actor with ActorLogging{
 
-  def receive: Receive = ???
+  def receive: Receive = {
+    case StartTestTimer(processingActor, liveAudioActor) =>
+      println("in here")
+      Thread.sleep(30000)
+      liveAudioActor ! EndLiveAudio(processingActor)
+  }
 }
