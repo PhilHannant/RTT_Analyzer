@@ -22,6 +22,9 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   private var path: String = _
   def path (value: String):Unit = path = value
 
+  private var timeAtStart: Long = _
+  def timeAtStart (value: Long): Unit = timeAtStart = value
+
   val gui = GUI
 
   var count: Int = 0
@@ -38,21 +41,21 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 
 
   def receive = {
-    case SendInputs(bpm, filePath) =>
+    case SendInputs(bpm, filePath, startTime) =>
       expectedBpm(bpm)
       path(filePath)
-      println(bpm)
+      timeAtStart(startTime)
     case ProcessBytes(data) =>
       println("got it")
       beatrootWorker ! SendBeatRoot(data, self)
       dwtWorker ! SendDwt(data, self)
-    case NewTempoDwt(tempo) =>
-      val t = Tempo(tempo, expectedBpm, None)
+    case NewTempoDwt(tempo, currentTime) =>
+      val t = Tempo(tempo, expectedBpm, None, currentTime - timeAtStart)
       gui.updateDwt(tempo)
       dwtStatsBuffer += t
       dWtAnalyser.addTempo(t)
-    case NewTempoWorm(tempo) =>
-      val t = Tempo(tempo, expectedBpm, None)
+    case NewTempoWorm(tempo, currentTime) =>
+      val t = Tempo(tempo, expectedBpm, None, currentTime - timeAtStart)
       if (count == 5) {
         gui.updateWorm(tempo)
         count = 0
@@ -60,34 +63,30 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       count = count + 1
       wormStatsuffer += t
       wormAnalyser.addTempo(t)
-    case NewTempoBeatroot(tempo, beatCount) =>
-      val t = Tempo(tempo, expectedBpm, Some(beatCount))
+    case NewTempoBeatroot(tempo, beatCount, currentTime) =>
+      val t = Tempo(tempo, expectedBpm, Some(beatCount), currentTime - timeAtStart)
 
       gui.updatebrt(tempo, beatCount)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>
-
       dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
       wormAnalyser.stats = Some(addStats(wormStatsuffer))
       beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
-
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
       jsonParser.write(beatrootAnalyser)
       jsonParser.flush(path)
-      context.system.terminate()
-      System.exit(0)
+//      context.system.terminate()
+//      System.exit(0)
     case WriteStatsJSON =>
       dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
       wormAnalyser.stats = Some(addStats(wormStatsuffer))
       beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
-
       jsonParser.writeStats(wormAnalyser)
       jsonParser.writeStats(dWtAnalyser)
       jsonParser.writeStats(beatrootAnalyser)
-      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest_2.json")
-
+      jsonParser.flush(path)
   }
 
   def addStats(lb: ListBuffer[Tempo]): Stats = {
