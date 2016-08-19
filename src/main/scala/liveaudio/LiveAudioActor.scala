@@ -20,11 +20,11 @@ class LiveAudioActor extends Actor with ActorLogging{
 
 
    def receive = {
-     case StartLiveAudio(expectedBPM: Double, processingActor: ActorRef) =>
+     case StartLiveAudio(expectedBPM, processingActor, filePath) =>
        w.setActor(processingActor)
        println(self.toString())
        w.play()
-       processingActor ! SendExpectedBPM(expectedBPM)
+       processingActor ! SendInputs(expectedBPM, filePath)
      case EndLiveAudio(processingActor) =>
        println("end")
        w.stop()

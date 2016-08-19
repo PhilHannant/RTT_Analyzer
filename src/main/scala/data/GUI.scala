@@ -153,7 +153,7 @@ object GUI extends JFXApp {
   }
 
   openResults.onAction = (e: ActionEvent) => {
-    Desktop.getDesktop().browse(new URL("file:///Users/philhannant/Desktop/HtmlTest.html").toURI());
+    Desktop.getDesktop().browse(new URL("file://" + filePath + ".html").toURI());
   }
 
   exitButton.onAction = (e: ActionEvent) => {
@@ -208,7 +208,8 @@ object GUI extends JFXApp {
 
   def start = {
     if (expectedBpm.getText == "") expectedBpm.text = "0"
-    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
+    if (filePath == "")
+    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath)
   }
 
 }

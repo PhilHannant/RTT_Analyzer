@@ -19,6 +19,9 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   private var expectedBpm: Double = _
   def expectedBpm (value: Double):Unit = expectedBpm = value
 
+  private var path: String = _
+  def path (value: String):Unit = path = value
+
   val gui = GUI
 
   var count: Int = 0
@@ -35,10 +38,11 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 
 
   def receive = {
-    case SendExpectedBPM(bpm: Double) =>
+    case SendInputs(bpm, filePath) =>
       expectedBpm(bpm)
+      path(filePath)
       println(bpm)
-    case ProcessBytes(data: Array[Byte]) =>
+    case ProcessBytes(data) =>
       println("got it")
       beatrootWorker ! SendBeatRoot(data, self)
       dwtWorker ! SendDwt(data, self)
@@ -71,7 +75,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       jsonParser.write(wormAnalyser)
       jsonParser.write(dWtAnalyser)
       jsonParser.write(beatrootAnalyser)
-      jsonParser.flush("/Users/philhannant/Desktop/ActorTempoTest_1.json")
+      jsonParser.flush(path)
       context.system.terminate()
       System.exit(0)
     case WriteStatsJSON =>
