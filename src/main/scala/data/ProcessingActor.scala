@@ -59,7 +59,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
     case NewTempoBeatroot(tempo, beatCount) =>
       val t = Tempo(tempo, expectedBpm, Some(beatCount))
 
-      gui.updatebrt(tempo)
+      gui.updatebrt(tempo, beatCount)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
     case ParseJSON =>

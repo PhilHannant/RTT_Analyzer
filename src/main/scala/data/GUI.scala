@@ -28,6 +28,7 @@ import scalafx.scene.paint.Color._
 
 object GUI extends JFXApp {
 
+  var beatCount: Double = 0.0
 
   val headingBox = new HBox
   headingBox.padding = Insets(20)
@@ -161,9 +162,11 @@ object GUI extends JFXApp {
 
   }
 
-  def updatebrt(tempo: Double) = {
+  def updatebrt(tempo: Double, count: Double) = {
+    beatCount = beatCount + count
     Platform.runLater{
       beatRootTempo.text = f"$tempo%1.2f"
+      beatRootCount.text = f"$beatCount%1.2f"
     }
   }
 
