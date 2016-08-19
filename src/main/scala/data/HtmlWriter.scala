@@ -3,7 +3,6 @@ package data
 import java.io.FileWriter
 import java.lang.reflect.Field
 
-import scala.annotation.tailrec
 
 /**
   * Created by philhannant on 17/08/2016.
