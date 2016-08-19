@@ -208,7 +208,7 @@ class JSONParserTest extends FlatSpec {
     val t1 = Tempo(115, 120, None, System.currentTimeMillis())
     val t2 = Tempo(125, 120, None, System.currentTimeMillis())
     val a = BeatrootAnalyser("test")
-    val s = Stats(1, 2, 3, 4, 4)
+    val s = Stats(1, 2, 3, 4, 4, 10)
     a.addTempo(t1)
     a.addTempo(t2)
     a.stats = Some(s)
@@ -239,17 +239,20 @@ class JSONParserTest extends FlatSpec {
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     d.stats = Some(Stats(s.getAverage(buff, "tempo"),
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     b.stats = Some(Stats(s.getAverage(buff, "tempo"),
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     jp.writeStats(w)
     jp.writeStats(d)
     val expected = jp.writeStats(b)
@@ -375,17 +378,20 @@ class HtmlWriterTest extends FlatSpec{
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     d.stats = Some(Stats(s.getAverage(buff, "tempo"),
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     b.stats = Some(Stats(s.getAverage(buff, "tempo"),
       s.getMedian(buff, "tempo"),
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
-      s.getTotal(buff)))
+      s.getTotal(buff),
+      s.getResponseTime(buff.toList)))
     val expected = ht.writeHtml(List(w, d, b))
     ht.flush("/Users/philhannant/Desktop/HtmlTest.html")
     val result: String = Source.fromFile("/Users/philhannant/Desktop/HtmlTest.html").getLines.mkString
