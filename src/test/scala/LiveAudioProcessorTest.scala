@@ -348,7 +348,7 @@ class JSONParserTest extends FlatSpec {
       buff += t2
       buff += t3
       buff += t4
-      val result = s.getResponseTime(buff)
+      val result = s.getResponseTime(buff.toList)
       val expected = 300
       assertResult(expected)(result)
     }
