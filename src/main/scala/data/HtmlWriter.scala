@@ -12,35 +12,33 @@ class HtmlWriter {
 
   val html = new StringBuilder
 
-  def writeHtml(worm: WormAnalyser, dwt: DWTAnalyser, beat: BeatrootAnalyser): String = {
-
-
-    def htmlHelper(analyser: Analyser): String = {
-      val heading = analyser.getClass.getDeclaredFields
-      val stats = unWrapStats(analyser.stats)
-      println(stats)
-      val shead = getStats(analyser.stats).getClass.getDeclaredFields
-
-      html ++= "<table><thead>"
-      html ++= "<tr><th>" + heading(0).getName + "</th>"
-      html ++= "<th>" + heading(2).getName + "</th></tr></thead>"
-      html ++= "<tbody><tr><td>" + analyser.name + "</td>"
-
-      addData(stats, shead, html, 0)
-      html ++= "</tbody></table>"
-      html.toString()
-    }
-
-    htmlHelper(worm)
-
+  def writeHtml(list: List[Analyser]): String = list match {
+    case (x :: xs) => htmlHelper(x); writeHtml(xs)
+    case Nil => html.toString()
   }
 
-  def flush(path: String) = {
-    val file = new FileWriter(path)
-    file.write(html.toString())
-    file.flush()
-    file.close()
+  def htmlHelper(analyser: Analyser): StringBuilder = {
+    val heading = analyser.getClass.getDeclaredFields
+    val stats = unWrapStats(analyser.stats)
+    println(stats)
+    val shead = getStats(analyser.stats).getClass.getDeclaredFields
+
+    html ++= "<table><thead>"
+    html ++= "<tr><th>" + heading(0).getName + "</th>"
+    html ++= "<th>" + heading(2).getName + "</th></tr></thead>"
+    html ++= "<tbody><tr><td>" + analyser.name + "</td>"
+
+    addData(stats, shead, html, 0)
+    html ++= "</tbody></table>"
+    html
   }
+
+
+  def addData(list: List[Double], heading: Array[Field], htmlString: StringBuilder ,acc: Int): StringBuilder = list match {
+    case Nil => htmlString
+    case (x :: xs) => addData(xs, heading, htmlString ++= "<tr><td>" + heading(acc).getName + "</td><td>" + x + "</td></tr>", acc + 1 )
+  }
+
 
   def unWrapStats(stats: Option[Stats]): List[Double] = stats match {
     case None => Nil
@@ -51,10 +49,11 @@ class HtmlWriter {
     case Some(x) => x
   }
 
-
-  def addData(list: List[Double], heading: Array[Field], htmlString: StringBuilder ,acc: Int): StringBuilder = list match {
-    case Nil => htmlString
-    case (x :: xs) => addData(xs, heading, htmlString ++= "<tr><td>" + heading(acc).getName + "</td><td>" + x + "</td></tr>", acc + 1 )
+  def flush(path: String) = {
+    val file = new FileWriter(path)
+    file.write(html.toString())
+    file.flush()
+    file.close()
   }
 
 }

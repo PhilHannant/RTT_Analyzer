@@ -365,7 +365,7 @@ class HtmlWriterTest extends FlatSpec{
       s.getAverage(buff, "diffs"),
       s.getMedian(buff, "diffs"),
       s.getTotal(buff)))
-    val expected = ht.writeHtml(w, d, b)
+    val expected = ht.writeHtml(List(w, d, b))
     ht.flush("/Users/philhannant/Desktop/HtmlTest.html")
     val result: String = Source.fromFile("/Users/philhannant/Desktop/HtmlTest.html").getLines.mkString
     assertResult(expected)(result)
