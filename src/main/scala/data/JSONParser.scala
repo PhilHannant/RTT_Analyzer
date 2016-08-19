@@ -17,7 +17,8 @@ case class JSONParser() {
       def writes(tempo: Tempo) = Json.obj(
         "tempo" -> tempo.tempo,
         "expectedTempo" -> tempo.baseTempo,
-        "difference" -> tempo.difference
+        "difference" -> tempo.difference,
+        "elapsedTime" -> tempo.timeElapsed
       )
     }
 
@@ -51,7 +52,8 @@ case class JSONParser() {
       def writes(tempo: Tempo) = Json.obj(
         "tempo" -> tempo.tempo,
         "expectedTempo" -> tempo.baseTempo,
-        "difference" -> tempo.difference
+        "difference" -> tempo.difference,
+        "elapsedTime" -> tempo.timeElapsed
       )
     }
 
@@ -86,7 +88,8 @@ case class JSONParser() {
         "tempo" -> tempo.tempo,
         "expectedTempo" -> tempo.baseTempo,
         "difference" -> tempo.difference,
-        "beatCount" -> tempo.beatCount
+        "beatCount" -> tempo.beatCount,
+        "elapsedTime" -> tempo.timeElapsed
       )
     }
 

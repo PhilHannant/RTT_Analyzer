@@ -56,6 +56,15 @@ case class StatsCalculator() {
   }
 
 
+  def getResponseTime(list: List[Tempo]): Long = list match {
+    case (x :: xs) => {
+      if (x.difference < 1.0 && x.difference > -1.0) {
+        x.timeElapsed
+      }
+      else getResponseTime(xs)
+    }
+    case Nil => 0
+  }
 
 
   def getTempos(lst: List[Tempo]): List[Double] =
@@ -81,4 +90,5 @@ case class StatsCalculator() {
       case Some(value) => value
       case None => 0 //throw new RuntimeException("None present")
     }
+
 }

@@ -95,7 +95,8 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       sc.getMedian(lb, "tempo"),
       sc.getAverage(lb, "diffs"),
       sc.getMedian(lb, "diffs"),
-      sc.getTotal(lb))
+      sc.getTotal(lb),
+      sc.getResponseTime(lb.toList))
   }
 
 }
