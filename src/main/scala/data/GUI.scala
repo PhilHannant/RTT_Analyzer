@@ -173,6 +173,10 @@ object GUI extends JFXApp {
     }
   }
 
+  val error = new Alert(AlertType.Information)
+  error.setTitle("Error Message")
+  error.setContentText("Please input a file name")
+
   stage = new JFXApp.PrimaryStage {
     title = "RTT_Analyser"
     width = 800
@@ -208,8 +212,8 @@ object GUI extends JFXApp {
 
   def start = {
     if (expectedBpm.getText == "") expectedBpm.text = "0"
-    if (filePath == "")
-    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath, System.currentTimeMillis())
+    if (filePath == "") error.showAndWait()
+    else Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath, System.currentTimeMillis())
   }
 
 }
