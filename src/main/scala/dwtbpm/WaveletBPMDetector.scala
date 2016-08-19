@@ -234,7 +234,7 @@ class WaveletBPMDetector (
 
       _bpm = instantBpm(0)//.toArray.median
     }
-    processor ! NewTempoDwt(_bpm)
+    processor ! NewTempoDwt(_bpm, System.currentTimeMillis())
     _bpm
   }
 
