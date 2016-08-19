@@ -50,6 +50,9 @@ object GUI extends JFXApp {
   val exitButton = new Button("Exit")
   exitButton.prefWidth = 100
 
+  val testButton = new Button("Test")
+  testButton.prefWidth = 100
+
   val enterBpm = new Label("Expected BPM")
   enterBpm.setTextFill(DarkGray)
   //        enterBpm.layoutX = 200
@@ -74,7 +77,7 @@ object GUI extends JFXApp {
 
   val openResults = new Button("Results")
 
-  val controlBar = new HBox(startButton, stopButton, openResults, exitButton)
+  val controlBar = new HBox(startButton,testButton, stopButton, openResults, exitButton)
   controlBar.prefWidth = 800
   controlBar.spacing = 25
   controlBar.id = "controlBar"
@@ -122,9 +125,7 @@ object GUI extends JFXApp {
 
 
   startButton.onAction = (e: ActionEvent) => {
-    if (expectedBpm.getText == "") expectedBpm.text = "0"
-    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
-
+    start
   }
 
   stopButton.onAction = (e: ActionEvent) => {
@@ -140,6 +141,10 @@ object GUI extends JFXApp {
     Operator.liveAudioActor ! Close
   }
 
+  testButton.onAction = (e: ActionEvent) => {
+    start
+    Operator.guiActor ! StartTestTimer(Operator.processingActor, Operator.liveAudioActor)
+  }
 
   stage = new JFXApp.PrimaryStage {
     title = "RTT_Analyser"
@@ -172,6 +177,11 @@ object GUI extends JFXApp {
   }
 
 
+  def start = {
+    if (expectedBpm.getText == "") expectedBpm.text = "0"
+    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor)
+  }
+
 }
 
 object Operator extends App {
@@ -182,6 +192,7 @@ object Operator extends App {
   val beatrootActor = system.actorOf(Props[BeatrootActor], "beatrootActor")
   val dwtActor = system.actorOf(Props[DwtActor], "dwtActor")
   val processingActor = system.actorOf(Props(new ProcessingActor(beatrootActor, dwtActor)))
+  val guiActor = system.actorOf(Props[GUIActor], "guiActor")
 
   val gui = GUI
   gui.main(args: Array[String])
