@@ -209,7 +209,7 @@ object GUI extends JFXApp {
   def start = {
     if (expectedBpm.getText == "") expectedBpm.text = "0"
     if (filePath == "")
-    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath)
+    Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath, System.currentTimeMillis())
   }
 
 }
@@ -227,6 +227,7 @@ object Operator extends App {
   val gui = GUI
   gui.main(args: Array[String])
 
+  val time = System.currentTimeMillis()
 
 
 }
