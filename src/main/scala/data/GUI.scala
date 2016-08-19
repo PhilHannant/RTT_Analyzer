@@ -15,11 +15,12 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.effect.DropShadow
-import scalafx.scene.layout.{BorderPane, GridPane, HBox, StackPane}
+import scalafx.scene.layout._
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 import scalafx.scene.paint.Color._
+import scalafx.stage.FileChooser
 
 /**
   * Created by philhannant on 11/08/2016.
@@ -29,19 +30,7 @@ import scalafx.scene.paint.Color._
 object GUI extends JFXApp {
 
   var beatCount: Double = 0.0
-
-  val headingBox = new HBox
-  headingBox.padding = Insets(20)
-  headingBox.children = Seq(
-    new Text {
-      text = "RTT_Analyser"
-      style = "-fx-font-size: 36pt"
-      fill = new LinearGradient(
-        endX = 0,
-        stops = Stops(DarkGray, Gray))
-    })
-
-
+  var filePath = ""
   val startButton = new Button("Start")
   startButton.prefWidth = 100
 
@@ -54,20 +43,24 @@ object GUI extends JFXApp {
   val testButton = new Button("Test")
   testButton.prefWidth = 100
 
-  val enterBpm = new Label("Expected BPM")
-  enterBpm.setTextFill(DarkGray)
+//  val enterBpm = new Label("")
+//  enterBpm.setTextFill(DarkGray)
   //        enterBpm.layoutX = 200
   //        enterBpm.layoutY = 100
 
   val expectedBpm = new TextField
   //        expectedBpm.layoutX = 300
   //        expectedBpm.layoutY = 100
-  expectedBpm.promptText = "BPM?"
+  expectedBpm.promptText = "Expected BPM"
+  expectedBpm.prefWidth = 250
 
-  val fileNameLabel = new Label("File Name")
+  val fileNameLabel = new Label("")
   fileNameLabel.setTextFill(DarkGray)
   //        fileName.layoutX = 200
   //        fileName.layoutY = 100
+  val fileChooser = new FileChooser()
+  val getFilePath = new Button("Set File Name")
+  getFilePath.prefWidth = 250
 
   val fileName = new TextField
 
@@ -77,6 +70,27 @@ object GUI extends JFXApp {
   //        controlBar.minWidth = 400
 
   val openResults = new Button("Results")
+
+
+
+  val settingsBox = new VBox
+  settingsBox.id = "input"
+  settingsBox.children = List(expectedBpm, getFilePath, fileNameLabel)
+
+
+  val headingBox = new HBox
+  headingBox.id = "heading"
+  headingBox.padding = Insets(20)
+  headingBox.children = Seq(
+    new Text {
+      text = "RTT_Analyser"
+      style = "-fx-font-size: 36pt"
+      fill = new LinearGradient(
+        endX = 0,
+        stops = Stops(DarkGray, Gray))
+    }, settingsBox)
+
+
 
   val controlBar = new HBox(startButton,testButton, stopButton, openResults, exitButton)
   controlBar.prefWidth = 800
@@ -108,10 +122,10 @@ object GUI extends JFXApp {
   gridPane.padding = Insets(0, 0, 0, 50)
   gridPane.hgap = 10
   gridPane.vgap = 35
-  gridPane.add(enterBpm, 1, 0)
-  gridPane.add(fileNameLabel, 4, 0)
-  gridPane.add(expectedBpm, 2, 0)
-  gridPane.add(fileName, 5, 0)
+ // gridPane.add(enterBpm, 1, 0)
+//  gridPane.add(fileNameLabel, 4, 0)
+ // gridPane.add(expectedBpm, 2, 0)
+//  gridPane.add(getFilePath, 5, 0)
   gridPane.add(beatRootLabel, 1, 1)
   gridPane.add(beatRootTempo, 2, 1)
   gridPane.add(beatRootCount, 3, 1)
@@ -125,6 +139,7 @@ object GUI extends JFXApp {
   bPane.setBottom(controlBar)
   bPane.setTop(headingBox)
   bPane.setCenter(gridPane)
+
   //content = List(headingBox, enterBpm, expectedBpm, bPane)
 
 
@@ -148,6 +163,14 @@ object GUI extends JFXApp {
   testButton.onAction = (e: ActionEvent) => {
     start
     Operator.guiActor ! StartTestTimer(Operator.processingActor, Operator.liveAudioActor)
+  }
+
+  getFilePath.onAction = (e: ActionEvent) => {
+    val path = fileChooser.showSaveDialog(stage)
+    filePath = path.toString
+    Platform.runLater{
+      fileNameLabel.text = filePath
+    }
   }
 
   stage = new JFXApp.PrimaryStage {

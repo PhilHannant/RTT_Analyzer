@@ -16,6 +16,13 @@
     -fx-font-size: 22pt;
 }
 
+#heading{
+    -fx-spacing: 200;
+}
+
+#input{
+    -fx-alignment: top-right;
+}
 /*
  * Metro style Push Button
  * Author: Pedro Duque Vieira
