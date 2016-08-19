@@ -7,7 +7,7 @@ import akka.actor.ActorRef
   * Created by philhannant on 01/08/2016.
   */
 sealed trait Messages
-case class StartLiveAudio(expectedBPM: Double, processingActor: ActorRef, filePath: String) extends Messages
+case class StartLiveAudio(expectedBPM: Double, processingActor: ActorRef, filePath: String, startTime: Long) extends Messages
 case class EndLiveAudio(processingActor: ActorRef) extends Messages
 case class ProcessBytes(data: Array[Byte]) extends Messages
 case class NewTempoWorm(tempo: Double) extends Messages
