@@ -87,6 +87,8 @@ object GUI extends JFXApp {
   beatRootLabel.id = "tempo"
   val beatRootTempo = new Label("0.00")
   beatRootTempo.id = "tempo"
+  val beatRootCount = new Label("0.00")
+  beatRootCount.id = "tempo"
   val dwtLabel = new Label("DWT")
   dwtLabel.id = "tempo"
   val dwtTempo = new Label("0.00")
@@ -111,6 +113,7 @@ object GUI extends JFXApp {
   gridPane.add(fileName, 5, 0)
   gridPane.add(beatRootLabel, 1, 1)
   gridPane.add(beatRootTempo, 2, 1)
+  gridPane.add(beatRootCount, 3, 1)
   gridPane.add(dwtLabel, 1, 2)
   gridPane.add(dwtTempo, 2, 2)
   gridPane.add(wormLabel, 1, 3)
