@@ -80,7 +80,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 //      dwtStatsBuffer.clear()
 //      wormStatsuffer.clear()
 //      beatStatsBpmBuffer.clear()
-      
+
   }
 
 

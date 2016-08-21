@@ -41,7 +41,7 @@ object HtmlWriter {
 
   def unWrapStats(stats: Option[Stats]): List[Double] = stats match {
     case None => Nil
-    case Some(x) => List(x.averageTempo, x.medianTempo, x.averageDiff, x.medianDiff, x.totalBeatCount)
+    case Some(x) => List(x.averageTempo, x.medianTempo, x.averageDiff, x.medianDiff, x.totalBeatCount, x.responseTime)
   }
 
   def getStats(stats: Option[Stats]): Stats = stats match {

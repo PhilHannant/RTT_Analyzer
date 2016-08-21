@@ -153,7 +153,9 @@ object GUI extends JFXApp {
   }
 
   openResults.onAction = (e: ActionEvent) => {
-    Desktop.getDesktop().browse(new URL("file://" + filePath + ".html").toURI());
+    val url = "file:" + """//""" + filePath + "stats.html"
+    println(url)
+    Desktop.getDesktop().browse(new URL(url).toURI());
   }
 
   exitButton.onAction = (e: ActionEvent) => {
