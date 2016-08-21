@@ -67,7 +67,6 @@ class Induction {
 	 *          of the top tempo hypotheses but no beats
 	 */
 	public static AgentList beatInduction(EventList events) {
-		System.out.println("beatInduction ");
 		int i, j, b, bestCount;
 		boolean submult;
 		int intervals = 0;			// number of interval clusters
