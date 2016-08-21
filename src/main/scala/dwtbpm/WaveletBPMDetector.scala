@@ -202,7 +202,7 @@ class WaveletBPMDetector (
     // Compute window BPM given the peak
     val realLocation = minIndex + location
     val windowBpm : Double = 60.toDouble / realLocation * (sampleRate.toDouble/maxDecimation)
-    println("windownbpm " + windowBpm)
+    println("dwt tempo: " + windowBpm)
     instantBpm += windowBpm
   }
 
