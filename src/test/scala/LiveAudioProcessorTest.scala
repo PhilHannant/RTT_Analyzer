@@ -372,7 +372,7 @@ class JSONParserTest extends FlatSpec {
       buff += t3
       buff += t4
       val result = s.getTotal(buff)
-      val expected = 21
+      val expected = 9
       assertResult(expected)(result)
     }
 
