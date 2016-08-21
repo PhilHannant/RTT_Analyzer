@@ -119,7 +119,6 @@ public class Agent {
 	 *  @param ibi The beat period (inter-beat interval) of the Agent's tempo hypothesis.
 	 */
 	public Agent(double ibi) {
-		System.out.println("agent = " + 60/ibi);
 		init(ibi);
 	} // constructor
 
