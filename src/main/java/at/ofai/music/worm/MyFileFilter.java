@@ -32,7 +32,7 @@ class MyFileFilter extends FileFilter {
 	public static final MyFileFilter matchFilter =
 						new MyFileFilter(".match", "Match");
 	public static final MyFileFilter wormFilter =
-						new MyFileFilter(".worm", "Worm");
+						new MyFileFilter(".worm", "worm");
 
 	protected String suffix;
 	protected String description;

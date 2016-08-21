@@ -1,5 +1,5 @@
 import akka.actor.{ActorSystem, Props}
-import data.{EndLiveAudio, ParseJSON, StartLiveAudio}
+import data.{EndLiveAudio, StartLiveAudio, WriteData}
 import liveaudio.LiveAudioActor
 
 /**
@@ -13,7 +13,7 @@ object ActorTest extends App{
 
   coord ! StartLiveAudio
   Thread.sleep(5000)
-  coord ! ParseJSON
+  coord ! WriteData
   Thread.sleep(2500)
   coord ! EndLiveAudio
 

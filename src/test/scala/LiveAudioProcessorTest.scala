@@ -396,7 +396,7 @@ class JSONParserTest extends FlatSpec {
 class HtmlWriterTest extends FlatSpec{
 
   "An htmlWriter" should "write html" in {
-    val ht = new HtmlWriter()
+    val ht = HtmlWriter
     val w = WormAnalyser("wt")
     val d = DWTAnalyser("dt")
     val b = BeatrootAnalyser("bt")

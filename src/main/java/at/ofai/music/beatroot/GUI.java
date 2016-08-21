@@ -52,7 +52,7 @@ public class GUI extends JFrame {
 	protected AudioPlayer audioPlayer;
 	
 	/** The object which reads and processes audio */
-	protected AudioProcessor audioProcessor;
+	AudioProcessor audioProcessor;
 	
 	/** BeatRoot's file chooser object */
 	protected Chooser chooser;
@@ -70,7 +70,7 @@ public class GUI extends JFrame {
 	protected JMenuBar menuBar;
 	
 	/** The main data panel, which displays audio and beat data, and is a component of this window */ 
-	protected BeatTrackDisplay displayPanel;
+	public BeatTrackDisplay displayPanel;
 	
 	/** The scroller for showing or changing the position of the viewport relative to the whole audio file */
 	protected JScrollBar scroller;
@@ -332,7 +332,7 @@ public class GUI extends JFrame {
 		audioPlayer.setCurrentFile(new AudioFile(fileName));
 		audioProcessor.setInputFile(fileName);
 		setTitle(title + " " + version + " - " + fileName);
-		audioProcessor.processFile();
+		audioProcessor.processFile(null);
 		audioProcessor.setDisplay(displayPanel);	// after processing
 		updateDisplay(true);
 	} // loadAudioData()
@@ -434,7 +434,7 @@ public class GUI extends JFrame {
     /** Redraws the data panel when new data is loaded or the mode or preferences are changed.
      *  @param resetSelection Indicates whether the selected region should be reset
      */
-	void updateDisplay(boolean resetSelection) {
+	public void updateDisplay(boolean resetSelection) {
 		displayPanel.init(resetSelection);
 		scroller.setMinimum(displayPanel.getMinimum());
 		scroller.setMaximum(displayPanel.getMaximum());

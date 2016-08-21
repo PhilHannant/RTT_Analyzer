@@ -134,8 +134,8 @@ public class WormControlPanel extends JPanel
 			worm.play();
 //		else if (e.getActionCommand().equals("Pause"))
 //			worm.pause();
-//		else if (e.getActionCommand().equals("Stop"))
-//			worm.stop();
+		else if (e.equals("Stop"))
+			worm.stop();
 //		else if (e.getActionCommand().equals("<<y>>"))
 //			worm.yZoom(true);
 //		else if (e.getActionCommand().equals(">>y<<"))
@@ -156,8 +156,8 @@ public class WormControlPanel extends JPanel
 //			new WormLoadDialog(worm);
 //		} else if (e.getActionCommand().equals("Save")) {
 //			worm.save(new MyFileChooser().browseSave());
-//		} else if (e.getActionCommand().equals("Quit"))
-//		    System.exit(0);
+		else if (e.equals("Quit"))
+		    System.exit(0);
 //		else if (e.getActionCommand().equals("AutoScale"))
 //			worm.setAutoScaleMode(
 //							((JCheckBoxMenuItem)e.getSource()).isSelected());

@@ -14,9 +14,17 @@ public class PerformanceWormTests {
 
     @Test
     public void RunBR(){
-        Worm w = new Worm();
-        WormControlPanel wcp = new WormControlPanel(w);
-        wcp.actionPerformed("Play");
-
+        try {
+            Worm w = new Worm();
+            WormControlPanel wcp = new WormControlPanel(w);
+            wcp.actionPerformed("Play");
+            Thread.sleep(20000);
+            wcp.actionPerformed("Quit");
+            System.out.print("end");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }
