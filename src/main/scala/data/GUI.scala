@@ -195,7 +195,7 @@ object GUI extends JFXApp {
     beatCount = beatCount + count
     Platform.runLater{
       beatRootTempo.text = f"$tempo%1.2f"
-      beatRootCount.text = f"$beatCount%1.2f"
+      beatRootCount.text = f"$count%1.2f"
     }
   }
 

@@ -29,9 +29,9 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   val htmlWriter = HtmlWriter
 
   var count: Int = 0
-  val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
-  val dWtAnalyser = DWTAnalyser("dwt", new ListBuffer[Tempo](), None)//placeholders
-  val beatrootAnalyser = BeatrootAnalyser("beatroot", new ListBuffer[Tempo](), None)//placeholders
+  val wormAnalyser = WormAnalyser("worm")
+  val dWtAnalyser = DWTAnalyser("dwt")//placeholders
+  val beatrootAnalyser = BeatrootAnalyser("beatroot")//placeholders
   val jsonParser = JSONParser()
   val dwtStatsBuffer = ListBuffer[Tempo]()
   val wormStatsuffer = ListBuffer[Tempo]()
