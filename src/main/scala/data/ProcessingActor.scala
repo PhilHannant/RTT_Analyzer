@@ -81,10 +81,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 //      System.exit(0)
     case WriteStatsJSON =>
       addStats()
-
-      jsonParser.writeStats(wormAnalyser)
-      jsonParser.writeStats(dWtAnalyser)
-      jsonParser.writeStats(beatrootAnalyser)
+      jsonParser.writeStats(List(wormAnalyser, dWtAnalyser, beatrootAnalyser)
       jsonParser.flush(path)
   }
 

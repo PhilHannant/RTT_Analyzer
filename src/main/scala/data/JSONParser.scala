@@ -128,7 +128,9 @@ case class JSONParser() {
 
   }
 
-  def writeStats(obj: WormAnalyser): String = {
+  def writeStats(list: List[Analyser]): String = ???
+
+  def writeStatsHelper(obj: WormAnalyser): String = {
 
     implicit val statsWrites = new Writes[Stats] {
       def writes(stats: Stats) = Json.obj(
@@ -153,7 +155,7 @@ case class JSONParser() {
   }
 
 
-  def writeStats(obj: DWTAnalyser): String = {
+  def writeStatsHelper(obj: DWTAnalyser): String = {
     implicit val statsWrites = new Writes[Stats] {
       def writes(stats: Stats) = Json.obj(
         "averageTempo" -> stats.averageTempo,
@@ -177,7 +179,7 @@ case class JSONParser() {
     json
   }
 
-  def writeStats(obj: BeatrootAnalyser): String = {
+  def writeStatsHelper(obj: BeatrootAnalyser): String = {
     implicit val statsWrites = new Writes[Stats] {
       def writes(stats: Stats) = Json.obj(
         "averageTempo" -> stats.averageTempo,
