@@ -1235,7 +1235,7 @@ public class BeatTrackDisplay
 		Agent best = agents.bestAgent();
 		System.out.println("Beatroot tempo: " + 60/best.beatInterval);
 		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, best.beatCount, System.currentTimeMillis()), processingActor);
-		System.out.println(best.beatCount);
+//		System.out.println(best.beatCount);
 		if (best != null) {
 			best.fillBeats(startSelection);
 			best.events.add(endBeats);
