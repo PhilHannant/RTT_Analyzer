@@ -19,3 +19,4 @@ case class SendBeatRoot(data: Array[Byte], processingActor: ActorRef) extends Me
 case class SendDwt(data: Array[Byte], processingActor: ActorRef) extends Messages
 case class Close() extends Messages
 case class StartTestTimer(processingActor: ActorRef, liveAudioActor: ActorRef) extends Messages
+case class Reset() extends Messages

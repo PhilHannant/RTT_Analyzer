@@ -76,6 +76,11 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       jsonParser.flushFull(path + "full.json")
       htmlWriter.writeHtml(List(wormAnalyser, dWtAnalyser, beatrootAnalyser))
       htmlWriter.flush(path + "stats.html")
+//    case Reset =>
+//      dwtStatsBuffer.clear()
+//      wormStatsuffer.clear()
+//      beatStatsBpmBuffer.clear()
+      
   }
 
 
