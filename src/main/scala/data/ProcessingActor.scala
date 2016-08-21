@@ -47,7 +47,6 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       path(filePath)
       timeAtStart(startTime)
     case ProcessBytes(data) =>
-      println("got it")
       beatrootWorker ! SendBeatRoot(data, self)
       dwtWorker ! SendDwt(data, self)
     case NewTempoDwt(tempo, currentTime) =>
