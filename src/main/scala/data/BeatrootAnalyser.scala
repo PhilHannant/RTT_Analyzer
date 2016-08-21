@@ -23,7 +23,7 @@ object BeatrootAnalyser{
   def apply (name: String): BeatrootAnalyser = {
     val buffer = ListBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
-    val fullName = name + " BeatrootAnalyser: " + sdf.format(resultDate)
+    val fullName = name + sdf.format(resultDate)
     BeatrootAnalyser(fullName, buffer, None)
   }
 }

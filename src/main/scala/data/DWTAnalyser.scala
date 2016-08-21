@@ -22,7 +22,7 @@ object DWTAnalyser{
   def apply (name: String): DWTAnalyser = {
     val buffer = new ListBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
-    val fullName = name + " DWTAnalyser: " + sdf.format(resultDate)
+    val fullName = name + sdf.format(resultDate)
     DWTAnalyser(fullName, buffer, None)
   }
 }

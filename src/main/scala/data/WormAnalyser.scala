@@ -15,13 +15,14 @@ case class WormAnalyser(name: String, buffer: ListBuffer[Tempo], var stats: Opti
   }
 }
 
-object WormAnalyser{
+object WormAnalyser {
   val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
 
   def apply (name: String): WormAnalyser = {
     val buffer = new ListBuffer[Tempo]()
     val resultDate = new Date(System.currentTimeMillis())
-    val fullName = name + " WormAnalyser: " + sdf.format(resultDate)
-    WormAnalyser(fullName, buffer, None)
+    val fullName = name + sdf.format(resultDate)
+    return new WormAnalyser(fullName, buffer, None)
   }
+
 }
