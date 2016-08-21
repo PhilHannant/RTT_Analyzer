@@ -26,7 +26,6 @@ class LiveAudioActor extends Actor with ActorLogging{
        w.play()
        processingActor ! SendInputs(expectedBPM, filePath, startTime)
      case EndLiveAudio(processingActor) =>
-       println("end")
        w.stop()
        processingActor ! WriteData
 //       processingActor ! Reset
