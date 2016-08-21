@@ -1205,8 +1205,6 @@ public class BeatTrackDisplay
 	} // beatTrack()
 
 	public void beatTrack(ActorRef processingActor) {
-		System.out.println("beatTrack2");
-		System.out.println(beats.size());
 		AgentList agents = null;
 		double beatTime = -1.0;
 		int count = 0;
@@ -1216,33 +1214,26 @@ public class BeatTrackDisplay
 			endBeats.add(beatPtr.next());
 			beatPtr.remove();
 		}
-		System.out.println("b" + beats.size());
 		if (beats.size() > 1) {					// tempo given by mean of initial beats
 			count = beats.size() - 1;
 			beatTime = beats.l.getLast().keyDown;
 			double ioi = (beatTime - beats.l.getFirst().keyDown) / count;
-			System.out.println("ioi = " + ioi);
 			agents = new AgentList(new Agent(ioi), null);
 		} else if (endBeats.size() > 1) {		// tempo given by mean of final beats
 			double ioi = (endBeats.l.getLast().keyDown - endBeats.l.getFirst().keyDown) /
 					(endBeats.size() - 1);
-			System.out.println("ioi = " + ioi);
 			agents = new AgentList(new Agent(ioi), null);
 		} else									// tempo not given; use tempo induction
-			System.out.println(onsetList.size());
 		agents = Induction.beatInduction(onsetList);
 		for (AgentList ptr = agents; ptr.ag != null; ptr = ptr.next) {
 			ptr.ag.beatTime = beatTime;
-			System.out.println("beatTime = " + beatTime);
 			ptr.ag.beatCount = count;
-			System.out.println("count = " + count);
 			ptr.ag.events = new EventList(beats);
-			System.out.println("pae1 = " + (60/ptr.ag.beatInterval));
 		}
 		//onsetList.print();
 		agents.beatTrack(onsetList, endSelection);
 		Agent best = agents.bestAgent();
-		System.out.println(60/best.beatInterval + "here");
+//		System.out.println(60/best.beatInterval);
 		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, best.beatCount, System.currentTimeMillis()), processingActor);
 		System.out.println(best.beatCount);
 		if (best != null) {
