@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 /**
   * Created by philhannant on 17/08/2016.
   */
-class HtmlWriter {
+object HtmlWriter {
 
   val html = new StringBuilder
 

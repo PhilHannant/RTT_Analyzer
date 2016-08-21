@@ -26,6 +26,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   def timeAtStart (value: Long): Unit = timeAtStart = value
 
   val gui = GUI
+  val htmlWriter = HtmlWriter
 
   var count: Int = 0
   val wormAnalyser = WormAnalyser("worm", new ListBuffer[Tempo](), None)//placeholders
@@ -68,11 +69,13 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       gui.updatebrt(tempo, beatCount)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
-    case WriteJSON =>
+    case WriteData =>
       addStats()
       jsonParser.writeAll(wormAnalyser, dWtAnalyser, beatrootAnalyser)
-      jsonParser.flushStats(path)
-      jsonParser.flushFull(path)
+      jsonParser.flushStats(path + "stats.json")
+      jsonParser.flushFull(path + "full.json")
+      htmlWriter.writeHtml(List(wormAnalyser, dWtAnalyser, beatrootAnalyser))
+      htmlWriter.flush(path + "stats.html")
   }
 
 
