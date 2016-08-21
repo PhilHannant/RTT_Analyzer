@@ -80,24 +80,33 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 //      context.system.terminate()
 //      System.exit(0)
     case WriteStatsJSON =>
-      dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
-      wormAnalyser.stats = Some(addStats(wormStatsuffer))
-      beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
+      addStats()
+
       jsonParser.writeStats(wormAnalyser)
       jsonParser.writeStats(dWtAnalyser)
       jsonParser.writeStats(beatrootAnalyser)
       jsonParser.flush(path)
   }
 
-  def addStats(lb: ListBuffer[Tempo]): Stats = {
-    val sc = StatsCalculator()
-    Stats(sc.getAverage(lb, "tempo"),
-      sc.getMedian(lb, "tempo"),
-      sc.getAverage(lb, "diffs"),
-      sc.getMedian(lb, "diffs"),
-      sc.getTotal(lb),
-      sc.getResponseTime(lb.toList))
+
+  def addStats() = {
+
+    def addStatsHelper(lb: ListBuffer[Tempo]): Stats = {
+      val sc = StatsCalculator()
+      Stats(sc.getAverage(lb, "tempo"),
+        sc.getMedian(lb, "tempo"),
+        sc.getAverage(lb, "diffs"),
+        sc.getMedian(lb, "diffs"),
+        sc.getTotal(lb),
+        sc.getResponseTime(lb.toList))
+    }
+
+    dWtAnalyser.stats = Some(addStatsHelper(dwtStatsBuffer))
+    wormAnalyser.stats = Some(addStatsHelper(wormStatsuffer))
+    beatrootAnalyser.stats = Some(addStatsHelper(beatStatsBpmBuffer))
+
   }
+
 
 }
 
