@@ -9,7 +9,8 @@ import play.api.libs.json._
   */
 case class JSONParser() {
 
-  var json: String = "["
+  var jsonFull: String = "["
+  var jsonStats: String = "["
 
   def write(obj: WormAnalyser): String = {
 
@@ -41,9 +42,9 @@ case class JSONParser() {
     }
 
     val jsonNew = Json.toJson(obj)
-    json += jsonNew.toString()
-    println("json at end of worm " + json)
-    json
+    jsonFull += jsonNew.toString()
+    println("json at end of worm " + jsonFull)
+    jsonFull
   }
 
   def write(obj: DWTAnalyser): String = {
@@ -75,9 +76,9 @@ case class JSONParser() {
     }
 
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString()
-    println("json at end of dwt " + json)
-    json
+    jsonFull += "," + jsonNew.toString()
+    println("json at end of dwt " + jsonFull)
+    jsonFull
   }
 
 
@@ -114,21 +115,20 @@ case class JSONParser() {
 
 
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString() + "]"
-    println("json at end of beatroot " + json)
-    json
+    jsonFull += "," + jsonNew.toString() + "]"
+    println("json at end of beatroot " + jsonFull)
+    jsonFull
   }
 
-  def flush(path: String) = {
+  def flushFull(path: String) = {
 
     val file = new FileWriter(path)
-    file.write(json)
+    file.write(jsonFull)
     file.flush()
     file.close()
 
   }
 
-  def writeStats(list: List[Analyser]): String = ???
 
   def writeStatsHelper(obj: WormAnalyser): String = {
 
@@ -150,8 +150,8 @@ case class JSONParser() {
     }
     val jsonNew = Json.toJson(obj)
 
-    json += jsonNew.toString()
-    json
+    jsonStats += jsonNew.toString()
+    jsonStats
   }
 
 
@@ -174,9 +174,9 @@ case class JSONParser() {
     }
 
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString()
-    println("json at end of dwt " + json)
-    json
+    jsonStats += "," + jsonNew.toString()
+    println("json at end of dwt " + jsonStats)
+    jsonStats
   }
 
   def writeStatsHelper(obj: BeatrootAnalyser): String = {
@@ -201,9 +201,29 @@ case class JSONParser() {
 
 
     val jsonNew = Json.toJson(obj)
-    json += "," + jsonNew.toString() + "]"
+    jsonStats += "," + jsonNew.toString() + "]"
     val test = Json.prettyPrint(jsonNew)
     println(test)
-    json
+    jsonStats
   }
+
+
+  def writeAll(worm: WormAnalyser, dwt: DWTAnalyser, beat: BeatrootAnalyser) = {
+    writeStatsHelper(worm)
+    writeStatsHelper(dwt)
+    writeStatsHelper(beat)
+    write(worm)
+    write(dwt)
+    write(beat)
+  }
+
+  def flushStats(path: String) = {
+
+    val file = new FileWriter(path)
+    file.write(jsonStats)
+    file.flush()
+    file.close()
+
+  }
+
 }
