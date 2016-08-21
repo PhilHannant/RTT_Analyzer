@@ -65,24 +65,14 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
       wormAnalyser.addTempo(t)
     case NewTempoBeatroot(tempo, beatCount, currentTime) =>
       val t = Tempo(tempo, expectedBpm, Some(beatCount), currentTime - timeAtStart)
-
       gui.updatebrt(tempo, beatCount)
       beatStatsBpmBuffer += t
       beatrootAnalyser.addTempo(t)
-    case ParseJSON =>
-      dWtAnalyser.stats = Some(addStats(dwtStatsBuffer))
-      wormAnalyser.stats = Some(addStats(wormStatsuffer))
-      beatrootAnalyser.stats = Some(addStats(beatStatsBpmBuffer))
-      jsonParser.write(wormAnalyser)
-      jsonParser.write(dWtAnalyser)
-      jsonParser.write(beatrootAnalyser)
-      jsonParser.flush(path)
-//      context.system.terminate()
-//      System.exit(0)
-    case WriteStatsJSON =>
+    case WriteJSON =>
       addStats()
-      jsonParser.writeStats(List(wormAnalyser, dWtAnalyser, beatrootAnalyser)
-      jsonParser.flush(path)
+      jsonParser.writeAll(wormAnalyser, dWtAnalyser, beatrootAnalyser)
+      jsonParser.flushStats(path)
+      jsonParser.flushFull(path)
   }
 
 
