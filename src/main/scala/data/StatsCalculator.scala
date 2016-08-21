@@ -49,7 +49,7 @@ case class StatsCalculator() {
     def totalHelper(lst: List[Double], total: Double): Double =
       lst match {
         case Nil => total
-        case x :: xs => totalHelper(xs, total + x)
+        case x :: xs => totalHelper(xs, x)
       }
 
     totalHelper(list, 0)
