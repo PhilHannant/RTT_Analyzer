@@ -21,6 +21,8 @@
 package at.ofai.music.worm;
 
 import at.ofai.music.beatroot.BeatRoot;
+import biz.source_code.dsp.filter.FilterPassType;
+import biz.source_code.dsp.sound.IirFilterAudioInputStreamExstrom;
 import data.EndLiveAudio;
 import data.Messages.*;
 import akka.actor.*;
@@ -104,6 +106,7 @@ public class AudioWorm {
     SoundCaptureImpl sc = new SoundCaptureImpl();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     ActorRef processingActor;
+	public AudioInputStream newIn;
 	
 	public AudioWorm(Worm w, ActorRef processingActor) {
 
@@ -265,6 +268,8 @@ public class AudioWorm {
 								// 	targetDataLine.getBufferSize());
 								System.out.println("Creating AudioInputStream");
 								in = new AudioInputStream(targetDataLine);
+//                                to be switched on for filter test
+//								newIn = IirFilterAudioInputStreamExstrom.getAudioInputStream(in, FilterPassType.lowpass, 1, 20, 0);
 								init();
 								return;
 							}
@@ -696,6 +701,9 @@ public class AudioWorm {
             if(bytePosition == 525672){
                 outputStream.write(data);
                 byte[] out = outputStream.toByteArray();
+				System.out.println(out[3]);
+				System.out.println(out[4]);
+				System.out.println(out[5]);
                 outputStream.close();
                 outputStream = new ByteArrayOutputStream();
                 bytePosition = 0;
