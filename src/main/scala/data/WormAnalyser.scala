@@ -3,7 +3,7 @@ package data
 import java.sql.Date
 import java.text.SimpleDateFormat
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by philhannant on 02/08/2016.
@@ -11,8 +11,17 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 case class WormAnalyser(name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
   def addTempo(tempo: Tempo) = {
-    buffer += tempo
+    if (buffer.isEmpty) buffer += tempo
+    else if (checkTempo(tempo)) buffer += tempo
   }
+
+  def checkTempo(t: Tempo) = {
+    if (buffer.last.tempo != t.tempo) true
+    else false
+  }
+
+
+
 }
 
 object WormAnalyser {
