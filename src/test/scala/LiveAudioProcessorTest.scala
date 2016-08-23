@@ -120,6 +120,21 @@ class TempoObjectTest extends FlatSpec {
     assertResult(expected)(result)
   }
 
+  "An WormAnalyzer" should "remove any tempo duplicates" in {
+    val t1 = Tempo(115, 120, None, System.currentTimeMillis())
+    val t2 = Tempo(125.72726617, 120, None, System.currentTimeMillis())
+    val t3 = Tempo(125.72726617, 120, None, System.currentTimeMillis())
+    val t4 = Tempo(125.72726617, 120, None, System.currentTimeMillis())
+    val a = WormAnalyser("test")
+    a.addTempo(t1)
+    a.addTempo(t2)
+    a.addTempo(t3)
+    a.addTempo(t4)
+    a.filterDuplicates
+    val expected = List(t1, t2)
+    val result = a.buffer
+    assertResult(expected)(result)
+  }
 
 }
 
