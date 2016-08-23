@@ -130,9 +130,9 @@ class TempoObjectTest extends FlatSpec {
     a.addTempo(t2)
     a.addTempo(t3)
     a.addTempo(t4)
-    a.filterDuplicates
     val expected = List(t1, t2)
     val result = a.buffer
+    println(a.buffer.toList)
     assertResult(expected)(result)
   }
 
