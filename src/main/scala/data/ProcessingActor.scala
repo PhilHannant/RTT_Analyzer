@@ -71,7 +71,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
     case WriteData =>
       addStats()
       jsonParser.writeAll(wormAnalyser, dWtAnalyser, beatrootAnalyser)
-      jsonParser.flushStats(path + "stats.json")
+      //jsonParser.flushStats(path + "stats.json")
       jsonParser.flushFull(path + "full.json")
       htmlWriter.writeHtml(List(wormAnalyser, dWtAnalyser, beatrootAnalyser))
       htmlWriter.flush(path + "stats.html")
