@@ -28,7 +28,11 @@ object HtmlWriter {
     html ++= "<tbody><tr><td>" + analyser.name + "</td>"
 
     addData(stats, shead, html, 0)
-    html ++= "</tbody></table>"
+    html ++= "</tbody></table></br><table><thead><tr>"
+    getTempoHead(analyser.buffer.head.getClass.getDeclaredFields.toList, html)
+    html ++= "</tr></thead><tbody>"
+    addTempoData(analyser.buffer.toList, html)
+    html ++= "</tbody></table></br>"
     html
   }
 
@@ -47,6 +51,18 @@ object HtmlWriter {
   def getStats(stats: Option[Stats]): Stats = stats match {
     case Some(x) => x
   }
+
+  def getTempoHead(list: List[Field], htmlString: StringBuilder): StringBuilder = list match {
+    case (x :: xs) =>  getTempoHead(xs, htmlString ++= "<th>" + x.getName + "</th>")
+    case Nil => htmlString
+  }
+
+  def addTempoData(list: List[Tempo], htmlString: StringBuilder): StringBuilder = list match {
+    case (x :: xs) => addTempoData(xs, htmlString ++= "<tr><td>" + x.tempo + "</td><td>" + x.baseTempo +
+      "</td><td>" + x.difference + "</td><td>" + x.beatCount + "</td><td>" + x.timeElapsed + "</td></tr>")
+    case Nil => htmlString
+  }
+
 
   def flush(path: String) = {
     val file = new FileWriter(path)
