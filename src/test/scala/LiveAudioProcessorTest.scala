@@ -421,6 +421,18 @@ class HtmlWriterTest extends FlatSpec{
     val t2 = Tempo(125, 120, None, System.currentTimeMillis())
     val t3 = Tempo(135, 120, None, System.currentTimeMillis())
     val t4 = Tempo(145, 120, None, System.currentTimeMillis())
+    w.addTempo(t1)
+    w.addTempo(t2)
+    w.addTempo(t3)
+    w.addTempo(t4)
+    d.addTempo(t1)
+    d.addTempo(t2)
+    d.addTempo(t3)
+    d.addTempo(t4)
+    b.addTempo(t1)
+    b.addTempo(t2)
+    b.addTempo(t3)
+    b.addTempo(t4)
     buff += t1
     buff += t2
     buff += t3
