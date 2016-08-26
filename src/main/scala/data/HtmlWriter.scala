@@ -65,6 +65,7 @@ object HtmlWriter {
 
 
   def flush(path: String) = {
+    html.insert(0, "<head>" + path + "<head>")
     val file = new FileWriter(path)
     file.write(html.toString())
     file.flush()

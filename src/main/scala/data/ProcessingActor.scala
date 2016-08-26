@@ -43,6 +43,9 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 
   def receive = {
     case SendInputs(bpm, filePath, startTime) =>
+      wormAnalyser.name = wormAnalyser.name + path
+      dWtAnalyser.name = dWtAnalyser.name + path
+      beatrootAnalyser.name = beatrootAnalyser.name + path
       expectedBpm(bpm)
       path(filePath)
       timeAtStart(startTime)

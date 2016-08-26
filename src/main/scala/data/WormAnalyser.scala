@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class WormAnalyser(name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
+case class WormAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
   def addTempo(tempo: Tempo) = {
     if (buffer.isEmpty) buffer += tempo

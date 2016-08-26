@@ -8,7 +8,7 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class BeatrootAnalyser(name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
+case class BeatrootAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
 
   def addTempo(tempo: Tempo) = {

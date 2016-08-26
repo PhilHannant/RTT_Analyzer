@@ -8,7 +8,7 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 /**
   * Created by philhannant on 02/08/2016.
   */
-case class DWTAnalyser(name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
+case class DWTAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
 
   def addTempo(tempo: Tempo) = {
