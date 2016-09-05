@@ -99,19 +99,19 @@ object GUI extends JFXApp {
 
 
   val beatRootLabel = new Label("Beatroot")
-  beatRootLabel.id = "tempo"
+  beatRootLabel.id = "tempo1"
   val beatRootTempo = new Label("0.00")
-  beatRootTempo.id = "tempo"
+  beatRootTempo.id = "tempo1"
   val beatRootCount = new Label("0.00")
-  beatRootCount.id = "tempo"
+  beatRootCount.id = "tempo1"
   val dwtLabel = new Label("DWT")
-  dwtLabel.id = "tempo"
+  dwtLabel.id = "tempo2"
   val dwtTempo = new Label("0.00")
-  dwtTempo.id = "tempo"
+  dwtTempo.id = "tempo2"
   val wormLabel = new Label("AudioWorm")
-  wormLabel.id = "tempo"
+  wormLabel.id = "tempo3"
   val wormTempo = new Label("0.00")
-  wormTempo.id = "tempo"
+  wormTempo.id = "tempo3"
 
  // val pb = new ProgressBar()
  // pb.setProgress(-1.0)

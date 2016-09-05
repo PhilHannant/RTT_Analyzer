@@ -12,8 +12,17 @@
     -fx-font-color: White;
 }
 
-#tempo{
+#tempo1{
     -fx-font-size: 22pt;
+    -fx-text-fill: Yellow;
+}
+#tempo2{
+    -fx-font-size: 22pt;
+    -fx-text-fill: Red;
+}
+#tempo3{
+    -fx-font-size: 22pt;
+    -fx-text-fill: Blue;
 }
 
 #heading{
