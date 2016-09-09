@@ -28,7 +28,8 @@ case class JSONParser() {
         "averageTempo" -> stats.averageTempo,
         "medianTempo" -> stats.medianDiff,
         "averageDiff" -> stats.averageDiff,
-        "medianDiff" -> stats.medianDiff
+        "medianDiff" -> stats.medianDiff,
+        "responseTime" -> stats.responseTime
       )
     }
 
@@ -63,7 +64,8 @@ case class JSONParser() {
         "averageTempo" -> stats.averageTempo,
         "medianTempo" -> stats.medianDiff,
         "averageDiff" -> stats.averageDiff,
-        "medianDiff" -> stats.medianDiff
+        "medianDiff" -> stats.medianDiff,
+        "responseTime" -> stats.responseTime
       )
     }
 
@@ -100,7 +102,8 @@ case class JSONParser() {
         "medianTempo" -> stats.medianDiff,
         "averageDiff" -> stats.averageDiff,
         "medianDiff" -> stats.medianDiff,
-        "totalBeatCount" -> stats.totalBeatCount
+        "totalBeatCount" -> stats.totalBeatCount,
+        "responseTime" -> stats.responseTime
       )
     }
 
