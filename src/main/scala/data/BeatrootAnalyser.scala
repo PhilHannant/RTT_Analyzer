@@ -18,7 +18,7 @@ case class BeatrootAnalyser(var name: String, buffer: ListBuffer[Tempo], var sta
 }
 
 object BeatrootAnalyser{
-  val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
+  val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 
   def apply (name: String): BeatrootAnalyser = {
     val buffer = ListBuffer[Tempo]()

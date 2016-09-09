@@ -17,7 +17,7 @@ case class DWTAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: O
 }
 
 object DWTAnalyser{
-  val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
+  val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 
   def apply (name: String): DWTAnalyser = {
     val buffer = new ListBuffer[Tempo]()

@@ -25,7 +25,7 @@ case class WormAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: 
 }
 
 object WormAnalyser {
-  val sdf = new SimpleDateFormat("yyyy-mm-dd, HH:mm:ss")
+  val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 
   def apply (name: String): WormAnalyser = {
     val buffer = new ListBuffer[Tempo]()
