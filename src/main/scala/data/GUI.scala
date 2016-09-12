@@ -3,7 +3,7 @@ package data
 import java.awt.Desktop
 import java.net.URL
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ActorSystem, PoisonPill, Props}
 import liveaudio.LiveAudioActor
 
 import scalafx.Includes._
@@ -29,6 +29,8 @@ import scalafx.stage.FileChooser
 
 object GUI extends JFXApp {
 
+  var state = false
+  var htmlReady = false
   var beatCount: Double = 0.0
   var filePath = ""
   val startButton = new Button("Start")
@@ -76,6 +78,7 @@ object GUI extends JFXApp {
   val settingsBox = new VBox
   settingsBox.id = "input"
   settingsBox.children = List(expectedBpm, getFilePath, fileNameLabel)
+  settingsBox.prefWidth = 350
 
 
   val headingBox = new HBox
@@ -113,6 +116,13 @@ object GUI extends JFXApp {
   val wormTempo = new Label("0.00")
   wormTempo.id = "tempo3"
 
+  val brBpm = new Label("bpm")
+  brBpm.id = "tempo1"
+  val dwBpm = new Label("bpm")
+  dwBpm.id = "tempo2"
+  val wBpm = new Label("bpm")
+  wBpm.id = "tempo3"
+
  // val pb = new ProgressBar()
  // pb.setProgress(-1.0)
 
@@ -120,7 +130,7 @@ object GUI extends JFXApp {
 
   val gridPane = new GridPane
   gridPane.padding = Insets(0, 0, 0, 50)
-  gridPane.hgap = 10
+  gridPane.hgap = 45
   gridPane.vgap = 35
  // gridPane.add(enterBpm, 1, 0)
 //  gridPane.add(fileNameLabel, 4, 0)
@@ -128,11 +138,13 @@ object GUI extends JFXApp {
 //  gridPane.add(getFilePath, 5, 0)
   gridPane.add(beatRootLabel, 1, 1)
   gridPane.add(beatRootTempo, 2, 1)
-  gridPane.add(beatRootCount, 3, 1)
+  gridPane.add(brBpm, 4, 1)
   gridPane.add(dwtLabel, 1, 2)
   gridPane.add(dwtTempo, 2, 2)
+  gridPane.add(dwBpm, 4, 2)
   gridPane.add(wormLabel, 1, 3)
   gridPane.add(wormTempo, 2, 3)
+  gridPane.add(wBpm, 4, 3)
   //gridPane.add(pb, 3, 4)
 
   val bPane = new BorderPane
@@ -148,36 +160,57 @@ object GUI extends JFXApp {
   }
 
   stopButton.onAction = (e: ActionEvent) => {
-    //will need to call start in actor
-    Operator.liveAudioActor ! EndLiveAudio(Operator.processingActor)
+    if (!state) {
+      error3.showAndWait()
+    } else {
+      Operator.opActors.liveAudioActor ! EndLiveAudio(Operator.opActors.processingActor)
+      htmlReady = true
+    }
   }
 
   openResults.onAction = (e: ActionEvent) => {
-    val url = "file:" + """//""" + filePath + "stats.html"
-    println(url)
-    Desktop.getDesktop().browse(new URL(url).toURI())
+    if (!htmlReady) {
+      error2.showAndWait()
+    } else {
+      val url = "file:" + """//""" + filePath + "stats.html"
+      println(url)
+      Desktop.getDesktop().browse(new URL(url).toURI())
+    }
   }
 
   exitButton.onAction = (e: ActionEvent) => {
-    Operator.liveAudioActor ! Close
+    if (!state) System.exit(0)
+    else Operator.opActors.liveAudioActor ! Close
   }
 
   testButton.onAction = (e: ActionEvent) => {
-    start
-    Operator.guiActor ! StartTestTimer(Operator.processingActor, Operator.liveAudioActor)
+    if (filePath == "") {
+      error.showAndWait()
+    } else {
+      start
+      Operator.opActors.guiActor ! StartTestTimer(Operator.opActors.processingActor, Operator.opActors.liveAudioActor)
+    }
   }
 
   getFilePath.onAction = (e: ActionEvent) => {
     val path = fileChooser.showSaveDialog(stage)
     filePath = path.toString
     Platform.runLater{
-      fileNameLabel.text = filePath
+      fileNameLabel.text = path.getName
     }
   }
 
   val error = new Alert(AlertType.Information)
   error.setTitle("Error Message")
   error.setContentText("Please input a file name")
+
+  val error2 = new Alert(AlertType.Information)
+  error2.setTitle("Error Message")
+  error2.setContentText("HTML File Not Ready")
+
+  val error3 = new Alert(AlertType.Information)
+  error3.setTitle("Error Message")
+  error3.setContentText("Please press Start or Test to proceed")
 
   stage = new JFXApp.PrimaryStage {
     title = "RTT_Analyser"
@@ -195,7 +228,7 @@ object GUI extends JFXApp {
     beatCount = beatCount + count
     Platform.runLater{
       beatRootTempo.text = f"$tempo%1.2f"
-      beatRootCount.text = f"$count%1.2f"
+//      beatRootCount.text = f"$count%1.2f"
     }
   }
 
@@ -214,14 +247,48 @@ object GUI extends JFXApp {
 
   def start = {
     if (expectedBpm.getText == "") expectedBpm.text = "0"
-    if (filePath == "") error.showAndWait()
-    else Operator.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.processingActor, filePath, System.currentTimeMillis())
+    if (filePath == "") {
+      error.showAndWait()
+    } else {
+      if (!state){
+        Operator.setup
+        state = true
+      } else {
+        Operator.reset
+        Operator.setup
+      }
+      Operator.opActors.liveAudioActor ! StartLiveAudio(expectedBpm.getText.toDouble, Operator.opActors.processingActor, filePath, System.currentTimeMillis())
+    }
   }
 
 }
 
 object Operator extends App {
 
+  var opActors: OperatorActors = _
+  var time: Long = _
+
+  def setup = {
+    opActors = new OperatorActors
+    time = System.currentTimeMillis()
+  }
+
+  def reset = {
+    opActors.liveAudioActor ! PoisonPill
+    opActors.beatrootActor ! PoisonPill
+    opActors.dwtActor ! PoisonPill
+    opActors.processingActor ! PoisonPill
+    opActors.guiActor ! PoisonPill
+  }
+
+  val gui = GUI
+  gui.main(args: Array[String])
+
+
+
+}
+
+class OperatorActors {
 
   val system = ActorSystem("liveAudioSystem")
   val liveAudioActor = system.actorOf(Props[LiveAudioActor], "liveAudioActor")
@@ -229,11 +296,5 @@ object Operator extends App {
   val dwtActor = system.actorOf(Props[DwtActor], "dwtActor")
   val processingActor = system.actorOf(Props(new ProcessingActor(beatrootActor, dwtActor)))
   val guiActor = system.actorOf(Props[GUIActor], "guiActor")
-
-  val gui = GUI
-  gui.main(args: Array[String])
-
-  val time = System.currentTimeMillis()
-
 
 }
