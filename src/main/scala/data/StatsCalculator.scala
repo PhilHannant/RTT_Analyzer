@@ -6,6 +6,8 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by philhannant on 08/08/2016.
   */
+
+
 case class StatsCalculator() {
 
   def getMedian(listBuff: ListBuffer[Tempo], identifer: String): Double =
@@ -31,7 +33,7 @@ case class StatsCalculator() {
 
     @tailrec
     def averageTR(list: List[Double], size: Double, total: Double): Double = list match {
-      case Nil => println(total); println(size); total/size
+      case Nil => total/size
       case x :: xs => averageTR(xs, size + 1, total + x)
 
     }
@@ -88,7 +90,7 @@ case class StatsCalculator() {
   def unwrapOption(head: Option[Double]): Double =
     head match {
       case Some(value) => value
-      case None => 0 //throw new RuntimeException("None present")
+      case None => 0
     }
 
 }
