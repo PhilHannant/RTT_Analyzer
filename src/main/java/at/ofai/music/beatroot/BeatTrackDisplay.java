@@ -1204,6 +1204,11 @@ public class BeatTrackDisplay
             System.err.println("No best agent");
 	} // beatTrack()
 
+	/**
+	 *
+	 * beatTrack method adapted by @author Phil Hannant to work with akka actor system
+	 *
+	 */
 	public void beatTrack(ActorRef processingActor) {
 		AgentList agents = null;
 		double beatTime = -1.0;
@@ -1234,6 +1239,11 @@ public class BeatTrackDisplay
 		agents.beatTrack(onsetList, endSelection);
 		Agent best = agents.bestAgent();
 		System.out.println("Beatroot tempo: " + 60/best.beatInterval);
+		/**
+		 *
+		 * message send to processingactot added by @author Phil Hannant
+		 *
+		 */
 		processingActor.tell(new NewTempoBeatroot(60/best.beatInterval, best.beatCount, System.currentTimeMillis()), processingActor);
 //		System.out.println(best.beatCount);
 		if (best != null) {
