@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat
 import scala.collection.mutable.ListBuffer
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * Implementation of the RTT_Analyser Analyser trait, holds the tempo values recorded by the Performance Worm
+  *
   */
 case class WormAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
@@ -24,6 +27,7 @@ case class WormAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: 
 
 }
 
+/** companion object */
 object WormAnalyser {
   val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 

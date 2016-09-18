@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * Implementation of the RTT_Analyser Analyser trait, holds the tempo values recorded by the Beatroot system
+  *
   */
 case class BeatrootAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
@@ -16,7 +19,7 @@ case class BeatrootAnalyser(var name: String, buffer: ListBuffer[Tempo], var sta
   }
 
 }
-
+/** companion object */
 object BeatrootAnalyser{
   val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 
