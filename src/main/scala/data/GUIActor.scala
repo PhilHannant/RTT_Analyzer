@@ -4,8 +4,11 @@ import akka.actor.Actor.Receive
 import akka.actor.{Actor, ActorLogging}
 
 /**
-  * Created by philhannant on 11/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser GUIActor, starts the test process and ends it after 30 seconds
   */
+
 class GUIActor extends Actor with ActorLogging{
 
   def receive: Receive = {
@@ -13,6 +16,5 @@ class GUIActor extends Actor with ActorLogging{
       Thread.sleep(30000)
       liveAudioActor ! EndLiveAudio(processingActor)
       GUI.htmlReady = true
-      println("Test Complete")
   }
 }
