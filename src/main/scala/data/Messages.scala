@@ -4,8 +4,12 @@ import akka.actor.ActorRef
 
 
 /**
-  * Created by philhannant on 01/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * Sealed trait holding all of the messages used by the RTT_Analyser actor system
   */
+
+
 sealed trait Messages
 case class StartLiveAudio(expectedBPM: Double, processingActor: ActorRef, filePath: String, startTime: Long) extends Messages
 case class EndLiveAudio(processingActor: ActorRef) extends Messages
