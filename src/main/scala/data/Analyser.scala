@@ -3,7 +3,10 @@ package data
 import scala.collection.mutable.ListBuffer
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser Analyser trait, basis for holding calculated tempo records
+  *
   */
 trait Analyser {
   var name: String
