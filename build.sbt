@@ -20,4 +20,4 @@ excludeFilter in unmanagedSources in Compile :=
 
 fork in run := true
 
-mainClass in (Compile, run) := Some("Operator.Main")
+mainClass := Some("data.Operator")
