@@ -6,7 +6,7 @@ import data.{Messages, ProcessBytes}
 import dwtbpm.WaveletBPMDetector
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * Original liveaudioProcessingActor no longer used
   */
 class LiveAudioProcessorActor extends Actor with ActorLogging {
 
