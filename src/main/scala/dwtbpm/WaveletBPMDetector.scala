@@ -225,7 +225,7 @@ class WaveletBPMDetector (
   /**
     *
     * bpm method adapted by @author Phil Hannant to work with one window of data
-    * 
+    *
     */
   def bpm(processor: ActorRef) : Double = {
     var count = 0
