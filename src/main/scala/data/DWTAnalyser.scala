@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * Implementation of the RTT_Analyser Analyser trait, holds the tempo values recorded by the WaveletBPMDetector
+  *
   */
 case class DWTAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: Option[Stats]) extends Analyser{
 
@@ -16,6 +19,7 @@ case class DWTAnalyser(var name: String, buffer: ListBuffer[Tempo], var stats: O
   }
 }
 
+/** companion object */
 object DWTAnalyser{
   val sdf = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss")
 
