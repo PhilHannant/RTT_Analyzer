@@ -1,13 +1,15 @@
 package data
 
-import akka.actor.Actor.Receive
+
 import akka.actor.{Actor, ActorLogging}
 import at.ofai.music.beatroot.BeatRoot
 import dwtbpm.WaveletBPMDetector
 import liveaudio.LiveAudioProcessor
 
 /**
-  * Created by philhannant on 15/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser BeatrootActor, instantiates Beatroot object and sends data for processing
   */
 class BeatrootActor extends Actor with ActorLogging{
 
@@ -27,6 +29,13 @@ class BeatrootActor extends Actor with ActorLogging{
 
 }
 
+
+/**
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser DwtActor, instantiates WaveletBPMDetector and LiveAudioProcessor
+  * object and sends data for processing
+  */
 
 class DwtActor extends Actor with ActorLogging {
 
