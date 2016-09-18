@@ -14,15 +14,15 @@
 
 #tempo1{
     -fx-font-size: 22pt;
-    -fx-text-fill: Yellow;
+    -fx-text-fill: palegoldenrod;
 }
 #tempo2{
     -fx-font-size: 22pt;
-    -fx-text-fill: Red;
+    -fx-text-fill: lightcoral;
 }
 #tempo3{
     -fx-font-size: 22pt;
-    -fx-text-fill: Blue;
+    -fx-text-fill: cyan;
 }
 
 #heading{
