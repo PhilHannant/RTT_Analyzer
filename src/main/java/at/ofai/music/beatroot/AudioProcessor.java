@@ -630,6 +630,7 @@ public class AudioProcessor {
                 }
         }
         frameRMS = Math.sqrt(frameRMS / inputBuffer.length * 2 * channels);
+//        System.out.println("RMS " + frameRMS);
         return true;
     } // getFrame()
 
@@ -718,7 +719,11 @@ public class AudioProcessor {
 
     /**
      * Processes a complete file of audio data.
+     *
+     * method adapted by @author Phil Hannant to work with live audio byte array
+     *
      */
+
     public void processFile(byte[] array) {
         try {
             in = new ByteArrayInputStream(array);
