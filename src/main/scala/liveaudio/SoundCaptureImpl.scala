@@ -11,6 +11,13 @@ import scala.collection.mutable.Queue
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+  * adapted by Phil Hannant for MSc Computer Science project
+  *
+  * Original sound capture class before being replaced by the performance worm's live audio function
+  */
+
+
 class SoundCaptureImpl() {
 
   val dataBuffer = new Queue[Array[Byte]]
@@ -42,14 +49,18 @@ class SoundCaptureImpl() {
   var status: Boolean = false
 
   def startCapture: Int = {
+
     try {
+
       input = AudioSystem.getTargetDataLine(inputFormat)
       val info: DataLine.Info = new DataLine.Info(classOf[TargetDataLine], inputFormat)
       input = AudioSystem.getLine(info).asInstanceOf[TargetDataLine]
       input.open(inputFormat)
       outputStream = new ByteArrayOutputStream
-      println("frame size" + inputFormat.getFrameSize)
       input.start()
+
+
+
       val currentTime: Long = System.currentTimeMillis()
       val finishTime: Long = currentTime + recordLength
       bytesRead = 0
@@ -58,25 +69,14 @@ class SoundCaptureImpl() {
         data = new Array[Byte](wormChunk)
         outputStream = new ByteArrayOutputStream
         while (bytesRead < 17640) {
-
-
             streamedBytes = input.read(data, 0, wormChunk)
             bytesRead += streamedBytes
-
             outputStream.write(data, 0, streamedBytes)
-
             data = outputStream.toByteArray
-
-
             var f = Future {
               runWorm(data)
             }
-
           }
-
-//          var f = Future {
-//            run(data)
-//          }
           bytesRead = 0
           outputStream.close()
 
