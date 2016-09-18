@@ -21,6 +21,7 @@ import scalafx.stage.FileChooser
 
 /**
   * @author Phil Hannant for MSc Computer Science project
+  *
   * RTT_Analyser GUI object
   */
 
