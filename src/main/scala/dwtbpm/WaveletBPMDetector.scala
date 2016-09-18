@@ -85,6 +85,7 @@ class WaveletBPMDetector (
                                    val waveletType : WaveletBPMDetector.Wavelet
                                    ) extends BPMDetector {
 
+  /** values added by Phil Hannant */
   val sampleRate = 44100
   val channels = 2
 
