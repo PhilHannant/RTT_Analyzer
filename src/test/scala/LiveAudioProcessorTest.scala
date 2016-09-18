@@ -9,58 +9,62 @@ import play.api.libs.json.{JsValue, Json}
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.io.Source
 /**
-  * Created by philhannant on 20/07/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser ScalaTest suite
   */
 class LiveAudioProcessorTest extends FlatSpec {
 
-  "A LiveAudioProcessor readSample" should "return an integer" in {
-    val lap = new LiveAudioProcessor
-    val returnedVal = lap.readSample()
-    assert(returnedVal > 0 || returnedVal < 0 || returnedVal == 0)
-
-  }
-
-  "A LiveAudioProcessor readFrames" should "return an integer" in {
-    val lap = new LiveAudioProcessor
-    val data: Array[Int] = new Array[Int](20)
-    val numberOfFrames = 5
-    val returnedVal = lap.readFrames(data, 0, numberOfFrames)
-    assert(returnedVal == numberOfFrames)
-  }
+  /** tests no longer relevant */
+//  "A LiveAudioProcessor readSample" should "return an integer" in {
+//    val lap = new LiveAudioProcessor
+//    val returnedVal = lap.readSample()
+//    assert(returnedVal > 0 || returnedVal < 0 || returnedVal == 0)
+//
+//  }
+//
+//  "A LiveAudioProcessor readFrames" should "return an integer" in {
+//    val lap = new LiveAudioProcessor
+//    val data: Array[Int] = new Array[Int](20)
+//    val numberOfFrames = 5
+//    val returnedVal = lap.readFrames(data, 0, numberOfFrames)
+//    assert(returnedVal == numberOfFrames)
+//  }
 
 
 }
 
 class SoundCaptureImplTest extends FlatSpec {
-
-  "A SoundCaptureImpl" should "send a byte array" in {
-    val sci = new SoundCaptureImpl()
-    val audioProcessor = new LiveAudioProcessor
-    val dwtbpm = WaveletBPMDetector(
-      audioProcessor,
-      131072,
-      WaveletBPMDetector.Daubechies4)
-    sci.audioProcessor(audioProcessor)
-    sci.startCapture
-    Thread.sleep(500)
-    val result = audioProcessor.popData()
-    assert(result != null)
-  }
-
-  "A SoundCaptureImpl" should "send an line to a Worm" in {
-    val sci = new SoundCaptureImpl()
-    val audioProcessor = new LiveAudioProcessor
-    sci.audioProcessor(audioProcessor)
-    sci.startCapture
-    Thread.sleep(180000)
-    val aw = sci.getWormInstance
-    assert(aw == true)
-  }
+  /** tests no longer relevant */
+//  "A SoundCaptureImpl" should "send a byte array" in {
+//    val sci = new SoundCaptureImpl()
+//    val audioProcessor = new LiveAudioProcessor
+//    val dwtbpm = WaveletBPMDetector(
+//      audioProcessor,
+//      131072,
+//      WaveletBPMDetector.Daubechies4)
+//    sci.audioProcessor(audioProcessor)
+//    sci.startCapture
+//    Thread.sleep(500)
+//    val result = audioProcessor.popData()
+//    assert(result != null)
+//  }
+//
+//  "A SoundCaptureImpl" should "send an line to a Worm" in {
+//    val sci = new SoundCaptureImpl()
+//    val audioProcessor = new LiveAudioProcessor
+//    sci.audioProcessor(audioProcessor)
+//    sci.startCapture
+//    Thread.sleep(180000)
+//    val aw = sci.getWormInstance
+//    assert(aw == true)
+//  }
 
 }
 
 class WaveletBPMDetectorTest extends FlatSpec {
 
+  /** tests no longer relevant */
 //  New test required as Future to be used to process bpm
 //  "A WaveletBPMDectector" should "return an integer (bpm)" in {
 //    val sci = new SoundCaptureImpl()
@@ -76,16 +80,16 @@ class WaveletBPMDetectorTest extends FlatSpec {
 //    println("bpm returned = " + bpm)
 //    assert(bpm > 60)
 //  }
-
-  "A WaveletBPMDectector" should "return an integer (bpm)" in {
-    val sci = new SoundCaptureImpl()
-    val audioProcessor = new LiveAudioProcessor
-    sci.audioProcessor(audioProcessor)
-    sci.startCapture
-    Thread.sleep(31000)
-    val windowsProcessed = sci.getWindowsProcessed()
-    assert(windowsProcessed > 10)
-  }
+//
+//  "A WaveletBPMDectector" should "return an integer (bpm)" in {
+//    val sci = new SoundCaptureImpl()
+//    val audioProcessor = new LiveAudioProcessor
+//    sci.audioProcessor(audioProcessor)
+//    sci.startCapture
+//    Thread.sleep(31000)
+//    val windowsProcessed = sci.getWindowsProcessed()
+//    assert(windowsProcessed > 10)
+//  }
 
 }
 
@@ -411,6 +415,8 @@ class JSONParserTest extends FlatSpec {
 class HtmlWriterTest extends FlatSpec{
 
   "An htmlWriter" should "write html" in {
+    val path: String = "/Users/philhannant/Desktop/HtmlTest.html"
+    val expected = new StringBuilder
     val ht = HtmlWriter
     val w = WormAnalyser("wt")
     val d = DWTAnalyser("dt")
@@ -455,10 +461,11 @@ class HtmlWriterTest extends FlatSpec{
       s.getMedian(buff, "diffs"),
       s.getTotal(buff),
       s.getResponseTime(buff.toList)))
-    val expected = ht.writeHtml(List(w, d, b))
-    ht.flush("/Users/philhannant/Desktop/HtmlTest.html")
-    val result: String = Source.fromFile("/Users/philhannant/Desktop/HtmlTest.html").getLines.mkString
-    assertResult(expected)(result)
+    expected ++= ht.writeHtml(List(w, d, b))
+    expected.insert(0, "<head>" + path + "<head>")
+    ht.flush(path)
+    val result: String = Source.fromFile(path).getLines.mkString
+    assertResult(expected.toString())(result)
   }
 
 }
