@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -46,6 +47,7 @@ import javax.sound.midi.Track;
 import at.ofai.music.worm.Worm;
 import at.ofai.music.worm.WormFile;
 import at.ofai.music.worm.WormParameters;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 // Adapted from eventList::readMatchFile in beatroot/src/eventMidi.cpp
 
@@ -822,6 +824,31 @@ public class EventList implements Serializable {
 		}
 		return list;
 	} // readMatchFile()
+
+	public double getBPM() {
+		double maxbpm = 165;
+		double minbpm = 67;
+		ArrayList<Double> onsetList = new ArrayList<Double>();
+		for (Iterator<Event> it = iterator(); it.hasNext(); ) {
+			Event e = it.next();
+			onsetList.add(e.keyDown);
+		}
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		if (onsetList.size()>1)
+			for (int i=1;i<onsetList.size();i++) {
+				stats.addValue(onsetList.get(i)-onsetList.get(i-1));
+			}
+
+		double median = stats.getPercentile(50);
+		double bpm = 60/median;
+		if (bpm > maxbpm) {
+			bpm = bpm/2;
+		} else if (bpm < minbpm) {
+			bpm = bpm*2;
+		}
+
+		return bpm;
+	}
 
 	public static void main(String[] args) throws Exception {	// quick test
 		//System.out.println("Test");

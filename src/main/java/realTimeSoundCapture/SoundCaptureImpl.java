@@ -53,10 +53,8 @@ public class SoundCaptureImpl implements SoundCapture{
             bytesRead = 0;
             status = true;
             while(status){
-
                 streamedBytes = input.read(data, 0, sampleSize);
                 bytesRead += streamedBytes;
-
                 outputStream.write(data, 0, streamedBytes);
                 audioObject = outputStream.toByteArray();
                 writeNext(audioObject);
