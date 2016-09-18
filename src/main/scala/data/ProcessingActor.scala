@@ -1,18 +1,18 @@
 package data
 
-import akka.actor.Actor.Receive
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import at.ofai.music.beatroot.BeatRoot
-import dwtbpm.WaveletBPMDetector
-import liveaudio.LiveAudioProcessor
 
-import scala.collection.mutable
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import akka.actor.{Actor, ActorLogging, ActorRef}
+import at.ofai.music.beatroot.BeatRoot
+
+
+
+import scala.collection.mutable.ListBuffer
 
 /**
-  * Created by philhannant on 02/08/2016.
+  * @author Phil Hannant for MSc Computer Science project
+  *
+  * RTT_Analyser ProcessingActor, carries out the bulk of the processing and sends captures bytes to beatrootActor and
+  * DwtActor
   */
 class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Actor with ActorLogging{
 
@@ -20,7 +20,12 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   def expectedBpm (value: Double):Unit = expectedBpm = value
 
   private var path: String = _
-  def path (value: String):Unit = path = value
+  def path (value: String):Unit = {
+    path = value
+    wormAnalyser.name = wormAnalyser.name + " - " + path
+    dWtAnalyser.name = dWtAnalyser.name +  " - " + path
+    beatrootAnalyser.name = beatrootAnalyser.name + " - " + path
+  }
 
   private var timeAtStart: Long = _
   def timeAtStart (value: Long): Unit = timeAtStart = value
@@ -30,8 +35,8 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
 
   var count: Int = 0
   val wormAnalyser = WormAnalyser("worm: ")
-  val dWtAnalyser = DWTAnalyser("dwt: ")//placeholders
-  val beatrootAnalyser = BeatrootAnalyser("beatroot: ")//placeholders
+  val dWtAnalyser = DWTAnalyser("dwt: ")
+  val beatrootAnalyser = BeatrootAnalyser("beatroot: ")
   val jsonParser = JSONParser()
   val dwtStatsBuffer = ListBuffer[Tempo]()
   val wormStatsuffer = ListBuffer[Tempo]()
@@ -40,12 +45,8 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
   b.audioProcessor.setInput()
 
 
-
   def receive = {
     case SendInputs(bpm, filePath, startTime) =>
-      wormAnalyser.name = wormAnalyser.name + path
-      dWtAnalyser.name = dWtAnalyser.name + path
-      beatrootAnalyser.name = beatrootAnalyser.name + path
       expectedBpm(bpm)
       path(filePath)
       timeAtStart(startTime)
@@ -60,7 +61,7 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
     case NewTempoWorm(tempo, currentTime) =>
       val t = Tempo(tempo, expectedBpm, None, currentTime - timeAtStart)
       if (count == 5) {
-        gui.updateWorm(tempo)
+        gui.updateWorm(tempo)//worm element of gui updated 5 time a second
         count = 0
       }
       count = count + 1
@@ -74,18 +75,12 @@ class ProcessingActor(beatrootWorker: ActorRef, dwtWorker: ActorRef) extends Act
     case WriteData =>
       addStats()
       jsonParser.writeAll(wormAnalyser, dWtAnalyser, beatrootAnalyser)
-      //jsonParser.flushStats(path + "stats.json")
       jsonParser.flushFull(path + "full.json")
       htmlWriter.writeHtml(List(wormAnalyser, dWtAnalyser, beatrootAnalyser))
       htmlWriter.flush(path + "stats.html")
-//    case Reset =>
-//      dwtStatsBuffer.clear()
-//      wormStatsuffer.clear()
-//      beatStatsBpmBuffer.clear()
-
   }
 
-
+  /** Populates the stats obejcts*/
   def addStats() = {
 
     def addStatsHelper(lb: ListBuffer[Tempo]): Stats = {
