@@ -21,8 +21,11 @@
 package at.ofai.music.worm;
 
 import at.ofai.music.beatroot.BeatRoot;
+import biz.source_code.dsp.filter.FilterCharacteristicsType;
 import biz.source_code.dsp.filter.FilterPassType;
+import biz.source_code.dsp.sound.AudioStreamPump;
 import biz.source_code.dsp.sound.IirFilterAudioInputStreamExstrom;
+import biz.source_code.dsp.sound.IirFilterAudioInputStreamFisher;
 import data.EndLiveAudio;
 import data.Messages.*;
 import akka.actor.*;
@@ -103,10 +106,15 @@ public class AudioWorm {
 	long jumpPosition;	// Requested new bytePosition (or -1 for none)
 	long fileLength;	// Length of input file in bytes
 	int count = 0;
-    SoundCaptureImpl sc = new SoundCaptureImpl();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+	/**
+	 *
+	 * following three parameters add by @author Phil Hannant
+	 *
+	 */
+	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     ActorRef processingActor;
-	public AudioInputStream newIn;
+	public AudioInputStream filteredIn;
 	
 	public AudioWorm(Worm w, ActorRef processingActor) {
 
@@ -269,8 +277,13 @@ public class AudioWorm {
 								System.out.println("Creating AudioInputStream");
 								in = new AudioInputStream(targetDataLine);
 //                                to be switched on for filter test
-//								newIn = IirFilterAudioInputStreamExstrom.getAudioInputStream(in, FilterPassType.lowpass, 1, 20, 0);
-								init();
+								/**
+								 *
+								 * low-pass filter added by @author Phil Hannant
+								 *
+								 */
+                                filteredIn = IirFilterAudioInputStreamFisher.getAudioInputStream(in, FilterPassType.lowpass, FilterCharacteristicsType.butterworth, 1, 0, 100, 0);
+                                init();
 								return;
 							}
 						} catch (Exception e) {
@@ -503,8 +516,11 @@ public class AudioWorm {
 			skipAudio();
         count++;
 //		System.out.println("Window " + count);
-		bytesRead = in.read(inputBuffer);
+		bytesRead = filteredIn.read(inputBuffer);
 		bytePosition += bytesRead;
+		/**
+		 * call to addbytes method
+		 */
         addBytes(inputBuffer);
 		//System.out.println("total bytes " + bytePosition);
 		// System.out.println("read(): " + bytePosition);//DEBUG
@@ -696,22 +712,20 @@ public class AudioWorm {
 		jumpPosition = -1;
 	} // skipAudio()
 
+	/**
+	 *
+	 * Added by @author Phil Hannant to hold captured bytes before being sent to ProcessingActor for processing
+	 *
+	 */
     public void addBytes(byte[] data){
         try{
             if(bytePosition == 525672){
                 outputStream.write(data);
                 byte[] out = outputStream.toByteArray();
-				System.out.println(out[3]);
-				System.out.println(out[4]);
-				System.out.println(out[5]);
                 outputStream.close();
                 outputStream = new ByteArrayOutputStream();
                 bytePosition = 0;
                 processingActor.tell(new ProcessBytes(out), processingActor);
-//                Object obj = "help";
-//                liveAudioActor.tell(obj, liveAudioActor);
-
-                //sc.recieve(out);
 
             }
             outputStream.write(data);
